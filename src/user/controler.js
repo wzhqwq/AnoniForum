@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
 
-app.listen(207150, 'localhost', () => {
+app.listen(20716, 'localhost', () => {
   console.log('User server is running.');
 });
 
-export class UserMgr {
-  
+module.exports = class UserMgr {
+
 }

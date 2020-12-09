@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
 
-app.listen(207151, 'localhost', () => {
+app.listen(20717, 'localhost', () => {
   console.log('Post server is running.');
 });
 
-export class PostMgr {
+module.exports = class PostMgr {
 
 }

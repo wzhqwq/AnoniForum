@@ -1,4 +1,4 @@
-const fork = require('child_process').fork('./worker.js');
+const fork = require('child_process').fork;
 var worker = fork('./worker.js');
 
 var reload = false;

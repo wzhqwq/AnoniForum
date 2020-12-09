@@ -12,6 +12,6 @@ app.get(BASE + '/reload', (req, res) => {
   process.send('reload');
 });
 
-export class Manager {
+module.exports = class Manager {
 
 }
