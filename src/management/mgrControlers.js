@@ -3,7 +3,7 @@ const http = require('http');
 const mysql = require('mysql');
 const mysqlAdmin = require('../../third-party/node-mysql-admin');
 const route = require('./mgrRoutes');
-const mgrPath = '/mgr';
+const mgrPath = require('../mgrPath.js');
 
 const app = express();
 const adminApp = express();
