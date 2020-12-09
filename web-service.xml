@@ -1,0 +1,14 @@
+<service>
+  <id>nodejs</id>
+  <name>Node.js Service</name>
+  <description>Javascript Server Service</description>
+  <logpath>C:\Users\Administrator\Documents\nodejs_log</logpath>
+  <log mode="roll-by-size">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>8</keepFiles>
+  </log>
+  <executable>"C:\Program Files\nodejs\node.exe"</executable>
+  <startarguments>C:\Users\Administrator\Documents\website\launch.js</startarguments>
+  <stopexecutable>taskkill</stopexecutable>
+  <stoparguments>/IM node.exe /F</stoparguments>
+</service>
