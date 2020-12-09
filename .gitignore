@@ -105,4 +105,4 @@ dist
 
 web-service.exe
 .DS_Store
-serverlogs/*.log
+mgrPath.js
