@@ -1,22 +1,16 @@
-var express = require('express');
+const fork = require('child_process').fork('./worker.js');
+var worker = fork('./worker.js');
 
-var app = express();
-
-app.use(express.static('route'));
-
-app.get('/foo', function (req, res) {
-    res.send('Hello from foo! [express sample]');
+var reload = false;
+worker.on('message', msg => {
+  if (msg == 'reload') {
+    reload = true;
+    worker.kill('SIGHUP');
+  }
 });
 
-app.get('/bar', function (req, res) {
-    res.send('Hello from bar! [express sample]');
-});
-
-app.listen(20715, "localhost", () => {
-	console.log("Processing server is running");
-});
-
-process.on('exit', () => {
-	console.log("server shutted down.");
-	process.exit(0);
+worker.on('exit', code => {
+  console.log('Master: Server closed with code:', code);
+  if (reload)
+    worker = fork('./worker.js');
 });
