@@ -1,10 +1,15 @@
 const express = require('express');
-const app = express();
+const http = require('http');
 
-app.listen(20716, 'localhost', () => {
+const app = express();
+const server = http.createServer(app);
+
+server.listen(20716, 'localhost', () => {
   console.log('User server is running.');
 });
 
-module.exports = class UserMgr {
-
-}
+module.exports = new (function () {
+  this.close = function () {
+    server.close();
+  };
+});

@@ -1,10 +1,15 @@
 const express = require('express');
-const app = express();
+const http = require('http');
 
-app.listen(20717, 'localhost', () => {
+const app = express();
+const server = http.createServer(app);
+
+server.listen(20717, 'localhost', () => {
   console.log('Post server is running.');
 });
 
-module.exports = class PostMgr {
-
-}
+module.exports = new (function () {
+  this.close = function () {
+    server.close();
+  };
+});

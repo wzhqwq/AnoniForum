@@ -1,16 +1,27 @@
 const fork = require('child_process').fork;
-var worker = fork('./worker.js');
+const MAIN_WORKER_PATH = './worker.js';
+const MGR_WORKER_PATH = './src/management/controler.js';
+var mainWorker = fork(MAIN_WORKER_PATH),
+  managerWorker = fork(MGR_WORKER_PATH);
 
 var reload = false;
-worker.on('message', msg => {
+managerWorker.on('message', msg => {
   if (msg == 'reload') {
     reload = true;
-    worker.kill('SIGHUP');
+    mainWorker.send('exit');
   }
 });
 
-worker.on('exit', code => {
-  console.log('Master: Server closed with code:', code);
+mainWorker.on('exit', code => {
+  console.log('Master: Main server closed with code:', code);
   if (reload)
-    worker = fork('./worker.js');
+    managerWorker.send('exit');
 });
+managerWorker.on('exit', code => {
+  console.log('Master: Manager server closed with code:', code);
+  if (reload) {
+    reload = false;
+    managerWorker = fork(MGR_WORKER_PATH);
+    mainWorker = fork(MAIN_WORKER_PATH);
+  }
+})
