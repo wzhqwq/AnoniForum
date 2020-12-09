@@ -9,10 +9,21 @@ server.listen(20715, "localhost", () => {
 	console.log("Manager server is running.");
 });
 
-app.get(BASE + '/reload', (req, res) => {
-  res.send('Ok, server start to reboot...');
-  console.log("Manager: reboot signal emerged.");
+// 会改成POST的
+app.get(BASE + '/reloadAllServer', (req, res) => {
+  res.send('Ok, servers start to reboot...');
+  console.log("Manager: reboot-all-servers signal emerged.");
   process.send('reload');
+});
+app.get(BASE + '/closeMainServer', (req, res) => {
+  res.send('Ok, main server start to close...');
+  console.log("Manager: close-main-server signal emerged.");
+  process.send("closeMain");
+});
+app.get(BASE + '/startMainServer', (req, res) => {
+  res.send('Ok, main server is starting...');
+  console.log("Manager: start-main-server signal emerged.");
+  process.send("startMain");
 });
 
 process.on('message', msg => {
