@@ -1,5 +1,5 @@
-const userCtrl = require('./src/user/controler');
-const postsCtrl = require('./src/posts/controler');
+const userCtrl = require('./src/user/userControlers');
+const postsCtrl = require('./src/posts/postControlers');
 
 process.on('message', msg => {
   if (msg == 'exit') {

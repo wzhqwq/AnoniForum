@@ -1,6 +1,6 @@
 const fork = require('child_process').fork;
 const MAIN_WORKER_PATH = './worker.js';
-const MGR_WORKER_PATH = './src/management/controler.js';
+const MGR_WORKER_PATH = './src/management/mgrControlers.js';
 var mainWorker, managerWorker;
 
 var reload = false;
