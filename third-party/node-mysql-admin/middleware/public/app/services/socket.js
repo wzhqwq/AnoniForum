@@ -30,7 +30,7 @@ angular.module('nodeadmin.socket', [])
   var socketFact = {};
   //hacky way to make this work in developer environments at specified port number
   socketFact.host = $location.host() !== "localhost" ? $location.host() + ':' + $location.$$port  : "localhost:" + $location.$$port;
-  socketFact.host += $location.pathname;
+  socketFact.host += $window.location.pathname;
 
   socketFact.connect = function (nameSpace) {
     if (!nameSpace) {
