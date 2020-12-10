@@ -34,9 +34,9 @@ angular.module('nodeadmin.socket', [])
 
   socketFact.connect = function (nameSpace) {
     if (!nameSpace) {
-      return io.connect(this.host, { forceNew: true });
+      return io.connect(this.host, { forceNew: true, path: $window.location.pathname + '/socket.io/' });
     } else {
-      return io.connect(this.host + "/" + nameSpace);
+      return io.connect(this.host + "/" + nameSpace, { path: $window.location.pathname + '/socket.io/' });
     }
   };
 
