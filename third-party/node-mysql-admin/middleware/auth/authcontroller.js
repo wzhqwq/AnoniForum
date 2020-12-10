@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 module.exports = {
 
   login: function (req, res) {
-    var hostComponents = req.body.mysqlHost.split(':');
+    var hostComponents = (req.body.mysqlHost || '').split(':');
     mysql.createConnection({
       user: req.body.mysqlUser,
       password: req.body.mysqlPassword,
