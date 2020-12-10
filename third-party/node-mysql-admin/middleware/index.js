@@ -11,11 +11,11 @@ var settings = require('./settings/settingsroutes.js');
 var system = require('./system/systemroutes.js');
 var home = require('./home/homeroutes.js');
 
-module.exports = function myadmin(router, server, app) {
+module.exports = function myadmin(router, server, app, ioPath) {
   'use strict';
 
   // ** Socket Connection
-  var io = sock(server);
+  var io = sock(server).path(ioPath);
 
   // ** Socket Controller
   require('./sockets/socketcontroller.js')(io);
