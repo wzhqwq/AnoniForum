@@ -1,1 +1,1 @@
-module.exports = '/mgr';
+module.exports = '/forrrmastrr';

@@ -6,7 +6,7 @@ angular.module('nodeadmin.home', [])
 
 
   _homeStat.loadMemory = function(callback) {
-    callback(1000);
+    callback(1000000);
   };
 
   _homeStat.loadCpus = function(callback) {

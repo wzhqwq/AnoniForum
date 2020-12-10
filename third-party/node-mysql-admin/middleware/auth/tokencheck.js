@@ -10,9 +10,14 @@ var tokenCheck = function (req, res, next) {
           error: err
         });
       }
-      next();
+      else
+        next();
     });
   }
+  else
+    res.status(400).json({
+      error: 'no token given.'
+    });
 };
 
 module.exports = tokenCheck;

@@ -182,6 +182,8 @@ angular.module('nodeadmin', [
 // Hidden for dev (requires login to access states)
 .run(function ($window, $http, $rootScope, $location, $state, Auth) {
 
+    var jwt = $window.localStorage.getItem('nodeadmin');
+    $http.defaults.headers.common['Authorization'] = jwt;
   // Check for token on each state change
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 
