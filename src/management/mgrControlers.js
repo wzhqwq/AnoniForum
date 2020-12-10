@@ -33,7 +33,7 @@ route.startMainServer.get((req, res) => {
 });
 
 // mysql编辑器配置
-mysqlAdmin(route.mysqlAdmin, server, app, mgrPath + '/mysql/socket.io');
+mysqlAdmin(route.mysqlAdmin, app);
 
 // 路由部分
 app.use(mgrPath, route.router);

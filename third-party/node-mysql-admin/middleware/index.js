@@ -1,6 +1,5 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var sock = require('socket.io');
 var fs = require('fs');
 var randomstring = require('randomstring')
 
@@ -11,14 +10,8 @@ var settings = require('./settings/settingsroutes.js');
 var system = require('./system/systemroutes.js');
 var home = require('./home/homeroutes.js');
 
-module.exports = function myadmin(router, server, app, ioPath) {
+module.exports = function myadmin(router, app) {
   'use strict';
-
-  // ** Socket Connection
-  var io = sock(server).path(ioPath);
-
-  // ** Socket Controller
-  require('./sockets/socketcontroller.js')(io);
 
   router(bodyParser.json());
   router(bodyParser.urlencoded({extended: true}));

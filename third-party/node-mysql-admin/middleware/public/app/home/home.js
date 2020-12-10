@@ -1,33 +1,23 @@
 /* jshint strict: false, camelcase: false */
 angular.module('nodeadmin.home', [])
-.factory('HSFactory', ['SocketFactory', function (SocketFactory){
+.factory('HSFactory', function (){
 
   var _homeStat = {};
 
-  _homeStat.socket = SocketFactory.connect('home');
 
   _homeStat.loadMemory = function(callback) {
-    this.socket.emit('pressure');
-    this.socket.on('memory', function (mem) {
-      callback(mem);
-    });
+    callback(0);
   };
 
   _homeStat.loadCpus = function(callback) {
-    this.socket.emit('clientcpu');
-    this.socket.on('servercpu', function (cpus) {
-      callback(cpus);
-    });
+    callback([{times: {sys: 0, user: 0, idle: 100}}]);
   };
 
-  _homeStat.endSocket = function(callback) {
-    this.socket.emit('endpressure');
-    this.socket.emit('endclientcpu');
-  };
+  _homeStat.endSocket = function(callback) {};
 
   return _homeStat;
 
-}])
+})
 .controller('HomeController', function ($scope, Stats, HSFactory) {
   $scope.loading = true;
   $scope.serverStats = {};

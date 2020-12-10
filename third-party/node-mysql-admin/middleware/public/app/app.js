@@ -3,7 +3,6 @@ angular.module('nodeadmin', [
   'nodeadmin.togglemenu',
   'nodeadmin.alertcenter',
   'nodeadmin.alertcenterfactory',
-  'nodeadmin.socket',
   'nodeadmin.home',
   'nodeadmin.auth',
   'nodeadmin.main',

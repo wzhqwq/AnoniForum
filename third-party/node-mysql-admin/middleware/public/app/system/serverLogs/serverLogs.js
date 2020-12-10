@@ -1,5 +1,5 @@
 angular.module('nodeadmin.system.logs', [])
-.controller('LogsController', ['$scope', 'SocketFactory', '$state', '$sce', function ($scope, SocketFactory, $state, $sce) {
+.controller('LogsController', ['$scope', function ($scope) {
 
     var first = ''
     var spanify = function (string) {
@@ -27,20 +27,8 @@ angular.module('nodeadmin.system.logs', [])
     };
 
   $scope.logfile = [];
-  var socket = SocketFactory.connect('system');
 
-  $scope.getLogs = function () {
-    socket.emit('getlogs');
-    socket.on('logs', function (log) {
-      log = $sce.trustAsHtml(spanify(log));
-      $scope.$apply($scope.logfile.unshift(log));
-    });
-  }
-  $scope.getLogs();
+  $scope.getLogs = function () {};
 
-  $scope.$on("$destroy", function () {
-    socket.removeListener('logs');
-    socket.emit('stoplogs');
-  });
-
+  $scope.$on("$destroy", function () {});
 }]);
