@@ -1,0 +1,19 @@
+.card,
+.alert {
+  border-radius: 10px;
+}
+.card {
+  border: none;
+  box-shadow: 0 0 2px #0003;
+}
+.card-header:first-child {
+  border-radius: 10px 10px 0 0;
+}
+.form-control {
+  border: none;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+}
+.btn {
+  border-radius: 8px;
+}
