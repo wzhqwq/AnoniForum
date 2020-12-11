@@ -44,7 +44,7 @@ exports.query = function (sql) {
       log('connections now:', connectedCount);
       connection.query('use anoni_base;').then(() => {
         connection.query(sql).then(data => {
-          pool.releaseConnection(connection);
+          pool.pool.releaseConnection(connection);
           connectedCount--;
           log('connections now:', connectedCount);
           res(data);
@@ -53,7 +53,7 @@ exports.query = function (sql) {
         })
         .catch(err => {
           log('query failed:', err.message);
-          pool.releaseConnection(connection);
+          pool.pool.releaseConnection(connection);
           connectedCount--;
           log('connections now:', connectedCount);
           rej(err);
@@ -69,7 +69,7 @@ exports.select = function (table, where) {
   return exports.query(`SELECT * FROM ${table}` + (where ? ` WHERE ${where};` : ';'));
 };
 exports.insert = function (table, items) {
-  return exports.query(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).join(',')});`);
+  return exports.query(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => mysql.escape(item)).join(',')});`);
 };
 exports.update = function (table, items, where) {
   var entries = [];

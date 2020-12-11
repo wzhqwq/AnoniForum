@@ -70,7 +70,7 @@ route.signUp.post((req, res) => {
     if (user.length != 0)
       res.json({jwt: '', err: '学号已被注册！'});
     else {
-      db.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: randomStr.generate()})
+      db.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: `${req.ip}`, token_secret: randomStr.generate()})
       .then(() => {
         auth(sdu_id, password, req.ip, salts[req.ip].salt)
         .then(({jwt}) => {
