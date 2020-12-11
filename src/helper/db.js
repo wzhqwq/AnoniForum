@@ -2,11 +2,17 @@ const mysql = require('promise-mysql');
 const passwd = require('../secrets').sqlPass;
 const log = require('./logger').log;
 
-const pool = mysql.createPool({
+var pool;
+mysql.createPool({
   host: 'localhost',
   port: '3306',
   password: passwd,
   user: 'root'
+}).then(p => {
+  pool = p;
+  log('DataBase: connected.');
+}).catch(e => {
+  log('DataBase: connection failed:', e.message);
 });
 
 var disconnecting = false;
@@ -23,7 +29,7 @@ exports.disconnect = function () {
         res();
       };
   });
-}
+};
 
 exports.query = function (sql) {
   log('DataBase: query:', sql);
