@@ -4,9 +4,9 @@ const db = require('../helper/db');
 const auth = require('../helper/auth').auth;
 const route = require('./userRoute');
 const salt1 = require('../secrets').salt;
-const crypto = require('crypto');
 const log = require('../helper/logger').log;
 const bodyParser = require('body-parser');
+const randomStr = require('randomstring');
 
 const app = express();
 const server = http.createServer(app);
@@ -70,7 +70,7 @@ route.signUp.post((req, res) => {
     if (user.length != 0)
       res.json({jwt: '', err: '学号已被注册！'});
     else {
-      db.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: crypto.randomBytes(32).toString('base64')})
+      db.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: randomStr.generate()})
       .then(() => {
         auth(sdu_id, password, req.ip, salts[req.ip].salt)
         .then(({jwt}) => {
@@ -92,7 +92,7 @@ route.signUp.post((req, res) => {
 
 route.getSalt.get((req, res) => {
   var ip = req.ip;
-  salts[ip] = {salt: crypto.randomBytes(32), date: new Date()};
+  salts[ip] = {salt: randomStr.generate(), date: new Date()};
   res.json({salt1: salt1, salt2: salts[ip].salt});
 });
 
