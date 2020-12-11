@@ -43,6 +43,7 @@ exports.query = function (sql) {
         countZeroHandler();
       })
       .catch(err => {
+        log('query failed:', err.message);
         connection.releaseConnection(connection);
         connectedCount--;
         rej(err);
@@ -54,7 +55,7 @@ exports.query = function (sql) {
 };
 
 exports.select = function (table, where) {
-  return exports.query(`SELECT * FROM ${table}` + (where ? `WHERE ${where};` : ';'));
+  return exports.query(`SELECT * FROM ${table}` + (where ? ` WHERE ${where};` : ';'));
 };
 exports.insert = function (table, items) {
   var names = [], values = [];
@@ -70,5 +71,5 @@ exports.update = function (table, items, where) {
   for (item in items)
     if (!(items[item] instanceof Object))
       entries.push(`${item}=${mysql.escape(items[item])}`);
-  return exports.query(`UPDATE ${table} SET ${entries.join(',')}` + (where ? `WHERE ${where};` : ';'));
+  return exports.query(`UPDATE ${table} SET ${entries.join(',')}` + (where ? ` WHERE ${where};` : ';'));
 };
