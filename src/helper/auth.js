@@ -43,15 +43,18 @@ exports.auth = function (sdu_id, passwd, address, salt) {
     .then(user => {
       if (user.length == 0)
         rej('学号未注册！');
-      else if (crypto.createHmac('sha256', salt).update((user = user[0]).passwd).digest('base64') != passwd)
-        rej('密码错误');
       else {
-        if (user.last_remote != address)
-          db.update('users', {last_remote: `'${address}'`}, `id=${user.id}`);
-        var data = {id: user.id};
-        var dataString = Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
-        var jwt = dataString + '.' + crypto.createHmac('sha256', user.token_secret).update(dataString).digest('base64');
-        res({jwt: jwt, user: user});
+        user = user[0];
+        if ((salt ? crypto.createHmac('sha256', salt).update(user.passwd).digest('base64') : user.passwd) != passwd)
+          rej('密码错误');
+        else {
+          if (user.last_remote != address)
+            db.update('users', {last_remote: address}, `id=${user.id}`);
+          var data = {id: user.id};
+          var dataString = Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
+          var jwt = dataString + '.' + crypto.createHmac('sha256', user.token_secret).update(dataString).digest('base64');
+          res({jwt: jwt, user: user});
+        }
       }
     })
     .catch(e => {
