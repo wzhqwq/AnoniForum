@@ -63,18 +63,11 @@ exports.select = function (table, where) {
   return exports.query(`SELECT * FROM ${table}` + (where ? ` WHERE ${where};` : ';'));
 };
 exports.insert = function (table, items) {
-  var names = [], values = [];
-  for (item in items)
-    if (!(items[item] instanceof Object)) {
-      names.push(item);
-      values.push(mysql.escape(items[item]));
-    }
-  return exports.query(`INSERT INTO ${table} (${names.join(',')}) VALUES(${values.join(',')});`);
+  return exports.query(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).join(',')});`);
 };
 exports.update = function (table, items, where) {
   var entries = [];
   for (item in items)
-    if (!(items[item] instanceof Object))
-      entries.push(`${item}=${mysql.escape(items[item])}`);
+    entries.push(`${item}=${mysql.escape(items[item])}`);
   return exports.query(`UPDATE ${table} SET ${entries.join(',')}` + (where ? ` WHERE ${where};` : ';'));
 };
