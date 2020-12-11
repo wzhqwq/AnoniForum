@@ -1,8 +1,8 @@
 window.addEventListener('load', () => {
   var salts;
   axios.get('/user/getsalt')
-  .then(data => {
-    salts = data;
+  .then(response => {
+    salts = response.data;
   })
   .catch(err => {
     console.error(err);
@@ -25,7 +25,8 @@ window.addEventListener('load', () => {
           password: Crypto(CryptoJS.HmacSHA256(this.password, salts[0]).toString(), salts[1]).toString(),
           sdu_id: this.sdu_id
         })
-        .then(data => {
+        .then(response => {
+          var data = response.data;
           if (data.err != '')
             this.err = data.err;
           else {

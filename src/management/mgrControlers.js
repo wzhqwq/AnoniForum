@@ -3,12 +3,14 @@ const http = require('http');
 // const mysqlAdmin = require('../../third-party/node-mysql-admin');
 const route = require('./mgrRoutes');
 const mgrPath = require('../secrets.js').mgrPath;
+const log = require('../helper/logger').log;
+const db = require('../helper/db');
 
 const app = express();
 const server = http.createServer(app);
 
 server.listen(20715, "localhost", () => {
-	console.log("Manager server is running.");
+	log("Manager server is running.");
 });
 
 // POST部分
@@ -16,17 +18,17 @@ server.listen(20715, "localhost", () => {
 // 会改成POST的
 route.reloadAllServer.get((req, res) => {
   res.send('Ok, servers start to reboot...');
-  console.log("Manager: reboot-all-servers signal emerged.");
+  log("Manager: reboot-all-servers signal emerged.");
   process.send('reload');
 });
 route.closeMainServer.get((req, res) => {
   res.send('Ok, main server start to close...');
-  console.log("Manager: close-main-server signal emerged.");
+  log("Manager: close-main-server signal emerged.");
   process.send("closeMain");
 });
 route.startMainServer.get((req, res) => {
   res.send('Ok, main server is starting...');
-  console.log("Manager: start-main-server signal emerged.");
+  log("Manager: start-main-server signal emerged.");
   process.send("startMain");
 });
 
@@ -43,8 +45,10 @@ app.use(require('../helper/auth').checkBefore);
 process.on('message', msg => {
   if (msg == 'exit') {
     // do some work
-    server.close();
-    console.log('ManagerWorker: Manager server closed.');
-    process.exit(0);
+    db.disconnect().then(() => {
+      server.close();
+      log('ManagerWorker: Manager server closed.');
+      process.exit(0);
+    });
   }
 })

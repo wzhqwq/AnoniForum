@@ -5,16 +5,22 @@ const auth = require('../helper/auth').auth;
 const route = require('./userRoute');
 const salt1 = require('../secrets').salt;
 const crypto = require('crypto');
+const log = require('../helper/logger').log;
 
 const app = express();
 const server = http.createServer(app);
 
 server.listen(20716, 'localhost', () => {
-  console.log('User server is running.');
+  log('User server is running.');
 });
 
 exports.close = function () {
-  server.close();
+  return new Promise(res => {
+    db.disconnect().then(() => {
+      server.close();
+      res();
+    });
+  })
 };
 
 // Route

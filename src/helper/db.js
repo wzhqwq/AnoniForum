@@ -1,5 +1,6 @@
 const mysql = require('promise-mysql');
 const passwd = require('../secrets').sqlPass;
+const log = require('./logger').log;
 
 const pool = mysql.createPool({
   host: 'localhost',
@@ -25,7 +26,7 @@ exports.disconnect = function () {
 }
 
 exports.query = function (sql) {
-  console.log('query:', sql);
+  log('DataBase: query:', sql);
   return new Promise((res, rej) => {
     if (disconnecting) {
       rej(new Error("Server is closing"));

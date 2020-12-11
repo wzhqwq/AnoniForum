@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const db = require('./db');
 
 exports.check = function (jwt, address) {
-  return Promise((res, rej) => {
+  return new Promise((res, rej) => {
     var parts = jwt.split('.');
     if (parts.length != 2) {
       rej('bad jwt.');
@@ -38,7 +38,7 @@ exports.check = function (jwt, address) {
 };
 
 exports.auth = function (sdu_id, passwd, address, salt) {
-  return Promise((res, rej) => {
+  return new Promise((res, rej) => {
     db.select('users', `sdu_id=${sdu_id}`)
     .then(user => {
       if (!user)
@@ -61,9 +61,9 @@ exports.auth = function (sdu_id, passwd, address, salt) {
 };
 
 exports.checkBefore = function (req, res, next) {
-  var jwt = '' || req.cookies.jwt;
+  var jwt = (req.cookies || {}).jwt || '';
   exports.check(jwt, req.ip)
-  .next(() => {
+  .then(() => {
     next();
   })
   .catch(e => {
