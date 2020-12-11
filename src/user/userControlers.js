@@ -43,7 +43,7 @@ route.logIn.post((req, res) => {
     res.status(400).json({jwt: '', err: '格式错误'});
     return;
   }
-  sdu_id = sdu_id.splice(0, 4);
+  sdu_id = sdu_id.replace(/^2020/, '');
 
   auth(sdu_id, password, req.ip, salts[req.ip].salt)
   .then(({jwt}) => {
@@ -63,7 +63,7 @@ route.signUp.post((req, res) => {
     res.status(400).json({jwt: '', err: '格式错误'});
     return;
   }
-  sdu_id = sdu_id.splice(0, 4);
+  sdu_id = sdu_id.replace(/^2020/, '');
 
   db.select('users', `sdu_id=${sdu_id}`)
   .then(user => {
