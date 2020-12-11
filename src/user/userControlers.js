@@ -32,7 +32,7 @@ route.logIn.post((req, res) => {
     return;
   }
   var password = req.query.password || '';
-  var sdu_id = req.query.sduid || 'a';
+  var sdu_id = req.query.sdu_id || 'a';
 
   if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
@@ -52,7 +52,7 @@ route.logIn.post((req, res) => {
 
 route.signUp.post((req, res) => {
   var password = req.query.password || '';
-  var sdu_id = req.query.sduid || 'a';
+  var sdu_id = req.query.sdu_id || 'a';
 
   if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
