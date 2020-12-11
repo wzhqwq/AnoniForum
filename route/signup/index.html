@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>注册论坛匿名用户</title>
+  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="../../public/js/signup.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>注册</h1>
+    <form role="form" id="form">
+      <div class="form-group" v-bind:class="{'has-error': sdu_id.length != 12}">
+        <label for="sdu-id" class="col-sm-2 control-label">学号</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="sdu-id" placeholder="请输入12位学号" oninput="value = value.replace(/[^\d]/g, '')" v-model="sdu_id">
+        </div>
+        <div class="alert alert-danger" v-if="sdu_id_err != ''">{{ sdu_id_err }}</div>
+      </div>
+      <div class="form-group" v-bind:class="{'has-error': !passwd_correct}">
+        <label for="password" class="col-sm-2 control-label">设置密码</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" placeholder="设置密码" v-model="password">
+        </div>
+        <div class="alert alert-danger" v-if="password_err != ''">{{ password_err }}</div>
+      </div>
+      <div class="form-group" v-bind:class="{'has-error': password != confirm}">
+        <label for="password-confirm" class="col-sm-2 control-label">确认密码</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password-confirm" placeholder="输入确认密码" v-model="confirm">
+        </div>
+        <div class="alert alert-danger" v-if="password != confirm">确认密码与密码不同</div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-primary" v-bind:disabled="sdu_id.length != 12 || !passwd_correct || password != confirm" v-on:click="submit">注册</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

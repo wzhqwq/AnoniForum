@@ -1,12 +1,10 @@
 const express = require('express');
 const http = require('http');
-const mysql = require('mysql');
-const mysqlAdmin = require('../../third-party/node-mysql-admin');
+// const mysqlAdmin = require('../../third-party/node-mysql-admin');
 const route = require('./mgrRoutes');
-const mgrPath = require('../mgrPath.js');
+const mgrPath = require('../secrets.js').mgrPath;
 
 const app = express();
-const adminApp = express();
 const server = http.createServer(app);
 
 server.listen(20715, "localhost", () => {
@@ -33,10 +31,11 @@ route.startMainServer.get((req, res) => {
 });
 
 // mysql编辑器配置
-mysqlAdmin(route.mysqlAdmin, app);
+// mysqlAdmin(route.mysqlAdmin, app);
 
 // 路由部分
 app.use(mgrPath, route.router);
+app.use(require('../helper/auth').checkBefore);
 
 // mysql部分
 

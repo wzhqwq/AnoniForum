@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录匿名论坛</title>
+  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="../../public/js/login.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>登录</h1>
+    <form role="form" id="form">
+      <div class="alert alert-danger" v-if="err != ''">{{ err }}</div>
+      <div class="form-group" v-bind:class="{'has-error': sdu_id.length != 12}">
+        <label for="sdu-id" class="col-sm-2 control-label">学号</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="sdu-id" placeholder="请输入12位学号" oninput="value = value.replace(/[^\d]/g, '')" v-model="sdu_id">
+        </div>
+      </div>
+      <div class="form-group" v-bind:class="{'has-error': password.length == 0}">
+        <label for="password" class="col-sm-2 control-label">密码</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" placeholder="输入密码" v-model="password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-primary" v-bind:disabled="sdu_id.length != 12 || password.length == 0" v-on:click="submit">登录</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

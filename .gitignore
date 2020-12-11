@@ -105,5 +105,4 @@ dist
 
 web-service.exe
 .DS_Store
-mgrPath.js
-third-party/node-mysql-admin/middleware/secret.js
+secrets.js
