@@ -22,7 +22,7 @@ window.addEventListener('load', () => {
           return;
         }
         axios.post('/user/login', {
-          password: Crypto(CryptoJS.HmacSHA256(this.password, salts[0]).toString(), salts[1]).toString(),
+          password: Crypto(CryptoJS.HmacSHA256(this.password, salts.salt1).toString(), salts.salt2).toString(),
           sdu_id: this.sdu_id
         })
         .then(response => {

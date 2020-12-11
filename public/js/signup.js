@@ -32,7 +32,7 @@ window.addEventListener('load', () => {
 
         axios.post('/user/signup', {
           sdu_id: this.sdu_id,
-          password: CryptoJS.HmacSHA256(this.password, salts[0]).toString()
+          password: CryptoJS.HmacSHA256(this.password, salts.salt1).toString()
         })
         .then(response => {
           var data = response.data;
