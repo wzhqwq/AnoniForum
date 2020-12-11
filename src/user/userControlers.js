@@ -67,7 +67,7 @@ route.signUp.post((req, res) => {
 
   db.select('users', `sdu_id=${sdu_id}`)
   .then(user => {
-    if (user)
+    if (user.length != 0)
       res.json({jwt: '', err: '学号已被注册！'});
     else {
       db.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: crypto.randomBytes(32)})
@@ -97,7 +97,3 @@ route.getSalt.get((req, res) => {
 });
 
 app.use('/user', route.router);
-
-// db = password ^ salt1
-// login = password ^ salt2
-// db ^ salt2 = login ^ salt1

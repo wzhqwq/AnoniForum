@@ -22,9 +22,9 @@ exports.check = function (jwt, address) {
     }
     db.select('users', `id=${data.id}`)
     .then(user => {
-      if (!user)
+      if (user.length == 0)
         rej('bad request: id not found')
-      else if (user.last_remote != address)
+      else if ((user = user[0]).last_remote != address)
         rej('登录IP发生改变，需要重新登录');
       else if (crypto.createHmac('sha256', parts[0]).update(user.token_secret).digest('base64') == parts[1])
         res(user);
@@ -41,9 +41,9 @@ exports.auth = function (sdu_id, passwd, address, salt) {
   return new Promise((res, rej) => {
     db.select('users', `sdu_id=${sdu_id}`)
     .then(user => {
-      if (!user)
+      if (user.length == 0)
         rej('学号未注册！');
-      else if (crypto.createHmac('sha256', salt).update(user.passwd).digest('base64') != passwd)
+      else if (crypto.createHmac('sha256', salt).update((user = user[0]).passwd).digest('base64') != passwd)
         rej('密码错误');
       else {
         if (user.last_remote != address)
