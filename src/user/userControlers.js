@@ -28,7 +28,7 @@ route.logIn.post((req, res) => {
   var password = req.query.password || '';
   var sdu_id = req.query.sduid || 'a';
 
-  if (password.length != 32 || password.match(/[^0-9a-f]/g) ||
+  if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
     res.status(400).json({jwt: '', err: '格式错误'});
     return;
@@ -48,7 +48,7 @@ route.signUp.post((req, res) => {
   var password = req.query.password || '';
   var sdu_id = req.query.sduid || 'a';
 
-  if (password.length != 32 || password.match(/[^0-9a-f]/g) ||
+  if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
     res.status(400).json({jwt: '', err: '格式错误'});
     return;

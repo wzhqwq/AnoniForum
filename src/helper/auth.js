@@ -26,7 +26,7 @@ exports.check = function (jwt, address) {
         rej('bad request: id not found')
       else if (user.last_remote != address)
         rej('登录IP发生改变，需要重新登录');
-      else if (crypto.createHash('sha256').update(parts[0] + '.' + user.token_secret).digest('base64') == parts[1])
+      else if (crypto.createHmac('sha256', parts[0]).update(user.token_secret).digest('base64') == parts[1])
         res(user);
       else
         rej('bad jwt token: mismatch');
@@ -43,14 +43,14 @@ exports.auth = function (sdu_id, passwd, address, salt) {
     .then(user => {
       if (!user)
         rej('学号未注册！');
-      else if (crypto.createHash('sha256').update(user.passwd + '.' + salt).digest('base64') != passwd)
+      else if (crypto.createHmac('sha256', salt).update(user.passwd).digest('base64') != passwd)
         rej('密码错误');
       else {
         if (user.last_remote != address)
           db.update('users', {last_remote: address}, `id=${user.id}`);
         var data = {id: user.id};
         var dataString = Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
-        var jwt = dataString + '.' + crypto.createHash('sha256').update(dataString + '.' + user.token_secret).digest('base64');
+        var jwt = dataString + '.' + crypto.createHmac('sha256', user.token_secret).update(dataString).digest('base64');
         res({jwt: jwt, user: user});
       }
     })

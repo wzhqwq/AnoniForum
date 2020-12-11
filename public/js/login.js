@@ -14,7 +14,7 @@ window.addEventListener('load', () => {
       password: '',
       err: ''
     },
-    method: {
+    methods: {
       submit: function (e) {
         e.preventDefault();
         if (!this.sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
@@ -22,7 +22,7 @@ window.addEventListener('load', () => {
           return;
         }
         axios.post('/user/login', {
-          password: this.password,
+          password: Crypto(CryptoJS.HmacSHA256(this.password, salts[0]).toString(), salts[1]).toString(),
           sdu_id: this.sdu_id
         })
         .then(data => {

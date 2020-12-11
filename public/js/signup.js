@@ -1,4 +1,12 @@
 window.addEventListener('load', () => {
+  var salts;
+  axios.get('/user/getsalt')
+  .then(data => {
+    salts = data;
+  })
+  .catch(err => {
+    console.error(err);
+  });
   new Vue({
     el: '#form',
     data: {
@@ -24,7 +32,7 @@ window.addEventListener('load', () => {
 
         axios.post('/user/signup', {
           sdu_id: this.sdu_id,
-          password: this.password
+          password: CryptoJS.HmacSHA256(this.password, salts[0]).toString()
         })
         .then(data => {
           if (data.err != '')
