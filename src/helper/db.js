@@ -35,24 +35,27 @@ exports.query = function (sql) {
     pool.getConnection()
     .then(connection => {
       connectedCount++;
+      log('connections now:', connectedCount);
       connection.query('use anoni_base;').then(() => {
         connection.query(sql).then(data => {
-          connection.releaseConnection(connection);
+          pool.releaseConnection(connection);
           connectedCount--;
+          log('connections now:', connectedCount);
           res(data);
           if (connectedCount == 0 && countZeroHandler)
           countZeroHandler();
         })
         .catch(err => {
           log('query failed:', err.message);
-          connection.releaseConnection(connection);
+          pool.releaseConnection(connection);
           connectedCount--;
+          log('connections now:', connectedCount);
           rej(err);
           if (connectedCount == 0 && countZeroHandler)
           countZeroHandler();
         });
       });
-    })
+    });
   })
 };
 
