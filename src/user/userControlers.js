@@ -6,6 +6,7 @@ const route = require('./userRoute');
 const salt1 = require('../secrets').salt;
 const crypto = require('crypto');
 const log = require('../helper/logger').log;
+const bodyParser = require('body-parser');
 
 const app = express();
 const server = http.createServer(app);
@@ -13,6 +14,9 @@ const server = http.createServer(app);
 server.listen(20716, 'localhost', () => {
   log('User server is running.');
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 exports.close = function () {
   return new Promise(res => {
@@ -31,8 +35,8 @@ route.logIn.post((req, res) => {
     res.status(400).json({jwt: '', err: '请先获取盐'});
     return;
   }
-  var password = req.body.password || '';
-  var sdu_id = req.body.sduid || 'a';
+  var password = req.param('password') || '';
+  var sdu_id = req.param('sduid') || 'a';
 
   if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
@@ -51,8 +55,8 @@ route.logIn.post((req, res) => {
 });
 
 route.signUp.post((req, res) => {
-  var password = req.body.password || '';
-  var sdu_id = req.body.sduid || 'a';
+  var password = req.param('password') || '';
+  var sdu_id = req.param('sduid') || 'a';
 
   if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {

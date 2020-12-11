@@ -5,9 +5,13 @@ const route = require('./mgrRoutes');
 const mgrPath = require('../secrets.js').mgrPath;
 const log = require('../helper/logger').log;
 const db = require('../helper/db');
+const bodyParser = require('body-parser');
 
 const app = express();
 const server = http.createServer(app);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 server.listen(20715, "localhost", () => {
 	log("Manager server is running.");
