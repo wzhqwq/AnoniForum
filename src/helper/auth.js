@@ -49,7 +49,7 @@ exports.auth = function (sdu_id, passwd, address, salt) {
         rej('学号未注册！');
       else {
         user = user[0];
-        if ((salt ? crypto.createHmac('sha256', salt).update(user.passwd).digest('base64') : user.passwd) != passwd)
+        if ((salt ? crypto.createHmac('sha256', salt).update(user.passwd).digest('hex') : user.passwd) != passwd)
           rej('密码错误');
         else {
           if (user.last_remote != address)
