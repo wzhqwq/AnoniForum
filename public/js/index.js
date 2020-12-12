@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 window.addEventListener('load', () => {
   var login_vm = new Vue({
     el: '#login-needed',

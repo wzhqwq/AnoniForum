@@ -52,3 +52,16 @@
   border-bottom: 1px #EEE solid;
   padding: .75em 0;
 }
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  margin-top: 30px;
+}
+.search-bar > button {
+  margin-left: 8px;
+}
+button > svg {
+  width: 20px;
+  height: 20px;
+}
