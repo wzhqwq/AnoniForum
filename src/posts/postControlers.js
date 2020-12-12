@@ -33,7 +33,7 @@ route.getEssentials.get((req, res) => {
   .select('issues', 'essential = 1')
   .append(
     (new DB).select('issues', 'essential = 0')
-    .sort('id', 'DESC', null, 15)
+    .sort('issue_id', 'DESC', null, 15)
   )
   .query()
   .then(data => {

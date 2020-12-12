@@ -35,7 +35,7 @@ exports.close = function () {
 var salts = {};
 route.logIn.post((req, res) => {
   if (!salts[req.ip]) {
-    res.status(400).json({jwt: '', err: '请先获取盐'});
+    res.json({jwt: '', err: '页面失效了，请刷新再试！'});
     return;
   }
   var password = req.body.password || '';
