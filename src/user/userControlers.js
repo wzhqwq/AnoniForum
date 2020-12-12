@@ -1,7 +1,9 @@
 const express = require('express');
 const http = require('http');
 const db = require('../helper/db');
+const DB = db.db;
 const auth = require('../helper/auth').auth;
+const check = require('../helper/auth').checkBefore;
 const route = require('./userRoute');
 const salt1 = require('../secrets').salt;
 const log = require('../helper/logger').log;
@@ -17,6 +19,7 @@ server.listen(20716, 'localhost', () => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(check);
 
 exports.close = function () {
   return new Promise(res => {
@@ -65,12 +68,14 @@ route.signUp.post((req, res) => {
   }
   sdu_id = sdu_id.replace(/^2020/, '');
 
-  db.select('users', `sdu_id=${sdu_id}`)
+  (new DB())
+  .select('users', `sdu_id=${sdu_id}`).query()
   .then(user => {
     if (user.length != 0)
       res.json({jwt: '', err: '学号已被注册！'});
     else {
-      db.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: randomStr.generate()})
+      (new DB())
+      .insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: randomStr.generate()})
       .then(() => {
         auth(sdu_id, password, req.ip)
         .then(({jwt}) => {
@@ -90,10 +95,38 @@ route.signUp.post((req, res) => {
   });
 });
 
+// GET
+
 route.getSalt.get((req, res) => {
   var ip = req.ip;
   salts[ip] = {salt: randomStr.generate(), date: new Date()};
   res.json({salt1: salt1, salt2: salts[ip].salt});
+});
+
+const two_weeks = 14 * 24 * 60 * 60 * 1000;
+route.getBulletin.get((req, res) => {
+  (new DB())
+  .select('bulletin', 'to_top = 1')
+  .appendSelect('bulletin b', null, 5)
+  .query()
+  .then(data => {
+    res.json(data);
+  })
+  .catch(err => {
+    res.status(500).json({code: 'DBERR', err: '数据库出错: ' + err.message});
+  });
+});
+
+route.getTop.get((req, res) => {
+  (new DB())
+  .sort('score', 'DESC', null, 10)
+  .query()
+  .then(data => {
+    res.json(data);
+  })
+  .catch(err => {
+    res.status(500).json({code: 'DBERR', err: '数据库出错: ' + err.message});
+  });
 });
 
 app.use('/user', route.router);

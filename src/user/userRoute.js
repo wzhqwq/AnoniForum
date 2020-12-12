@@ -1,9 +1,12 @@
 const router = require('express').Router();
 
-var routers = {router: router};
-
-routers.signUp = router.route('/signup');
-routers.logIn = router.route('/login');
-routers.getSalt = router.route('/getsalt');
+var routers = {
+  router: router,
+  signUp: router.route('/signup'),
+  logIn: router.route('/login'),
+  getSalt: router.route('/getsalt'),
+  getBulletin: router.route('/getbulletin'),
+  getTop: router.route('/gettop')
+};
 
 module.exports = routers;

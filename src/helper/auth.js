@@ -5,7 +5,7 @@ exports.check = function (jwt, address) {
   return new Promise((res, rej) => {
     var parts = jwt.split('.');
     if (parts.length != 2) {
-      rej('bad jwt.');
+      rej('jwt格式错误');
       return;
     }
     var data;
@@ -13,26 +13,26 @@ exports.check = function (jwt, address) {
       data = JSON.parse(Buffer.from(parts[0], 'base64').toString('utf-8'));
     }
     catch (e) {
-      rej('bad jwt data: ' + e.message);
+      rej('jwt解析错误: ' + e.message);
       return;
     }
     if (!data.id || typeof data.id != 'number') {
-      rej('bad jwt data: illegal id');
+      rej('用户id不合法');
       return;
     }
     db.select('users', `id=${data.id}`)
     .then(user => {
       if (user.length == 0)
-        rej('bad request: id not found')
+        rej('用户不存在')
       else if ((user = user[0]).last_remote != address)
-        rej('登录IP发生改变，需要重新登录');
+        rej('登录IP发生改变');
       else if (crypto.createHmac('sha256', parts[0]).update(user.token_secret).digest('base64') == parts[1])
         res(user);
       else
-        rej('bad jwt token: mismatch');
+        rej('jwt验证失败');
     })
     .catch(e => {
-      rej('bad request: database error: ' + e.message);
+      rej('数据库出错: ' + e.message);
     });
   });
 };
@@ -64,15 +64,20 @@ exports.auth = function (sdu_id, passwd, address, salt) {
 };
 
 exports.checkBefore = function (req, res, next) {
-  var jwt = (req.cookies || {}).jwt || '';
+  if (req.path == '/user/login' || req.path == '/user/signup' || req.path == '/user/getsalt') {
+    next();
+    return;
+  }
+  var jwt = (req.cookies || {}).jwt;
+  if (!jwt || jwt.length == 0) {
+    res.status(403).json({code: 'LOGIN', note: ''});
+    return;
+  }
   exports.check(jwt, req.ip)
   .then(() => {
     next();
   })
   .catch(e => {
-    if (req.method == 'GET')
-      res.redirect('/login');
-    else
-      res.status(403).json({code: 'MALJWT', note: e});
+    res.status(403).json({code: 'MALJWT', note: e});
   });
 };

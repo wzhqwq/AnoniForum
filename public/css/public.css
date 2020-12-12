@@ -2,6 +2,10 @@
 .alert {
   border-radius: 10px;
 }
+.list-group,
+.form-control {
+  border-radius: 8px;
+}
 .card {
   border: none;
   box-shadow: 0 0 2px #0003;
@@ -11,9 +15,40 @@
 }
 .form-control {
   border: none;
-  border-radius: 8px;
   background-color: #f5f5f5;
 }
 .btn {
   border-radius: 8px;
+}
+.center-loader {
+  width: 100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  animation: change-color 4s infinite;
+}
+.center-loader > span {
+  line-height: 2em;
+  color: var(--gray-dark);
+}
+@keyframes change-color {
+  0%,
+  100% {
+    color: var(--blue);
+  }
+  25% {
+    color: var(--pink);
+  }
+  50% {
+    color: var(--orange);
+  }
+  75% {
+    color: var(--green);
+  }
+}
+
+.post-block {
+  border-bottom: 1px #EEE solid;
+  padding: .75em 0;
 }
