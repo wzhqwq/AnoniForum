@@ -28,7 +28,7 @@ exports.check = function (jwt, address) {
         rej('用户不存在')
       else if ((user = user[0]).last_remote != address)
         rej('登录IP发生改变');
-      else if (crypto.createHmac('sha256', parts[0]).update(user.token_secret).digest('base64') == parts[1])
+      else if (crypto.createHmac('sha256', user.token_secret).update(parts[0]).digest('base64') == parts[1])
         res(user);
       else
         rej('jwt验证失败');
