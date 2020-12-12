@@ -54,7 +54,7 @@ exports.auth = function (sdu_id, passwd, address, salt) {
         else {
           if (user.last_remote != address)
             (new DB()).update('users', {last_remote: address}, `id=${user.u_id}`);
-          var data = {id: user.u_id};
+          var data = {u_id: user.u_id};
           var dataString = Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
           var jwt = dataString + '.' + crypto.createHmac('sha256', user.token_secret).update(dataString).digest('base64');
           res({jwt: jwt, user: user});
