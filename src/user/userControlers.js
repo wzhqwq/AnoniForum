@@ -69,7 +69,8 @@ route.signUp.post((req, res) => {
   sdu_id = sdu_id.replace(/^2020/, '');
 
   (new DB())
-  .select('users', `sdu_id=${sdu_id}`).query()
+  .select('users', `sdu_id=${sdu_id}`)
+  .query()
   .then(user => {
     if (user.length != 0)
       res.json({jwt: '', err: '学号已被注册！'});

@@ -3,7 +3,8 @@ window.addEventListener('load', () => {
     el: '#login-needed',
     data: {
       login_needed: true,
-      login_note: ''
+      login_note: '',
+      location: location
     }
   });
   var bulletin_vm = new Vue({

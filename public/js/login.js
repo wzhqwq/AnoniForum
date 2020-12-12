@@ -33,7 +33,7 @@ window.addEventListener('load', () => {
             this.err = '';
             var d = new Date();
             d.setTime(d.getTime() + (7*24*60*60*1000));
-            document.cookies = `wjt=${data.wjt};expires=${d.toUTCString()};path=/`;
+            document.cookies = `jwt=${data.jwt};expires=${d.toUTCString()};path=/`;
             location.href = (location.search.match(/fb=[^&]*/) || ['fb=/'])[0].replace(/^fb=/, '');
           }
         })
