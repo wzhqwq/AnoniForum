@@ -31,8 +31,12 @@ exports.disconnect = function () {
   });
 };
 
-exports.query = function (sql) {
-  log('DataBase: query:', sql);
+var db = function () {
+  this.sql = '';
+}
+db.prototype.query = function () {
+  this.sql += ';';
+  log('DataBase: query:', this.sql);
   return new Promise((res, rej) => {
     if (disconnecting) {
       rej(new Error("Server is closing"));
@@ -43,7 +47,7 @@ exports.query = function (sql) {
       connectedCount++;
       log('connections now:', connectedCount);
       connection.query('use anoni_base;').then(() => {
-        connection.query(sql).then(data => {
+        connection.query(this.sql).then(data => {
           pool.pool.releaseConnection(connection);
           connectedCount--;
           log('connections now:', connectedCount);
@@ -65,15 +69,37 @@ exports.query = function (sql) {
   })
 };
 
-exports.select = function (table, where) {
-  return exports.query(`SELECT * FROM ${table}` + (where ? ` WHERE ${where};` : ';'));
+db.prototype.select = function (table, where, limit) {
+  this.sql += (limit ? '(' : '') + `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit})` : '');
+  return this;
 };
-exports.insert = function (table, items) {
-  return exports.query(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => mysql.escape(item)).join(',')});`);
+db.prototype.insert = function (table, items) {
+  this.sql = `INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => mysql.escape(item)).join(',')})`;
+  return this.query();
 };
-exports.update = function (table, items, where) {
+db.prototype.update = function (table, items, where) {
   var entries = [];
   for (item in items)
     entries.push(`${item}=${mysql.escape(items[item])}`);
-  return exports.query(`UPDATE ${table} SET ${entries.join(',')}` + (where ? ` WHERE ${where};` : ';'));
+  this.sql = `UPDATE ${table} SET ${entries.join(',')} WHERE ${where}`;
+  return this.query();
 };
+db.prototype.appendSelect = function (table, where, limit) {
+  this.sql += ' UNION ALL ';
+  return this.select(table, where, limit);
+}
+db.prototype.append = function (db) {
+  this.sql += ' UNION ALL ' + db.sql;
+  return this;
+}
+// table1 < table2
+db.prototype.join = function (table1, table2, both) {
+  this.select(table1);
+  this.sql += ` a STRAIGHT_JOIN ${table2} b ON a.${both} = b.${both}`;
+  return this.query();
+}
+db.prototype.sort = function (key, order, where, limit) {
+  this.sql = (limit ? '(' : '') + this.sql + `ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit})` : '');
+}
+
+exports.db = db;
