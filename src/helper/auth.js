@@ -22,6 +22,7 @@ exports.check = function (jwt, address) {
     }
     (new DB())
     .select('users', `id=${data.id}`)
+    .query()
     .then(user => {
       if (user.length == 0)
         rej('用户不存在')
@@ -42,6 +43,7 @@ exports.auth = function (sdu_id, passwd, address, salt) {
   return new Promise((res, rej) => {
     (new DB())
     .select('users', `sdu_id=${sdu_id}`)
+    .query()
     .then(user => {
       if (user.length == 0)
         rej('学号未注册！');
