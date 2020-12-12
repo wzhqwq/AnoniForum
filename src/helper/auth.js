@@ -72,7 +72,7 @@ exports.checkBefore = function (req, res, next) {
     next();
     return;
   }
-  var jwt = (req.cookies || {}).jwt;
+  var jwt = req.body.jwt;
   if (!jwt || jwt.length == 0) {
     res.status(403).json({code: 'LOGIN', note: ''});
     return;

@@ -32,18 +32,19 @@ window.addEventListener('load', () => {
     }
   });
 
-  axios.get('/user/getbulletin')
+  var jwt = localStorage.getItem('jwt');
+  axios.post('/user/getbulletin', {jwt: jwt})
   .then(response => {
     login_vm.login_needed = false;
     bulletin_vm.loading = false;
     bulletin_vm.bulletins = response.data;
   })
-  .then(() => axios.get('/user/gettop'))
+  .then(() => axios.post('/user/gettop', {jwt: jwt}))
   .then(response => {
     top_vm.loading = false;
     top_vm.users = response.data;
   })
-  .then(() => axios.get('/posts/getess'))
+  .then(() => axios.post('/posts/getess', {jwt: jwt}))
   .then(response => {
     fav_vm.loading = false;
     fav_vm.issues = response.data.issues;
