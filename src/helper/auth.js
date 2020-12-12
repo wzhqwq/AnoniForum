@@ -20,7 +20,8 @@ exports.check = function (jwt, address) {
       rej('用户id不合法');
       return;
     }
-    db.select('users', `id=${data.id}`)
+    (new DB())
+    .select('users', `id=${data.id}`)
     .then(user => {
       if (user.length == 0)
         rej('用户不存在')
@@ -39,7 +40,8 @@ exports.check = function (jwt, address) {
 
 exports.auth = function (sdu_id, passwd, address, salt) {
   return new Promise((res, rej) => {
-    db.select('users', `sdu_id=${sdu_id}`)
+    (new DB())
+    .select('users', `sdu_id=${sdu_id}`)
     .then(user => {
       if (user.length == 0)
         rej('学号未注册！');
@@ -49,7 +51,7 @@ exports.auth = function (sdu_id, passwd, address, salt) {
           rej('密码错误');
         else {
           if (user.last_remote != address)
-            db.update('users', {last_remote: address}, `id=${user.id}`);
+            (new DB()).update('users', {last_remote: address}, `id=${user.id}`);
           var data = {id: user.id};
           var dataString = Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
           var jwt = dataString + '.' + crypto.createHmac('sha256', user.token_secret).update(dataString).digest('base64');
