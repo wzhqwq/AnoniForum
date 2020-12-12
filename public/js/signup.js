@@ -58,8 +58,8 @@ window.addEventListener('load', () => {
           return false;
         }
         if (!this.password.match(/[a-z]/g) || !this.password.match(/[A-Z]/g) || !this.password.match(/[()_0-9]/g)) {
-          this.password_err = '密码必须包含大小写字母以及“数字或括号下划线”构成';
-          return false;
+          this.password_err = '密码最好由大小写字母以及“数字或括号下划线”构成';
+          return true;
         }
         this.password_err = '';
         return true;

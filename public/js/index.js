@@ -33,7 +33,7 @@ window.addEventListener('load', () => {
   });
 
   var jwt = localStorage.getItem('jwt');
-  axios.post('/user/getbulletin', {jwt: jwt})
+  axios.post('/posts/getbulletin', {jwt: jwt})
   .then(response => {
     login_vm.login_needed = false;
     bulletin_vm.loading = false;

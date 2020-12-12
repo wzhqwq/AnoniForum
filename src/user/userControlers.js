@@ -58,8 +58,8 @@ route.logIn.post((req, res) => {
 });
 
 route.signUp.post((req, res) => {
-  var password = req.password || '';
-  var sdu_id = req.sduid || 'a';
+  var password = req.body.password || '';
+  var sdu_id = req.body.sduid || 'a';
 
   if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
   sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
@@ -104,21 +104,7 @@ route.getSalt.get((req, res) => {
   res.json({salt1: salt1, salt2: salts[ip].salt});
 });
 
-const two_weeks = 14 * 24 * 60 * 60 * 1000;
-route.getBulletin.get((req, res) => {
-  (new DB())
-  .select('bulletin', 'to_top = 1')
-  .appendSelect('bulletin b', null, 5)
-  .query()
-  .then(data => {
-    res.json(data);
-  })
-  .catch(err => {
-    res.status(500).json({code: 'DBERR', err: '数据库出错: ' + err.message});
-  });
-});
-
-route.getTop.get((req, res) => {
+route.getTop.post((req, res) => {
   (new DB())
   .sort('score', 'DESC', null, 10)
   .query()

@@ -27,7 +27,20 @@ exports.close = function () {
   })
 };
 
-route.getEssentials.get((req, res) => {
+route.getBulletin.post((req, res) => {
+  (new DB())
+  .select('bulletin', 'to_top = 1')
+  .appendSelect('bulletin b', null, 5)
+  .query()
+  .then(data => {
+    res.json(data);
+  })
+  .catch(err => {
+    res.status(500).json({code: 'DBERR', err: '数据库出错: ' + err.message});
+  });
+});
+
+route.getEssentials.post((req, res) => {
   var ret = {};
   (new DB())
   .select('issues', 'essential = 1')

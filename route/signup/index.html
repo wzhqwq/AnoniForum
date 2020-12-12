@@ -34,7 +34,7 @@
               <input type="password" class="form-control" id="password" placeholder="设置密码" v-model="password">
             </div>
             <div class="col-sm-8" style="margin-top: 5px;">
-              <div class="alert alert-danger" v-if="password_err != ''">{{ password_err }}</div>
+              <div class="alert" v-if="password_err != ''" v-bind:class="[ passwd_correct ? 'alert-info' : 'alert-danger' ]">{{ password_err }}</div>
             </div>
           </div>
           <div class="form-group" v-bind:class="{'has-error': password != confirm}">

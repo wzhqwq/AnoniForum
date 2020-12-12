@@ -106,3 +106,4 @@ dist
 web-service.exe
 .DS_Store
 secrets.js
+markdowns/
