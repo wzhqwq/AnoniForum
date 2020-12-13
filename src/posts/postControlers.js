@@ -9,12 +9,12 @@ const route = require('./postRoutes');
 const app = express();
 const server = http.createServer(app);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-
 server.listen(20717, 'localhost', () => {
   log('Post server is running.');
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(require('../helper/auth').checkBefore);
 
@@ -63,3 +63,5 @@ route.getEssentials.post((req, res) => {
     res.status(500).json({code: 'DBERR', err: '数据库出错: ' + err.message});
   });
 });
+
+app.use('/posts', route.router);
