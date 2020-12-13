@@ -77,8 +77,9 @@ exports.checkBefore = function (req, res, next) {
     res.status(403).json({code: 'LOGIN', note: ''});
     return;
   }
-  exports.check(jwt, req.ip)
-  .then(() => {
+  exports.check(jwt, req.header('X-Real-IP'))
+  .then(user => {
+    req.user_current = user;
     next();
   })
   .catch(e => {

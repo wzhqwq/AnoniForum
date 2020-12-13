@@ -34,7 +34,7 @@ exports.close = function () {
 // POST
 var salts = {};
 route.logIn.post((req, res) => {
-  if (!salts[req.ip]) {
+  if (!salts[req.header('X-Real-IP')]) {
     res.json({jwt: '', err: '页面失效了，请刷新再试！'});
     return;
   }
@@ -48,7 +48,7 @@ route.logIn.post((req, res) => {
   }
   sdu_id = sdu_id.replace(/^2020/, '');
 
-  auth(sdu_id, password, req.ip, salts[req.ip].salt)
+  auth(sdu_id, password, req.header('X-Real-IP'), salts[req.header('X-Real-IP')].salt)
   .then(({jwt}) => {
     res.json({jwt: jwt, err: ''});
   })
@@ -76,9 +76,9 @@ route.signUp.post((req, res) => {
       res.json({jwt: '', err: '学号已被注册！'});
     else {
       (new DB())
-      .insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.ip, token_secret: randomStr.generate()})
+      .insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.header('X-Real-IP'), token_secret: randomStr.generate()})
       .then(() => {
-        auth(sdu_id, password, req.ip)
+        auth(sdu_id, password, req.header('X-Real-IP'))
         .then(({jwt}) => {
           res.json({jwt: jwt, err: ''});
         })
@@ -99,7 +99,7 @@ route.signUp.post((req, res) => {
 // GET
 
 route.getSalt.get((req, res) => {
-  var ip = req.ip;
+  var ip = req.header('X-Real-IP');
   salts[ip] = {salt: randomStr.generate(), date: new Date()};
   res.json({salt1: salt1, salt2: salts[ip].salt});
 });

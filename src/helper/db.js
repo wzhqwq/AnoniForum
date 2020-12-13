@@ -30,6 +30,11 @@ exports.disconnect = function () {
       };
   });
 };
+exports.whereWithKey = function (key, values) {
+  var ret = '';
+  var wheres = values.map(val => `${key} = '${val}'`);
+  return wheres.join(' OR ');
+}
 
 var db = function () {
   this.sql = '';
@@ -70,7 +75,7 @@ db.prototype.query = function () {
 };
 
 db.prototype.select = function (table, where, limit) {
-  this.sql += (limit ? '(' : '') + `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit})` : '');
+  this.sql += `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
 };
 db.prototype.insert = function (table, items) {
@@ -84,23 +89,25 @@ db.prototype.update = function (table, items, where) {
   this.sql = `UPDATE ${table} SET ${entries.join(',')} WHERE ${where}`;
   return this.query();
 };
+db.prototype.append = function (db) {
+  this.sql = `${this.asTable()} UNION ALL ${db.asTable()}`;
+  return this;
+}
 db.prototype.appendSelect = function (table, where, limit) {
-  this.sql += ' UNION ALL ';
+  this.sql = `${this.asTable()} UNION ALL `;
   return this.select(table, where, limit);
 }
-db.prototype.append = function (db) {
-  this.sql += ' UNION ALL ' + db.sql;
-  return this;
-}
 // table1 < table2
-db.prototype.join = function (table1, table2, both) {
-  this.select(table1);
-  this.sql += ` a STRAIGHT_JOIN ${table2} b ON a.${both} = b.${both}`;
-  return this.query();
+db.prototype.joinSelect = function (table1, table2, both) {
+  this.sql = `SELECT * FROM ${table1} a STRAIGHT_JOIN ${table2} b ON a.${both} = b.${both}`;
+  return this;
 }
 db.prototype.sort = function (key, order, where, limit) {
-  this.sql = (limit ? '(' : '') + this.sql + ` ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit})` : '');
+  this.sql = this.sql + ` ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
+}
+db.prototype.asTable = function () {
+  return `(${this.sql})`;
 }
 
 exports.db = db;

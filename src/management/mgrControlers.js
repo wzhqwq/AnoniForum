@@ -11,11 +11,11 @@ const app = express();
 const server = http.createServer(app);
 
 server.listen(20715, "localhost", () => {
-	log("Manager server is running.");
+  log("Manager server is running.");
 });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // POST部分
 // -----服务器管理
