@@ -1,93 +1,96 @@
-const mysql = require('promise-mysql');
+const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3');
 const passwd = require('../secrets').sqlPass;
 const log = require('./logger').log;
 
-var pool;
-mysql.createPool({
-  host: 'localhost',
-  port: '3306',
-  password: passwd,
-  user: 'root'
-}).then(p => {
-  pool = p;
-  log('DataBase: connected.');
-}).catch(e => {
-  log('DataBase: connection failed:', e.message);
-});
+var database;
+var db = function () {
+  this.sql = '';
+}
+db.connect = function () {
+  return sqlite.open({
+    filename: __dirname + `/../../data/sqlite/main.db`,
+    driver: sqlite3.cached.Database
+  })
+  .then(base => {
+    database = base;
+    log('Database connected');
+  });
+}
 
 var disconnecting = false;
-var connectedCount = 0;
-var countZeroHandler = null;
 
-exports.disconnect = function () {
-  return new Promise(res => {
-    disconnecting = true;
-    if (connectedCount == 0)
-      res();
-    else
-      countZeroHandler = function () {
-        res();
-      };
-  });
+db.disconnect = function () {
+  disconnecting = true;
+  return database.close();
 };
-exports.whereWithKey = function (key, values) {
-  var ret = '';
+db.whereWithKey = function (key, values) {
   var wheres = values.map(val => `${key} = '${val}'`);
   return wheres.join(' OR ');
 }
 
-var db = function () {
-  this.sql = '';
-}
 db.prototype.query = function () {
+  if (disconnecting) {
+    rej('Server is closing');
+    return;
+  }
   this.sql += ';';
   log('DataBase: query:', this.sql);
   return new Promise((res, rej) => {
-    if (disconnecting) {
-      rej(new Error("Server is closing"));
-      return;
-    }
-    pool.getConnection()
-    .then(connection => {
-      connectedCount++;
-      log('connections now:', connectedCount);
-      connection.query('use anoni_base;').then(() => {
-        connection.query(this.sql).then(data => {
-          pool.pool.releaseConnection(connection);
-          connectedCount--;
-          log('connections now:', connectedCount);
-          res(data);
-          if (connectedCount == 0 && countZeroHandler)
-          countZeroHandler();
-        })
-        .catch(err => {
-          log('query failed:', err.message);
-          pool.pool.releaseConnection(connection);
-          connectedCount--;
-          log('connections now:', connectedCount);
-          rej(err);
-          if (connectedCount == 0 && countZeroHandler)
-          countZeroHandler();
-        });
+    database.get(this.sql)
+      .then(data => {
+        log('Query success.');
+        res(data);
+      })
+      .catch(err => {
+        log('Query failed:', err.message);
+        rej(err);
       });
-    });
-  })
+  });
 };
+function exec(sql) {
+  if (disconnecting) {
+    rej('Server is closing');
+    return;
+  }
+  log('DataBase: execute:', sql);
+  return new Promise((res, rej) => {
+    database.run(sql)
+      .then(data => {
+        log('Execute success.');
+        res(data);
+      })
+      .catch(err => {
+        log('Execute failed:', err.message);
+        rej(err);
+      });
+  });
+}
 
-db.prototype.select = function (table, where, limit) {
-  this.sql += `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
-  return this;
+db.insert = function (table, items) {
+  return exec(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => mysql.escape(item)).join(',')});`);
 };
-db.prototype.insert = function (table, items) {
-  this.sql = `INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => mysql.escape(item)).join(',')})`;
-  return this.query();
-};
-db.prototype.update = function (table, items, where) {
+db.update = function (table, items, where) {
   var entries = [];
   for (item in items)
     entries.push(`${item}=${mysql.escape(items[item])}`);
-  this.sql = `UPDATE ${table} SET ${entries.join(',')} WHERE ${where}`;
-  return this.query();
+  return exec(`UPDATE ${table} SET ${entries.join(',')} WHERE ${where};`);
+};
+db.delete = function (table, where) {
+  return exec(`DELETE FROM ${table} WHERE ${where};`)
+}
+db.create = function (table, items) {
+  return exec(`CREATE TABLE IF NOT EXISTS ${table} (\n${
+    items
+      .map(item =>
+        `${item.name} ${item.type}` + (item.isPrimary ? ' PRIMARY KEY' : '') + (item.autoInc ? ' AUTOINCREMENT' : '')
+      ).join(',\n')
+  }\n);`);
+}
+
+db.prototype.select = function (table, where, limit) {
+  this.sql = `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
+  return this;
 };
 db.prototype.append = function (db) {
   this.sql = `${this.asTable()} UNION ALL ${db.asTable()}`;
@@ -103,11 +106,17 @@ db.prototype.joinSelect = function (table1, table2, both) {
   return this;
 }
 db.prototype.sort = function (key, order, where, limit) {
-  this.sql = this.sql + ` ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
+  this.sql += ` ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
 }
 db.prototype.asTable = function () {
   return `(${this.sql})`;
 }
 
-exports.db = db;
+db.INT = 'INTEGER';
+db.TEXT = 'TEXT';
+db.SALT = 'CHAR(32)';
+db.SHA = 'CHAR(64)';
+db.SHORT = 'VARCHAR(50)';
+
+module.exports = db;

@@ -1,7 +1,6 @@
 const express = require('express');
 const http = require('http');
-const db = require('../helper/db');
-const DB = db.db;
+const DB = require('../helper/db');
 const auth = require('../helper/auth').auth;
 const check = require('../helper/auth').checkBefore;
 const route = require('./userRoute');
@@ -9,13 +8,32 @@ const salt1 = require('../secrets').salt;
 const log = require('../helper/logger').log;
 const bodyParser = require('body-parser');
 const randomStr = require('randomstring');
+const db = require('../helper/db');
 
 const app = express();
 const server = http.createServer(app);
 
-server.listen(20716, 'localhost', () => {
-  log('User server is running.');
+DB.connect()
+.then(() => {
+  server.listen(20716, 'localhost', () => {
+    log('User server is running.');
+  });
+  DB.create('users', [
+    {name: 'u_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'sdu_id', type: DB.INT},
+    {name: 'passwd', type: DB.SHA},
+    {name: 'last_remote', type: DB.SHORT},
+    {name: 'token_secret', type: DB.SALT}
+  ]);
+  DB.create('scores', [
+    {name: 'u_id', type: DB.INT},
+    {name: 'score', type: DB.INT}
+  ]);
+})
+.catch(err => {
+  log('User server: open database failed:', err);
 });
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -23,7 +41,7 @@ app.use(check);
 
 exports.close = function () {
   return new Promise(res => {
-    db.disconnect().then(() => {
+    DB.disconnect().finally(() => {
       server.close();
       res();
     });

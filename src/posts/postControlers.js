@@ -1,17 +1,54 @@
 const express = require('express');
 const http = require('http');
 const log = require('../helper/logger').log;
-const db = require('../helper/db');
-const DB = db.db;
+const DB = require('../helper/db');
 const bodyParser = require('body-parser');
 const route = require('./postRoutes');
-const fs = require('fs/promises');
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 
-server.listen(20717, 'localhost', () => {
-  log('Post server is running.');
+DB.connect().then(() => {
+  server.listen(20717, 'localhost', () => {
+    log('Post server is running.');
+  });
+  DB.create('bulletin', [
+    {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'title', type: DB.SHORT},
+    {name: 'toTop', type: DB.INT},
+    {name: 'date', type: DB.SHORT},
+  ]);
+  DB.create('issues', [
+    {name: 'issue_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'topic', type: DB.SHORT},
+    {name: 'tags', type: DB.SHORT},
+    {name: 'essential', type: DB.INT},
+    {name: 'resolved', type: DB.INT},
+    {name: 'time', type: DB.SHORT}
+  ]);
+  DB.create('articles', [
+    {name: 'article_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'topic', type: DB.SHORT},
+    {name: 'tags', type: DB.SHORT},
+    {name: 'essential', type: DB.INT},
+    {name: 'date', type: DB.SHORT}
+  ]);
+  DB.create('issues_tags', [
+    {name: 'issue_id', type: DB.INT},
+    {name: 'tag_id', type: DB.INT}
+  ]);
+  DB.create('articles_tags', [
+    {name: 'article_id', type: DB.INT},
+    {name: 'tag_id', type: DB.INT}
+  ]);
+  DB.create('comments', [
+    {name: 'comment_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'article_id', type: DB.INT},
+    {name: 'content', type: DB.TEXT},
+    {name: 'u_id', type: DB.INT},
+    {name: 'reply', type: DB.INT}
+  ])
 });
 
 app.use(bodyParser.json());
@@ -21,7 +58,7 @@ app.use(require('../helper/auth').checkBefore);
 
 exports.close = function () {
   return new Promise(res => {
-    db.disconnect().then(() => {
+    DB.disconnect().then(() => {
       server.close();
       res();
     });
@@ -31,7 +68,7 @@ exports.close = function () {
 route.getBulletins.post((req, res) => {
   (new DB())
     .select('bulletin', 'to_top = 1')
-    .appendSelect('bulletin b', null, 5)
+    .appendSelect('bulletin', null, 5)
     .query()
     .then(data => {
       res.json(data);
@@ -95,7 +132,7 @@ route.getPosts.post((req, res) => {
       fromTable = (new DB())
         .joinSelect(
           (new DB())
-            .select(`${name}_tags a`, db.whereWithKey('tag_id', tags))
+            .select(`${name}_tags a`, DB.whereWithKey('tag_id', tags))
             .asTable(),
           fromTable,
           `${name}_id`
