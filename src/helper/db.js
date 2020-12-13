@@ -100,6 +100,7 @@ db.prototype.join = function (table1, table2, both) {
 }
 db.prototype.sort = function (key, order, where, limit) {
   this.sql = (limit ? '(' : '') + this.sql + `ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit})` : '');
+  return this;
 }
 
 exports.db = db;
