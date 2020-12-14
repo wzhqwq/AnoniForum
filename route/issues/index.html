@@ -28,7 +28,7 @@
       </div>
     </div>
   </div>
-  <div class="container" style="margin-top: 80px;" id="posts">
+  <div class="container" style="margin-top: 80px; display: none;" id="posts">
     <h3>所有提问</h3>
     <div class="search-bar col-md-6 offset-md-3">
       <input type="text" class="form-control" v-model="search_text">
@@ -87,6 +87,7 @@
         <button class="btn btn-light" v-on:click="load_more">加载更多</button>
       </div>
     </div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
@@ -94,6 +95,5 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
   <script src="/resource/js/main.js"></script>
   <script src="/resource/js/posts.js"></script>
-  </div>
 </body>
 </html>

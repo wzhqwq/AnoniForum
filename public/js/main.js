@@ -9,6 +9,7 @@ window.addEventListener('load', () => {
       el.style.backgroundImage = `url(${el.getAttribute('lazy-src')})`;
     }
   );
+  $('.container').css('display', 'block');
 
   if (location.pathname == 'login' || location.pathname == 'signup') return;
 
@@ -30,7 +31,7 @@ window.addEventListener('load', () => {
   var login_vm = new Vue({
     el: '#login-needed',
     data: {
-      login_needed: true,
+      login_needed: false,
       login_note: '',
       location: location
     }

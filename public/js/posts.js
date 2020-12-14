@@ -1,5 +1,5 @@
 window.addEventListener('load', () => {
-  var type = location.pathname.split('/').pop();
+  var type = location.pathname.match('[^/]*/$')[0];
   var last_search = '';
 
   var common_vm = new Vue({
