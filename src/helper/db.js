@@ -68,12 +68,12 @@ function exec(sql) {
 }
 
 db.insert = function (table, items) {
-  return exec(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => mysql.escape(item)).join(',')});`);
+  return exec(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => `${item}`).join(',')});`);
 };
 db.update = function (table, items, where) {
   var entries = [];
   for (item in items)
-    entries.push(`${item}=${mysql.escape(items[item])}`);
+    entries.push(`${item}='${items[item]}'`);
   return exec(`UPDATE ${table} SET ${entries.join(',')} WHERE ${where};`);
 };
 db.delete = function (table, where) {

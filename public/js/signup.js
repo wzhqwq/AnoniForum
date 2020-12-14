@@ -47,7 +47,9 @@ window.addEventListener('load', () => {
           }
         })
         .catch(e => {
-          alert("注册发生问题" + e);
+          var msg = '';
+          if (e.response.data) msg = e.response.data.note;
+          alert("登录发生问题：" + e.message + ' ' + msg);
         })
       }
     },
