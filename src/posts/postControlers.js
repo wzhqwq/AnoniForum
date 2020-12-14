@@ -13,7 +13,7 @@ DB.connect().then(() => {
   server.listen(20717, 'localhost', () => {
     log('Post server is running.');
   });
-  DB.create('bulletin', [
+  /*DB.create('bulletin', [
     {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'title', type: DB.SHORT},
     {name: 'toTop', type: DB.INT},
@@ -48,7 +48,7 @@ DB.connect().then(() => {
     {name: 'content', type: DB.TEXT},
     {name: 'u_id', type: DB.INT},
     {name: 'reply', type: DB.INT}
-  ])
+  ])*/
 });
 
 app.use(bodyParser.json());
