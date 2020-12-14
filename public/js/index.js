@@ -26,7 +26,6 @@ window.addEventListener('load', () => {
 
   axiosPost('/posts/getbulletins')
   .then(response => {
-    login_vm.login_needed = false;
     bulletin_vm.loading = false;
     bulletin_vm.bulletins = response.data;
   })

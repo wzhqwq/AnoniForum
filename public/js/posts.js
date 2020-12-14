@@ -72,7 +72,7 @@ window.addEventListener('load', () => {
               alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.note : ''))
           }
           else {
-            alert('发送请求失败，请检查网络环境: ', err.message);
+            alert('发送请求失败，请检查网络环境: ' + err.message);
           }
         });
       }

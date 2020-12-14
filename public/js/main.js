@@ -42,7 +42,7 @@ window.addEventListener('load', () => {
     obj.jwt = jwt;
     return axios.post(url, obj)
       .catch(err => {
-        if (err.response.status == 403) {
+        if (err?.response.status == 403) {
           login_vm.login_needed = true;
           setTimeout(() => {
             login_vm.login_note = err.response.data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
