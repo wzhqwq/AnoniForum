@@ -62,7 +62,8 @@ window.addEventListener('load', () => {
           start: more ? `${this.posts.length}` : '0',
           tag: this.tag_now == -1 ? '' : `${this.tag_now}`,
           res: this.resolved == -1 ? '' : `${this.resolved}`,
-          sort: this.sortByPop ? 'h' : ''
+          sort: this.sortByPop ? 'h' : '',
+          jwt: jwt
         })
         .then(resp => {
           this.isEnd = false;
@@ -81,7 +82,7 @@ window.addEventListener('load', () => {
             else if (err.response.status == 403) {
               login_vm.login_needed = true;
               setTimeout(() => {
-                login_vm.login_note = data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
+                login_vm.login_note = err.response.data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
               }, 0);
             }
             else
