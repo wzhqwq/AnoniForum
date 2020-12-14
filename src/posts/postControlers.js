@@ -70,8 +70,8 @@ route.getBulletins.post((req, res) => {
     .select('bulletin', 'to_top = 1')
     .appendSelect('bulletin', null, 5)
     .query()
-    .then(data => {
-      res.json(data);
+    .then(bulletins => {
+      res.json(bulletins);
     })
     .catch(err => {
       res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
@@ -87,14 +87,14 @@ route.getEssentials.post((req, res) => {
         .sort('issue_id', 'DESC', null, 15)
     )
     .query()
-    .then(data => {
-      ret.issues = data;
+    .then(issues => {
+      ret.issues = issues;
       return (new DB())
         .select('articles', 'essential = 1', 20)
         .query()
     })
-    .then(data => {
-      ret.articles = data;
+    .then(articles => {
+      ret.articles = articles;
       res.json(ret);
     })
     .catch(err => {
@@ -144,11 +144,11 @@ route.getPosts.post((req, res) => {
       q.sort('watch', 'DESC');
 
     q.query()
-      .then(post => {
-        if (!post)
+      .then(posts => {
+        if (posts.length == 0)
           res.status(404).json({ code: 'NOPOST', note: '没有了' });
         else
-          res.json(post);
+          res.json(posts);
       })
       .catch(err => {
         res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
@@ -168,7 +168,7 @@ route.getPost.post((req, res) => {
     var name = type == 'a' ? 'article' : 'issue';
     (new DB())
       .select(`${name}s`, `${name}_id = ${p_id}`)
-      .query()
+      .query(true)
       .then(post => {
         if (!post)
           res.status(404).json({ code: 'NOID', note: 'p_id不存在' });

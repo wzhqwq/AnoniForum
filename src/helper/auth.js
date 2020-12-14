@@ -22,11 +22,11 @@ exports.check = function (jwt, address) {
     }
     (new DB())
     .select('users', `u_id=${data.u_id}`)
-    .query()
+    .query(true)
     .then(user => {
       if (!user)
         rej('用户不存在')
-      else if ((user = user[0]).last_remote != address)
+      else if (user.last_remote != address)
         rej('登录IP发生改变');
       else if (crypto.createHmac('sha256', user.token_secret).update(parts[0]).digest('base64') == parts[1])
         res(user);
@@ -43,12 +43,11 @@ exports.auth = function (sdu_id, passwd, address, salt) {
   return new Promise((res, rej) => {
     (new DB())
     .select('users', `sdu_id=${sdu_id}`)
-    .query()
+    .query(true)
     .then(user => {
       if (!user)
         rej('学号未注册！');
       else {
-        user = user[0];
         if ((salt ? crypto.createHmac('sha256', salt).update(user.passwd).digest('hex') : user.passwd) != passwd)
           rej('密码错误');
         else {

@@ -87,7 +87,7 @@ route.signUp.post((req, res) => {
 
   (new DB())
   .select('users', `sdu_id=${sdu_id}`)
-  .query()
+  .query(true)
   .then(user => {
     if (user)
       res.json({jwt: '', err: '学号已被注册！'});
@@ -128,8 +128,8 @@ route.getTop.post((req, res) => {
   .select('scores')
   .sort('score', 'DESC', null, 10)
   .query()
-  .then(data => {
-    res.json(data);
+  .then(users => {
+    res.json(users);
   })
   .catch(err => {
     res.status(500).json({code: 'DBERR', err: '数据库出错: ' + err.message});

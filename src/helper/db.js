@@ -29,7 +29,7 @@ db.whereWithKey = function (key, values) {
   return wheres.join(' OR ');
 }
 
-db.prototype.query = function () {
+db.prototype.query = function (single) {
   if (disconnecting) {
     rej('Server is closing');
     return;
@@ -37,7 +37,7 @@ db.prototype.query = function () {
   this.sql += ';';
   log('DataBase: query:', this.sql);
   return new Promise((res, rej) => {
-    database.get(this.sql)
+    database[single ? "get" : "all"](this.sql)
       .then(data => {
         log('Query success.');
         res(data);
