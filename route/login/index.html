@@ -5,20 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>登录匿名论坛</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/resource/js/login.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
   <link rel="stylesheet" href="/resource/css/public.css">
-  <style>
-  </style>
 </head>
 <body>
   <div class="container">
     <div class="row d-none d-sm-block" style="height: 150px;"></div>
     <div class="row d-sm-none" style="height: 50px;"></div>
     <div class="card">
-      <h3 class="card-header" style="background-color: #2b2531; background-image: url('https://i.loli.net/2020/12/11/v8BlxftjSWkEHmZ.jpg'); background-size: cover; color: white; height: 80px;">登录</h3>
+      <h3 class="card-header lazy-bg" style="background-color: #2b2531; background-size: cover; color: white; height: 80px;" lazy-src="https://i.loli.net/2020/12/11/v8BlxftjSWkEHmZ.jpg">登录</h3>
       <div class="card-body">
         <form role="form" id="form" class="form-horizonal">
           <div class="col-sm-8">
@@ -46,5 +40,10 @@
       </div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+  <script src="/resource/js/main.js"></script>
+  <script src="/resource/js/login.js"></script>
 </body>
 </html>

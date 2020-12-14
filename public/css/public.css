@@ -61,7 +61,7 @@
 .search-bar > button {
   margin-left: 5px;
 }
-.search-tools {
+.search-tools > * {
   margin-top: 10px;
 }
 .search-tools::after {

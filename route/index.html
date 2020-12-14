@@ -5,11 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SDU2020软三匿名论坛</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/resource/js/index.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/resource/css/public.css">
 </head>
 <body>
@@ -118,18 +113,12 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="login-needed" v-bind:class="{ show: login_note != '' }" v-bind:style="{ display: login_needed ? 'block' : '' }">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            {{ login_note }}
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" v-on:click="location.href='/login'">登录</button>
-          </div>
-        </div>
-      </div>
-    </div>    
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+  <script src="/resource/js/main.js"></script>
+  <script src="/resource/js/index.js"></script>
 </body>
 </html>

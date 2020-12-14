@@ -1,12 +1,4 @@
 window.addEventListener('load', () => {
-  var login_vm = new Vue({
-    el: '#login-needed',
-    data: {
-      login_needed: true,
-      login_note: '',
-      location: location
-    }
-  });
   var bulletin_vm = new Vue({
     el: '#bulletin-board',
     data: {
@@ -32,19 +24,18 @@ window.addEventListener('load', () => {
     }
   });
 
-  var jwt = localStorage.getItem('jwt');
-  axios.post('/posts/getbulletins', {jwt: jwt})
+  axiosPost('/posts/getbulletins')
   .then(response => {
     login_vm.login_needed = false;
     bulletin_vm.loading = false;
     bulletin_vm.bulletins = response.data;
   })
-  .then(() => axios.post('/user/gettop', {jwt: jwt}))
+  .then(() => axiosPost('/user/gettop'))
   .then(response => {
     top_vm.loading = false;
     top_vm.users = response.data;
   })
-  .then(() => axios.post('/posts/getess', {jwt: jwt}))
+  .then(() => axiosPost('/posts/getess'))
   .then(response => {
     fav_vm.loading = false;
     fav_vm.issues = response.data.issues;
@@ -53,8 +44,6 @@ window.addEventListener('load', () => {
   .catch(error => {
     if (error.response) {
       let data = error.response.data;
-      if (error.response.status == '403')
-        login_vm.login_note = data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
       if (error.response.status == '500')
       login_vm.login_note = '服务器出错，请联系王子涵' + ', 详细原因：' + (data ? data.note : '');
       else

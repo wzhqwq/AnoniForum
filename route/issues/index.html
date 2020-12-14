@@ -5,12 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>所有提问</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/resource/js/posts.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/resource/css/public.css">
   <link href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
@@ -42,8 +36,8 @@
         <span class="fa fa-search"></span>
       </button>
     </div>
-    <div class="search-tools">
-      <ul class="float-left nav nav-pills">
+    <div class="search-tools row">
+      <ul class="nav nav-pills col-sm-4">
         <li class="nav-item">
           <a class="nav-link" href="#" v-bind:class="{ active: !sortByPop }" v-on:click="sort(0)">最新</a>
         </li>
@@ -51,7 +45,7 @@
           <a class="nav-link" href="#" v-bind:class="{ active: sortByPop }" v-on:click="sort(1)">最热</a>
         </li>
       </ul>
-      <div class="center">
+      <div class="col-sm-8 text-right">
         <div class="btn-group">
           <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" v-bind:class="[ tag_now == -1 ? 'btn-primary' : 'btn-success' ]">
             <span class="fa" v-bind:class="[ tag_now == -1 ? 'fa-tags' : 'fa-tag' ]">{{ tag_now == -1 ? '标签筛选' : tags[tag_now].name }}</span>
@@ -59,8 +53,10 @@
           <div class="dropdown-menu tag-view">
             <a class="dropdown-item" href="#" v-for="tag in tags" v-bind:class="{ active: tag.id == tag_now }" v-on:click="select_tag(tag.id)">{{ tag.name }}</a>
           </div>
+        </div>
+        <div class="btn-group">
           <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" v-bind:class="[ resolved == -1 ? 'btn-primary' : 'btn-success' ]">
-            <span class="fa" v-bind:class="[ resolved == -1 ? 'fa-tags' : 'fa-tag' ]">{{ resolved == -1 ? '筛选问题状态' : (resolved == 0 ? '筛选未解决' : '筛选已解决') }}</span>
+            <span class="fa" v-bind:class="[ resolved == -1 ? 'fa-filter' : (resolved == 0 ? 'fa-question-circle' : 'fa-check-circle') ]">{{ resolved == -1 ? '筛选问题状态' : (resolved == 0 ? '筛选未解决' : '筛选已解决') }}</span>
           </button>
           <div class="dropdown-menu tag-view">
             <a class="dropdown-item" href="#" v-bind:class="{ active: 0 == resolved }" v-on:click="set_res(0)">未解决</a>
@@ -91,18 +87,13 @@
         <button class="btn btn-light" v-on:click="load_more">加载更多</button>
       </div>
     </div>
-    <div class="modal fade" id="login-needed" v-bind:class="{ show: login_note != '' }" v-bind:style="{ display: login_needed ? 'block' : '' }">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            {{ login_note }}
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" v-on:click="location.href='/login'">登录</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+  <script src="/resource/js/main.js"></script>
+  <script src="/resource/js/posts.js"></script>
   </div>
 </body>
 </html>

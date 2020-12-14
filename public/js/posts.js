@@ -1,16 +1,6 @@
 window.addEventListener('load', () => {
   var type = location.pathname.split('/').pop();
   var last_search = '';
-  var jwt = localStorage.getItem('jwt');
-
-  var login_vm = new Vue({
-    el: '#login-needed',
-    data: {
-      login_needed: false,
-      login_note: '',
-      location: location
-    }
-  });
 
   var common_vm = new Vue({
     el: '#posts',
@@ -56,14 +46,13 @@ window.addEventListener('load', () => {
       },
       load: function (more) {
         this.loading = true;
-        axios.post('/posts/getposts', {
+        axiosPost('/posts/getposts', {
           type: type[0],
           wd: this.search_text,
           start: more ? `${this.posts.length}` : '0',
           tag: this.tag_now == -1 ? '' : `${this.tag_now}`,
           res: this.resolved == -1 ? '' : `${this.resolved}`,
-          sort: this.sortByPop ? 'h' : '',
-          jwt: jwt
+          sort: this.sortByPop ? 'h' : ''
         })
         .then(resp => {
           this.isEnd = false;
@@ -79,13 +68,7 @@ window.addEventListener('load', () => {
               alert('服务器出错，请联系王子涵');
             else if (err.response.status == 404)
               this.isEnd = true;
-            else if (err.response.status == 403) {
-              login_vm.login_needed = true;
-              setTimeout(() => {
-                login_vm.login_note = err.response.data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
-              }, 0);
-            }
-            else
+            else if (err.response.status != 403)
               alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.note : ''))
           }
           else {
