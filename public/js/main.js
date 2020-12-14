@@ -48,6 +48,7 @@ window.addEventListener('load', () => {
             login_vm.login_note = err.response.data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
           }, 0);
         }
+        return new Promise((r, rej) => rej(e));
       });
   };
 

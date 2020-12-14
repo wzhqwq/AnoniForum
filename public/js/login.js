@@ -41,7 +41,6 @@ window.addEventListener('load', () => {
           var msg = '';
           if (e.response.data) msg = e.response.data.err;
           alert("登录发生问题：" + e.message + ' ' + msg);
-          return new Promise((r, rej) => rej(e));
         });
       }
     }
