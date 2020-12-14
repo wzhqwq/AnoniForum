@@ -145,7 +145,7 @@ route.getPosts.post((req, res) => {
 
     q.query()
       .then(post => {
-        if (post.length == 0)
+        if (!post)
           res.status(404).json({ code: 'NOPOST', note: '没有了' });
         else
           res.json(post);
@@ -170,7 +170,7 @@ route.getPost.post((req, res) => {
       .select(`${name}s`, `${name}_id = ${p_id}`)
       .query()
       .then(post => {
-        if (post.length == 0)
+        if (!post)
           res.status(404).json({ code: 'NOID', note: 'p_id不存在' });
         else {
           var ret = post[0];

@@ -89,7 +89,7 @@ route.signUp.post((req, res) => {
   .select('users', `sdu_id=${sdu_id}`)
   .query()
   .then(user => {
-    if (user.length != 0)
+    if (user)
       res.json({jwt: '', err: '学号已被注册！'});
     else {
       (new DB())

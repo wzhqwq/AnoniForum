@@ -24,7 +24,7 @@ exports.check = function (jwt, address) {
     .select('users', `u_id=${data.u_id}`)
     .query()
     .then(user => {
-      if (user.length == 0)
+      if (!user)
         rej('用户不存在')
       else if ((user = user[0]).last_remote != address)
         rej('登录IP发生改变');
@@ -45,7 +45,7 @@ exports.auth = function (sdu_id, passwd, address, salt) {
     .select('users', `sdu_id=${sdu_id}`)
     .query()
     .then(user => {
-      if (user.length == 0)
+      if (!user)
         rej('学号未注册！');
       else {
         user = user[0];
