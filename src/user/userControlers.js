@@ -95,9 +95,12 @@ route.signUp.post((req, res) => {
       DB.insert('users', {sdu_id: sdu_id, passwd: password, last_remote: req.header('X-Real-IP'), token_secret: randomStr.generate()})
       .then(() => {
         auth(sdu_id, password, req.header('X-Real-IP'))
-        .then(({jwt}) => {
-          res.json({jwt: jwt, err: ''});
-        })
+        .then(({jwt, user}) =>
+          DB.insert('scores', {u_id: user.u_id, score: 0})
+          .then(() => {
+            res.json({jwt: jwt, err: ''});
+          })
+        )
         .catch(err => {
           res.status(500).json({jwt: '', err: err});
         });
