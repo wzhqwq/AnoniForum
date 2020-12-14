@@ -1,6 +1,17 @@
 window.addEventListener('load', () => {
   var type = location.pathname.split('/').pop();
   var last_search = '';
+  var jwt = localStorage.getItem('jwt');
+
+  var login_vm = new Vue({
+    el: '#login-needed',
+    data: {
+      login_needed: false,
+      login_note: '',
+      location: location
+    }
+  });
+
   var common_vm = new Vue({
     el: '#posts',
     data: {
@@ -67,6 +78,12 @@ window.addEventListener('load', () => {
               alert('服务器出错，请联系王子涵');
             else if (err.response.status == 404)
               this.isEnd = true;
+            else if (err.response.status == 403) {
+              login_vm.login_needed = true;
+              setTimeout(() => {
+                login_vm.login_note = data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
+              }, 0);
+            }
             else
               alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.note : ''))
           }

@@ -84,6 +84,18 @@
         <button class="btn btn-light" v-on:click="load_more">加载更多</button>
       </div>
     </div>
+    <div class="modal fade" id="login-needed" v-bind:class="{ show: login_note != '' }" v-bind:style="{ display: login_needed ? 'block' : '' }">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            {{ login_note }}
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" v-on:click="location.href='/login'">登录</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 </html>
