@@ -93,11 +93,11 @@ db.prototype.select = function (table, where, limit) {
   return this;
 };
 db.prototype.append = function (db) {
-  this.sql = `${this.asTable()} UNION ALL ${db.asTable()}`;
+  this.sql = `${this.sql} UNION ALL ${db.sql}`;
   return this;
 }
 db.prototype.appendSelect = function (table, where, limit) {
-  this.sql = `${this.asTable()} UNION ALL `;
+  this.sql = `${this.sql} UNION ALL `;
   return this.select(table, where, limit);
 }
 // table1 < table2
