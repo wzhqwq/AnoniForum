@@ -4,14 +4,17 @@ const http = require('http');
 const route = require('./mgrRoutes');
 const mgrPath = require('../secrets.js').mgrPath;
 const log = require('../helper/logger').log;
-const db = require('../helper/db');
+const DB = require('../helper/db');
 const bodyParser = require('body-parser');
 
 const app = express();
 const server = http.createServer(app);
 
-server.listen(20715, "localhost", () => {
-  log("Manager server is running.");
+DB.connect()
+.then(() => {
+  server.listen(20715, "localhost", () => {
+    log("Manager server is running.");
+  });
 });
 
 app.use(bodyParser.json());
@@ -49,7 +52,7 @@ app.use(require('../helper/auth').checkBefore);
 process.on('message', msg => {
   if (msg == 'exit') {
     // do some work
-    db.disconnect().then(() => {
+    DB.disconnect().then(() => {
       server.close();
       log('ManagerWorker: Manager server closed.');
       process.exit(0);

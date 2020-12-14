@@ -1,9 +1,12 @@
 .card,
-.alert {
+.alert,
+.dropdown-menu {
   border-radius: 10px;
 }
 .list-group,
-.form-control {
+.form-control,
+.btn,
+.nav-pills .nav-link {
   border-radius: 8px;
 }
 .card {
@@ -16,9 +19,6 @@
 .form-control {
   border: none;
   background-color: #f5f5f5;
-}
-.btn {
-  border-radius: 8px;
 }
 .center-loader {
   width: 100px;
@@ -59,9 +59,17 @@
   margin-top: 30px;
 }
 .search-bar > button {
-  margin-left: 8px;
+  margin-left: 5px;
 }
-button > svg {
-  width: 20px;
-  height: 20px;
+.search-tools {
+  margin-top: 10px;
+}
+.search-tools::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.tag-view {
+  overflow: auto;
+  max-height: 100px;
 }

@@ -106,7 +106,7 @@ route.getPosts.post((req, res) => {
   var type = req.body.type || '';
   var start = req.body.start || '';
   var word = req.body.wd || '';
-  var tags = req.body.tags || '';
+  var tag = req.body.tag || '';
   var resolved = req.body.res || '';
   var sort = req.body.sort || '';
   var where = word ? `topic LIKE '%${word}%'` : '';
@@ -123,16 +123,15 @@ route.getPosts.post((req, res) => {
     start = parseInt(start);
     var fromTable = `${name}s`;
 
-    if (tags != '') {
-      tags = tags.split(',');
-      if (tags.some(tag => tag.match(/[\D]/g) != null)) {
+    if (tag != '') {
+      if (tag.match(/[\D]/g) != null) {
         res.status(400).json({ code: 'INVTAG', note: 'tags不合法' });
         return;
       }
       fromTable = (new DB())
         .joinSelect(
           (new DB())
-            .select(`${name}_tags a`, DB.whereWithKey('tag_id', tags))
+            .select(`${name}_tags a`, `tag_id = ${tag}`)
             .asTable(),
           fromTable,
           `${name}_id`

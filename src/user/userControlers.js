@@ -8,7 +8,6 @@ const salt1 = require('../secrets').salt;
 const log = require('../helper/logger').log;
 const bodyParser = require('body-parser');
 const randomStr = require('randomstring');
-const db = require('../helper/db');
 
 const app = express();
 const server = http.createServer(app);

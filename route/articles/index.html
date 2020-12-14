@@ -6,13 +6,13 @@
   <title>所有文章</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <!-- <script src="/resource/js/index.js"></script> -->
-  <script src="../../public/js/index.js"></script>
+  <script src="/resource/js/index.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
-  <!-- <link rel="stylesheet" href="/resource/css/public.css"> -->
-  <link rel="stylesheet" href="../../public/css/public.css">
+  <link rel="stylesheet" href="/resource/css/public.css">
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
@@ -38,11 +38,51 @@
     <h3>所有文章</h3>
     <div class="search-bar col-md-6 offset-md-3">
       <input type="text" class="form-control" v-model="search_text">
-      <button class="btn btn-primary">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 1057 1024">
-          <path d="M409.012356 811.965935c-108.676129 0.660645-213.058065-41.851871-289.924129-117.991225A401.242839 401.242839 0 0 1 0.006937 406.594065a401.242839 401.242839 0 0 1 119.015226-287.512775A408.344774 408.344774 0 0 1 409.012356 0.990968a408.344774 408.344774 0 0 1 289.924129 118.05729 401.275871 401.275871 0 0 1 119.08129 287.44671 401.275871 401.275871 0 0 1-119.048258 287.380645 408.344774 408.344774 0 0 1-289.891096 118.090322h-0.066065z m0-695.130838A290.617806 290.617806 0 0 0 201.63584 200.836129a285.563871 285.563871 0 0 0-84.69471 205.625806c0 162.221419 128.495484 289.626839 292.071226 289.626839 163.641806 0 292.13729-127.405419 292.13729-289.560774 0-162.221419-128.495484-289.725935-292.071225-289.725935h-0.066065zM957.942421 1005.799226l-173.980904-171.866839a55.130839 55.130839 0 0 1 0-80.235355c23.221677-22.990452 58.004645-22.990452 81.193291 0l173.947871 171.965936a55.130839 55.130839 0 0 1 0 80.235355 56.419097 56.419097 0 0 1-81.160258 0v-0.099097z" fill="white"></path>
-        </svg>
+      <button class="btn btn-primary" v-on:click="search">
+        <span class="fa fa-search"></span>
       </button>
+    </div>
+    <div class="search-tools">
+      <ul class="float-left nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" href="#" v-bind:class="{ active: !sortByPop }" v-on:click="sort(0)">最新</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" v-bind:class="{ active: sortByPop }" v-on:click="sort(1)">最热</a>
+        </li>
+      </ul>
+      <div class="float-right">
+        <div class="btn-group">
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" v-bind:class="[ tag_now == -1 ? 'btn-primary' : 'btn-success' ]">
+            <span class="fa" v-bind:class="[ tag_now == -1 ? 'fa-tags' : 'fa-tag' ]">{{ tag_now == -1 ? '标签筛选' : tags[tag_now].name }}</span>
+          </button>
+          <div class="dropdown-menu tag-view">
+            <a class="dropdown-item" href="#" v-for="tag in tags" v-bind:class="{ active: tag.id == tag_now }" v-on:click="select_tag(tag.id)">{{ tag.name }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="post-block" v-for="post in posts">
+        <h5>
+          <span class="badge badge-primary" v-if="post.essential == 1">精选</span>
+          <a v-bind:href="post.id">{{ post.topic }}</a>
+        </h5>
+        <div class="post-info">
+          <span class="badge badge-pill badge-warning" v-for="tag in post.tags.split(',')">{{ tag }}</span>
+          <div class="float-right">
+            {{ post.date }}
+          </div>
+        </div>
+      </div>
+      <div class="center-loader" v-if="loading">
+        <div class="spinner-border"></div>
+        <span>加载中</span>
+      </div>
+      <div class="text-center" v-if="isEnd">已经到最后了</div>
+      <div class="text-center" v-if="!loading && !isEnd">
+        <button class="btn btn-light" v-on:click="load_more">加载更多</button>
+      </div>
     </div>
   </div>
 </body>

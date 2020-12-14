@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const DB = require('./db').db;
+const DB = require('./db');
 
 exports.check = function (jwt, address) {
   return new Promise((res, rej) => {

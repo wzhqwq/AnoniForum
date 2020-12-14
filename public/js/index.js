@@ -55,10 +55,12 @@ window.addEventListener('load', () => {
       let data = error.response.data;
       if (error.response.status == '403')
         login_vm.login_note = data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
+      if (error.response.status == '500')
+      login_vm.login_note = '服务器出错，请联系王子涵' + ', 详细原因：' + (data ? data.note : '');
       else
-        login_vm.login_note = '获取数据失败，请联系王子涵，错误码：' + error.response.status + '详细原因：' + (data ? data.note : '');
+        login_vm.login_note = '获取数据失败，请联系王子涵，错误码：' + error.response.status;
     }
     else
-      login_vm.login_note = '获取数据失败，请联系王子涵，错误信息：' + error.message;
+      login_vm.login_note = '获取数据失败，请检查网络环境：' + error.message;
   });
 });
