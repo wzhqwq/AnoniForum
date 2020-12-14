@@ -66,8 +66,10 @@ window.addEventListener('load', () => {
           if (err.response) {
             if (err.response.status == 500)
               alert('服务器出错，请联系王子涵');
-            else if (err.response.status == 404)
+            else if (err.response.status == 404) {
+              this.loading = false;
               this.isEnd = true;
+            }
             else if (err.response.status != 403)
               alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.note : ''))
           }

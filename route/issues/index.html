@@ -65,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div>
+    <div style="padding: 5px 0;">
       <div class="post-block" v-for="post in posts">
         <h5>
           <span class="badge badge-primary" v-if="post.essential == 1">精选</span>
@@ -78,14 +78,14 @@
           </div>
         </div>
       </div>
-      <div class="center-loader" v-if="loading">
-        <div class="spinner-border"></div>
-        <span>加载中</span>
-      </div>
-      <div class="text-center" v-if="isEnd">已经到最后了</div>
-      <div class="text-center" v-if="!loading && !isEnd">
-        <button class="btn btn-light" v-on:click="load_more">加载更多</button>
-      </div>
+    </div>
+    <div class="center-loader" v-if="loading">
+      <div class="spinner-border"></div>
+      <span>加载中</span>
+    </div>
+    <div class="text-center" v-if="isEnd" style="color: #AAA; display: block;">已经到最后了</div>
+    <div class="text-center" v-if="!loading && !isEnd">
+      <button class="btn btn-light" v-on:click="load_more">加载更多</button>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

@@ -106,7 +106,7 @@ db.prototype.joinSelect = function (table1, table2, both) {
   return this;
 }
 db.prototype.sort = function (key, order, where, limit) {
-  this.sql += ` ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
+  this.sql = `${this.asTable()} ORDER BY ${key}` + (order ? ` ${order}` : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
 }
 db.prototype.asTable = function () {
