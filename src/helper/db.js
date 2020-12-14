@@ -68,7 +68,7 @@ function exec(sql) {
 }
 
 db.insert = function (table, items) {
-  return exec(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => `${item}`).join(',')});`);
+  return exec(`INSERT INTO ${table} (${Object.keys(items).join(',')}) VALUES(${Object.values(items).map(item => `'${item}'`).join(',')});`);
 };
 db.update = function (table, items, where) {
   var entries = [];

@@ -48,7 +48,7 @@ window.addEventListener('load', () => {
         })
         .catch(e => {
           var msg = '';
-          if (e.response.data) msg = e.response.data.note;
+          if (e.response.data) msg = e.response.data.err;
           alert("登录发生问题：" + e.message + ' ' + msg);
         })
       }
