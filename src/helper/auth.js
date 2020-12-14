@@ -53,7 +53,7 @@ exports.auth = function (sdu_id, passwd, address, salt) {
           rej('密码错误');
         else {
           if (user.last_remote != address)
-            (new DB()).update('users', {last_remote: address}, `u_id=${user.u_id}`);
+            DB.update('users', {last_remote: address}, `u_id=${user.u_id}`);
           var data = {u_id: user.u_id};
           var dataString = Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
           var jwt = dataString + '.' + crypto.createHmac('sha256', user.token_secret).update(dataString).digest('base64');

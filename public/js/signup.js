@@ -47,7 +47,7 @@ window.addEventListener('load', () => {
           }
         })
         .catch(e => {
-          console.error(e);
+          alert("注册发生问题" + e);
         })
       }
     },

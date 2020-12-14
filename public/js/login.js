@@ -38,7 +38,7 @@ window.addEventListener('load', () => {
           }
         })
         .catch(e => {
-          console.error(e);
+          alert("登录发生问题：" + e);
         });
       }
     }
