@@ -33,11 +33,10 @@ writer.insert_img = function (e) {
           now.appendChild(line);
           now.appendChild(newLine);
         }
-        else {
+        else
           now.parentElement.insertBefore(line, now);
-          range.setStart(newLine, 0);
-          range.collapse(true);
-        }
+        range.setStart(now, 0);
+        range.collapse(true);
       });
     }
     else
@@ -74,11 +73,10 @@ writer.insert_code = function () {
           now.appendChild(line);
           now.appendChild(newLine);
         }
-        else {
+        else
           now.parentElement.insertBefore(line, now);
-          range.setStart(newLine, 0);
-          range.collapse(true);
-        }
+        range.setStart(now, 0);
+        range.collapse(true);
       });
     }
     else
@@ -284,6 +282,7 @@ function getLine(el) {
 function lineFormat(format_current) {
   var range = getRange();
   var el = document.getElementById('writer');
+  if (el.innerHTML == '') return;
   var temp = {start: [range.startContainer, range.startOffset], end: [range.endContainer, range.endOffset]};
   (format_current ? [getLine(range.startContainer)] : el.childNodes).forEach(line => {
     if (line.nodeName == '#text' || (line.tagName != 'DIV' && line.tagName != 'H1')) {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>创建文章</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/resoure/css/public.css">
+  <link rel="stylesheet" href="/resource/css/public.css">
   <link href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://cdn.bootcdn.net/ajax/libs/codemirror/5.58.3/codemirror.min.css" rel="stylesheet">
 </head>
@@ -40,7 +40,7 @@
         <div class="float-left btn-group" style="margin-left: 5px;">
           <button class="btn btn-dark fa fa-image btn-sm" v-on:click="writer.insert_img" data-toggle="tooltip" data-placement="bottom" title="插入图片"></button>
           <button class="btn btn-dark fa fa-code btn-sm" v-on:click="writer.insert_code" data-toggle="tooltip" data-placement="bottom" title="插入代码"></button>
-          <button class="btn btn-dark fa formula btn-sm" v-on:click="writer.insert_formula" data-toggle="tooltip" data-placement="bottom" title="插入公式"></button>
+          <button class="btn btn-dark fa formula btn-sm" v-on:click="writer.insert_formula" data-toggle="tooltip" data-placement="bottom" title="插入数学公式"></button>
         </div>
         <div class="float-right">
           <button class="btn fa btn-sm" v-on:click="save" data-toggle="tooltip" data-placement="bottom" title="存成草稿" v-bind:disabled="!can_save" v-bind:class="[ saving ? 'btn-waring' : 'btn-success', saving ? 'fa-clock-o' : 'fa-save' ]"></button>
@@ -153,8 +153,8 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/codemirror/5.58.3/codemirror.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/codemirror/5.58.3/mode/clike/clike.min.js"></script>
-  <script src="/resoure/js/main.js"></script>
-  <script src="/resoure/js/publish.js"></script>
-  <script src="/resoure/js/writer.js"></script>
+  <script src="/resource/js/main.js"></script>
+  <script src="/resource/js/publish.js"></script>
+  <script src="/resource/js/writer.js"></script>
 </body>
 </html>
