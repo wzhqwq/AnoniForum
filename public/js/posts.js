@@ -58,7 +58,7 @@ window.addEventListener('load', () => {
           this.isEnd = false;
           this.loading = false;
           if (more)
-            this.posts.push(... resp.data);
+            this.posts.concat(resp.data);
           else
             this.posts = resp.data;
         })
