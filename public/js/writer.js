@@ -423,7 +423,7 @@ const refresh_status = () => {
   }, 50);
 };
 
-window.addEventListener('load', () => {
+const secondly_load =  () => {
   var element = document.getElementById('writer');
   element.parentElement.addEventListener('mouseup', refresh_status);
   element.parentElement.addEventListener('keyup', e => {
@@ -527,4 +527,4 @@ window.addEventListener('load', () => {
       }
     }
   })
-});
+};

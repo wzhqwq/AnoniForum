@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+const first_load = () => {
   var type = location.pathname.match('[^/]*/$')[0];
   var last_search = '';
 
@@ -88,4 +88,4 @@ window.addEventListener('load', () => {
   .catch(err => {
     alert('获取标签时出现问题：' + err.message);
   });
-});
+};

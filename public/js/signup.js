@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+const first_load =  () => {
   var salts;
   axios.get('/user/getsalt')
   .then(response => {
@@ -68,4 +68,4 @@ window.addEventListener('load', () => {
       }
     }
   });
-});
+};

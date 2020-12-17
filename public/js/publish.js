@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+const first_load = () => {
   $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip(); 
   });
@@ -212,4 +212,4 @@ window.addEventListener('load', () => {
     lineNumbers: true,
     mode: "text/x-java"
   });
-});
+};

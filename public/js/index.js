@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+const first_load =  () => {
   var bulletin_vm = new Vue({
     el: '#bulletin-board',
     data: {
@@ -51,4 +51,4 @@ window.addEventListener('load', () => {
     else
       alert('获取数据失败，请检查网络环境：' + error.message);
   });
-});
+};

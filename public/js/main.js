@@ -11,6 +11,11 @@ window.addEventListener('load', () => {
   );
   $('.container').css('display', 'block');
 
+  if (first_load)
+    first_load();
+  if (secondly_load)
+    secondly_load();
+
   if (location.pathname == 'login' || location.pathname == 'signup') return;
 
   var login_el = document.createElement('div');
