@@ -87,6 +87,7 @@ db.create = function (table, items) {
       ).join(',\n')
   }\n);`);
 }
+db.exec = exec;
 
 db.prototype.select = function (table, where, limit) {
   this.sql = `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');

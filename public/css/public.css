@@ -90,18 +90,18 @@
 .formula::after {
   content: "∑ƒπ";
 }
-#writer {
+#writer-content {
   margin-top: 30px;
   border-radius: 10px;
   padding: 5px 7px;
   box-shadow: 0 0 3px #0003;
   min-height: 100px;
 }
-#writer:focus {
+#writer-content:focus {
   outline: none;
   background-color: #EEE;
 }
-#writer img {
+#writer-content img {
   max-width: 90%;
   cursor: pointer;
   display: block;
@@ -185,6 +185,7 @@ block {
   padding: 5px;
   height: 140px;
   justify-content: space-between;
+  z-index: 20;
 }
 #block-popper > button {
   display: block;
@@ -195,4 +196,34 @@ block {
   border-radius: 10px;
   box-shadow: 0 0 5px #0003;
   overflow: hidden;
+}
+
+.tag {
+  padding: 5px 8px;
+  background-color: rgb(255, 245, 188);
+  color: rgb(151, 129, 0);
+  border-radius: 8px;
+  margin: 4px;
+  user-select: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.tag.selected {
+  background-color: rgb(172, 146, 0);
+  color: white;
+}
+.all-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.all-tags.collapsed {
+  height: 40px;
+}
+@media (max-width: 576px) {
+  .all-tags {
+    flex-wrap: nowrap;
+    overflow: auto;
+  }
 }

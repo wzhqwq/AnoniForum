@@ -8,7 +8,9 @@ var route = {
   getPost: router.route('/getpost'),
   getBulletin: router.route('/getbulletin'),
   getComments: router.route('/getcomments'),
-  sendPost: router.route('/sendpost'),
+  savePost: router.route('/savepost'),
+  publishPost: router.route('/publishpost'),
+  deletePost: router.route('/deletepost'),
   sendComment: router.route('/sendcomment')
 };
 

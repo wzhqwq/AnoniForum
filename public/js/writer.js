@@ -11,7 +11,7 @@ writer.insert_img = function (e) {
   lineFormat();
   if (range.collapsed) {
     let now = range.startContainer;
-    if (now.parentElement.id == 'writer' || now.id == 'writer') {
+    if (now.parentElement.id == 'writer-content' || now.id == 'writer-content') {
       window.image_vm.get_image().then((obj) => {
         obj.id = images.length;
         images.push(obj);
@@ -27,7 +27,7 @@ writer.insert_img = function (e) {
 
         let line = document.createElement('div');
         line.appendChild(el1);
-        if (now.id == 'writer') {
+        if (now.id == 'writer-content') {
           let newLine = document.createElement('div');
           newLine.innerHTML = '<br/>';
           now.appendChild(line);
@@ -51,7 +51,7 @@ writer.insert_code = function () {
   lineFormat();
   if (range.collapsed) {
     let now = range.startContainer;
-    if (now.parentElement.id == 'writer' || now.id == 'writer') {
+    if (now.parentElement.id == 'writer-content' || now.id == 'writer-content') {
       window.code_vm.get_code().then((obj) => {
         obj.id = codes.length;
         codes.push(obj);
@@ -67,7 +67,7 @@ writer.insert_code = function () {
         let line = document.createElement('div');
         line.appendChild(el1);
         line.appendChild(document.createElement('br'));
-        if (now.id == 'writer') {
+        if (now.id == 'writer-content') {
           let newLine = document.createElement('div');
           newLine.innerHTML = '<br/>';
           now.appendChild(line);
@@ -131,7 +131,7 @@ writer.set_bold = function (el) {
   }
   else {
     if (range.collapsed) return;
-    if (range.commonAncestorContainer.id == 'writer') {
+    if (range.commonAncestorContainer.id == 'writer-content') {
       alert('无法跨行设置加粗，但可以在设置加粗后在内部换行');
       return;
     }
@@ -153,7 +153,7 @@ writer.set_header = function () {
   lineFormat();
   if (writer.is_header) {
     var node = range.commonAncestorContainer;
-    if (range.collapsed && node.nodeName == 'DIV' && node.id == 'writer' && node.childNodes.length)
+    if (range.collapsed && node.nodeName == 'DIV' && node.id == 'writer-content' && node.childNodes.length)
       node = node.childNodes[range.startOffset];
     if (node.nodeName == 'H1') {
       node.outerHTML = `<div>${node.innerHTML}</div>`;
@@ -185,7 +185,7 @@ writer.set_header = function () {
   }
   else {
     var line = range.commonAncestorContainer;
-    if (line.id == 'writer') {
+    if (line.id == 'writer-content') {
       if (range.collapsed) {
         if (line.innerHTML == '') {
           alert('无法将空的第一行设为标题，请先键入内容');
@@ -198,7 +198,7 @@ writer.set_header = function () {
         return;
       }
     }
-    if (line.parentElement.id != 'writer')
+    if (line.parentElement.id != 'writer-content')
       line = getLine(line);
     if (line.nodeName == '#text') {
       let wrap = document.createElement('div');
@@ -256,7 +256,7 @@ writer.set_link = function () {
   }
   else {
     if (range.collapsed) return;
-    if (range.commonAncestorContainer.id == 'writer') {
+    if (range.commonAncestorContainer.id == 'writer-content') {
       alert('无法设置跨行超链接，但是可以设置超链接后在内部换行');
       return;
     }
@@ -272,16 +272,36 @@ writer.set_link = function () {
     });
   }
 };
+writer.get_post = function () {
+  var el = document.getElementById('writer-content');
+  var doc = el.innerHTML;
+  var upload_imgs = [];
+  Array.prototype.forEach.call(el.getElementsByTagName('img'), img => {
+    var id = img.id.split('-');
+    if (id.length != 2) return;
+    id = parseInt(id[1]);
+    if (images[id] && images[id].file) {
+      doc = doc.replace(`src="[^"]*" id="img-${id}`, `src="%${upload_imgs}%" id="img-${id}"`);
+      upload_imgs.push(images[id].file);
+    }
+  });
+  doc = doc.replace(/(src="[^"]")/g, 'lazy-$0');
+  console.log(doc);
+  return {post: doc, img_files: upload_imgs};
+};
+writer.load_post = function (post) {
+  document.getElementById('writer-content').innerHTML = post.replace('lazy-', '');
+}
 
 function getLine(el) {
-  while (el.parentElement.id != 'writer')
+  while (el.parentElement.id != 'writer-content')
     el = el.parentElement;
   return el;
 }
 
 function lineFormat(format_current) {
   var range = getRange();
-  var el = document.getElementById('writer');
+  var el = document.getElementById('writer-content');
   if (el.innerHTML == '') return;
   var temp = {start: [range.startContainer, range.startOffset], end: [range.endContainer, range.endOffset]};
   (format_current ? [getLine(range.startContainer)] : el.childNodes).forEach(line => {
@@ -365,7 +385,7 @@ const refresh_status = () => {
 
     if (movingEl) {
       if (range.collapsed) {
-        if (range.startContainer.parentElement.id == 'writer') {
+        if (range.startContainer.parentElement.id == 'writer-content') {
           range.insertNode(movingEl);
           movingEl.className = '';
           movingEl = null;
@@ -380,7 +400,7 @@ const refresh_status = () => {
 
     var isStart = false;
     var node = range.commonAncestorContainer;
-    if (range.collapsed && node.nodeName == 'DIV' && node.id == 'writer' && node.childNodes.length)
+    if (range.collapsed && node.nodeName == 'DIV' && node.id == 'writer-content' && node.childNodes.length)
       node = node.childNodes[range.startOffset];
     writer.is_bold = false;
     writer.is_link = false;
@@ -424,7 +444,7 @@ const refresh_status = () => {
 };
 
 const secondly_load =  () => {
-  var element = document.getElementById('writer');
+  var element = document.getElementById('writer-content');
   element.parentElement.addEventListener('mouseup', refresh_status);
   element.parentElement.addEventListener('keyup', e => {
     if (e.key == 'Delete' || e.key == 'Backspace')
@@ -453,13 +473,21 @@ const secondly_load =  () => {
         document.execCommand('paste', false, text);
     }
   });
-  var writer_vm = new Vue({
+  window.writer_vm = new Vue({
     el: '#writer',
     data: {
-      value: ''
+      saving: false,
+      publishing: false,
+      writer: writer,
+      post_id: -1
     },
     methods: {
-      
+      save: function () {
+        window.publish_vm.save();
+      },
+      publish: function () {
+        window.publish_vm.publish();
+      }
     }
   });
   var types = ['img', 'code', 'formula'];
@@ -483,8 +511,8 @@ const secondly_load =  () => {
         this.show = true;
         var w = window.innerWidth;
         this.x = (mx + 50 > w) ? (w - 60) : (mx + 20);
-        this.y = (my - 220 < 0) ? (my + 60) : (my - 60);
-        this.dir = (my - 220 < 0) ? 'column-reverse' : 'column';
+        this.y = (my - 190 < 0) ? (my + 60) : (my - 60);
+        this.dir = (my - 190 < 0) ? 'column-reverse' : 'column';
         this.type = type;
         this.id = id;
       },

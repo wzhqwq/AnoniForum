@@ -3,22 +3,137 @@ const first_load = () => {
     $('[data-toggle="tooltip"]').tooltip(); 
   });
 
-  var publish_vm = new Vue({
-    el: '#publish',
+  var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace(/\/$/, '').match(/[^/]*$/)[0];
+
+  window.publish_vm = new Vue({
+    el: '#publisher',
     data: {
-      can_save: false,
-      can_send: false,
       saving: false,
-      writer: window.writer
+      publishing: false,
+      // uploaded: [],
+      post: '',
+      post_id: -1,
+      err: '',
+      tags: [],
+      tags_s: [],
+      topic: '',
+      tag_collapsed: true
     },
     methods: {
       save: function () {
-
+        var post = writer.get_post();
+        if (post.post == this.post && this.post_id != -1) return;
+        this.saving = true;
+        /*var imgs_to_upload = [], imgs_to_delete = [];
+        Promise.all(
+          post.img_files.map(to_upload =>
+            async () => {
+              var md5 = await to_upload.arrayBuffer;
+              md5 = cryptoJS.MD5(md5).toString();
+              for (let i = 0; i < this.uploaded.length; i++)
+                if (this.uploaded[i].file.size != to_upload.size && this.uploaded[i].md5 != md5)
+                  imgs_to_upload.push(to_upload);
+                else
+                  imgs_to_delete.push(this.uploaded[i].name);
+              return;
+            }
+          )
+        ).then(() => {
+          if (this.uploaded.length - imgs_to_delete.length + imgs_to_upload.length > 5) {
+            alert('最多可以有五张图片留在服务器，若图片很多请考虑使用图床');
+            this.saving = false;
+            return;
+          }
+          for (let i = 0; i < imgs_to_delete.length; i++)
+            for (let j = 0; j < this.uploaded.length; j++)
+              if (this.uploaded[j].name == imgs_to_delete[i]) {
+                this.uploaded = this.uploaded.splice(j, 1);
+                break;
+              }*/
+          axiosPost('/posts/savepost', {
+            /*add_img: imgs_to_upload,
+            delete_img: imgs_to_delete,*/
+            post: post,
+            p_id: this.post_id,
+            type: type[0]
+          }).then(resp => {
+            /*resp.data.files.forEach((file, i) => {
+              this.uploaded.push({name: file.name, md5: file.md5, file: imgs_to_upload[i]});
+            });*/
+            this.saving = false;
+            if (this.publishing) {
+              if (this.topic == '') {
+                this.err = '需要键入标题';
+                return;
+              }
+              if (this.topic.length > 40) {
+                this.err = '标题不能超过40个字';
+                return;
+              }
+              axiosPost('/posts/publishpost', {
+                type: type[0],
+                topic: this.topic,
+                tags: this.tags_s.map(tag => tag.id).join(',')
+              })
+              .then(resp => {
+                this.publishing = false;
+                location.href = `/${type}/detail?id=${resp.data.id}`;
+              })
+              .catch(err => {
+                this.publishing = false;
+              });
+            }
+          })
+          .catch(err => {
+            this.saving = false;
+            this.publishing = false;
+          });
+        /*});*/
       },
       publish: function () {
-
+        if (this.saving) return;
+        this.publishing = true;
+        this.save();
+      },
+      tag_click: function (id) {
+        if (id < this.tags.length) {
+          if (this.tags[id].selected) {
+            for (let i = 0; i < this.tags_s.length; i++)
+              if (this.tags_s[i].id == id) {
+                this.tags_s.splice(i, 1);
+                break;
+              }
+          }
+          else {
+            if (this.tags_s.length == 3)
+              return alert('最多可以同时选择3个标签'), null;
+            this.tags_s.push(this.tags[id]);
+          }
+          this.tags[id].selected = !this.tags[id].selected;
+        }
+      }
+    },
+    watch: {
+      publishing(val) {
+        window.writer_vm.publishing = val;
+      },
+      saving(val) {
+        window.writer_vm.saving = val;
       }
     }
+  });
+  
+  /*axios.get('/resource/public/jsons/tags.json')
+  .then(data => {
+    window.publish_vm.tags = data.map((tag, i) => {
+      return {name: tag, id: i, selected: false};
+    });
+  })
+  .catch(err => {
+    alert('获取标签时发生错误：' + err.message);
+  })*/
+  window.publish_vm.tags = ["Java", "微积分", "继承", "多态", "选择题", "读程序题", "PTA", "补全程序题", "算法", "递归", "链表", "重载", "代码bug", "微分", "定积分", "不定积分", "极限", "常用公式", "洛必达", "中值定理", "泰勒公式", "微分方程", "吉米多维奇"].map((tag, i) => {
+    return {name: tag, id: i, selected: false};
   });
 
   window.link_vm = new Vue({

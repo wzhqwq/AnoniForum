@@ -13,7 +13,7 @@ DB.connect().then(() => {
   server.listen(20717, 'localhost', () => {
     log('Post server is running.');
   });
-  /*DB.create('bulletin', [
+  DB.create('bulletin', [
     {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'title', type: DB.SHORT},
     {name: 'toTop', type: DB.INT},
@@ -21,7 +21,9 @@ DB.connect().then(() => {
   ]);
   DB.create('issues', [
     {name: 'issue_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'u_id', type: DB.INT},
     {name: 'topic', type: DB.SHORT},
+    {name: 'brief', type: 'VARCHAR(200)'},
     {name: 'tags', type: DB.SHORT},
     {name: 'essential', type: DB.INT},
     {name: 'resolved', type: DB.INT},
@@ -29,6 +31,7 @@ DB.connect().then(() => {
   ]);
   DB.create('articles', [
     {name: 'article_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'u_id', type: DB.INT},
     {name: 'topic', type: DB.SHORT},
     {name: 'tags', type: DB.SHORT},
     {name: 'essential', type: DB.INT},
@@ -48,7 +51,7 @@ DB.connect().then(() => {
     {name: 'content', type: DB.TEXT},
     {name: 'u_id', type: DB.INT},
     {name: 'reply', type: DB.INT}
-  ])*/
+  ]);
 });
 
 app.use(bodyParser.json());
@@ -117,72 +120,154 @@ route.getPosts.post((req, res) => {
   }
 
   if (start.match(/[\D]/g))
-    res.status(400).json({ code: 'INVNUM', note: 'start不合法' });
-  else if (type == 'a' || type == 'i') {
-    var name = type == 'a' ? 'article' : 'issue';
-    start = parseInt(start);
-    var fromTable = `${name}s`;
+    return res.status(400).json({ code: 'INVNUM', note: 'start不合法' }), null;
+  if (type != 'a' && type != 'i')
+    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
 
-    if (tag != '') {
-      if (tag.match(/[\D]/g) != null) {
-        res.status(400).json({ code: 'INVTAG', note: 'tags不合法' });
-        return;
-      }
-      fromTable = (new DB())
-        .joinSelect(
-          (new DB())
-            .select(`${name}_tags a`, `tag_id = ${tag}`)
-            .asTable(),
-          fromTable,
-          `${name}_id`
-        ).asTable();
-    }
-    var q = new DB();
-    q.select(fromTable, where == '' ? null : where, `${start} OFFSET 10`);
+  var name = type == 'a' ? 'article' : 'issue';
+  start = parseInt(start);
+  var fromTable = `${name}s`;
 
-    if (sort == 'h')
-      q.sort('watch', 'DESC');
+  if (tag != '') {
+    if (tag.match(/[\D]/g) != null)
+      return res.status(400).json({ code: 'INVTAG', note: 'tags不合法' }), null;
 
-    q.query()
-      .then(posts => {
-        if (posts.length == 0)
-          res.status(404).json({ code: 'NOPOST', note: '没有了' });
-        else
-          res.json(posts);
-      })
-      .catch(err => {
-        res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
-      });
+    fromTable = (new DB())
+      .joinSelect(
+        (new DB())
+          .select(`${name}_tags a`, `tag_id = ${tag}`)
+          .asTable(),
+        fromTable,
+        `${name}_id`
+      ).asTable();
   }
-  else
-    res.status(400).json({ code: 'INVTP', note: 'type不合法' });
+  var q = new DB();
+  q.select(fromTable, where == '' ? null : where, `${start} OFFSET 10`);
+
+  if (sort == 'h')
+    q.sort('watch', 'DESC');
+
+  q.query()
+    .then(posts => {
+      if (posts.length == 0)
+        res.status(404).json({ code: 'NOPOST', note: '没有了' });
+      else
+        res.json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
+    });
 });
 
 route.getPost.post((req, res) => {
-  var type = req.body.type;
-  var p_id = req.body.p_id;
+  var type = req.body.type || '';
+  var p_id = req.body.p_id || '';
 
   if (p_id.match(/[\D]/g))
-    res.status(400).json({ code: 'INVID', note: 'p_id不合法' });
-  else if (type == 'a' || type == 'i') {
-    var name = type == 'a' ? 'article' : 'issue';
+    return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
+  if (type != 'a' && type != 'i')
+    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+
+  var name = type == 'a' ? 'article' : 'issue';
+  (new DB())
+    .select(`${name}s`, `${name}_id = ${p_id}`)
+    .query(true)
+    .then(post => {
+      if (!post)
+        return res.status(404).json({ code: 'NOID', note: 'p_id不存在' }), null;
+
+      fetch(__dirname + `/../../data/${name}s/${p_id}.html`)
+      .then(buf => buf.arrayBuffer())
+      .then(content => {
+        post.content = content;
+        res.json({code: 'SUCC', note: '', post: post});
+      })
+      .catch(err => {
+        res.json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
+      })
+    })
+    .catch(err => {
+      res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
+    });
+});
+
+route.savePost.post((req, res) => {
+  var type = req.body.type || '';
+  var p_id = req.body.p_id || '';
+  // prevent XSS
+  var content = (req.body.post || '').replace(/<script>/gi, '<xd>').replace(/<\/script>/gi, '</xd>');
+
+  if (type != 'a' && type != 'i')
+    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+  
+  var path = __dirname + `/../../data/${type}/`;
+  var name = type == 'a' ? 'article' : 'issue';
+  if (p_id == '-1')
+    fs.writeFile(path + `drafts/${req.user_current.u_id}.html`, content, () => {
+      res.json({ code: 'SUCC', note: ''});
+    });
+  else {
+    if (p_id.match(/[\D]/g))
+      return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
     (new DB())
       .select(`${name}s`, `${name}_id = ${p_id}`)
       .query(true)
       .then(post => {
         if (!post)
-          res.status(404).json({ code: 'NOID', note: 'p_id不存在' });
-        else {
-          var ret = post[0];
-          // read post
-        }
+          return res.status(403).json({code: 'NOID', note: 'p_id不存在'}), null;
+        if (post.p_id != req.user_current)
+          return res.status(403).json({code: 'INVUSER', note: '您没有权限编辑此内容'}), null;
+        fs.writeFile(path + `${p_id}.html`, content, () => {
+          res.json({ code: 'SUCC', note: ''});
+        });
       })
       .catch(err => {
-        res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
+        res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
       });
   }
-  else
-    res.status(400).json({ code: 'INVTP', note: 'type不合法' });
 });
+
+route.publishPost.post((req, res) => {
+  var type = req.body.type || '';
+  var topic = req.body.topic || '';
+  var tags = req.body.tags || '';
+  var brief = req.body.brief || '';
+  if (type != 'a' && type != 'i')
+    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+  if (topic == '' || topic.length > 40)
+    return res.status(400).json({ node: 'NOTOPIC', note: '标题不合法'}), null;
+  if (tags != '' && tags.match(/[^,\d]/g))
+    return res.status(400).json({ code: 'INVTAG', note: 'tags不合法'}), null;
+  
+  var path = __dirname + `/../../data/${type}/`;
+  var name = type == 'a' ? 'article' : 'issue';
+
+  if (!fs.existsSync(path + `drafts/${req.user_current.u_id}.html`))
+    return res.json({ code: 'NODRAFT', note: '没有草稿要发送'});
+  
+  var date = new Date();
+  var post = {
+    topic: topic,
+    tags: tags,
+    essential: 0,
+    resolved: 0,
+    time: `${date.getMonth()}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`
+  };
+  if (type == 'i')
+    post.brief = brief;
+  DB.insert(`${name}s`, post).then(result => {
+    if (tags != '')
+      tags.split(',').forEach(id => {
+        var ins = {tag_id: id};
+        ins[`${name}_id`] = result.lastID;
+        DB.insert(`${name}s_tags`, ins);
+      });
+    fs.rename(path + `drafts/${req.user_current.u_id}.html`, path + `${result.lastID}.html`, () => {
+      res.json({code: 'SUCC', note: '', id: result.lastID});
+    });
+  }).catch(err => {
+    res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
+  });
+})
 
 app.use('/posts', route.router);

@@ -5,6 +5,8 @@ var routes = {
   reloadAllServer: router.route('/reloadAllServer'),
   closeMainServer: router.route('/closeMainServer'),
   startMainServer: router.route('/startMainServer'),
+  addBulletin: router.route('/addbulletin'),
+  removeBulletin: router.route('/removebulletin'),
   
   mysqlAdmin: function (prefix, middleware) {
     if (!middleware && prefix) {

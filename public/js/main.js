@@ -9,11 +9,11 @@ window.addEventListener('load', () => {
       el.style.backgroundImage = `url(${el.getAttribute('lazy-src')})`;
     }
   );
-  $('.container').css('display', 'block');
+  document.getElementsByClassName('container')[0].style.display = 'block';
 
-  if (first_load)
+  if (typeof first_load != 'undefined')
     first_load();
-  if (secondly_load)
+  if (typeof secondly_load != 'undefined')
     secondly_load();
 
   if (location.pathname == 'login' || location.pathname == 'signup') return;
