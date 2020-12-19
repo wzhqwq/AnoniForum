@@ -64,10 +64,12 @@ const first_load = () => {
             if (this.publishing) {
               if (this.topic == '') {
                 this.err = '需要键入标题';
+                this.publishing = false;
                 return;
               }
               if (this.topic.length > 40) {
                 this.err = '标题不能超过40个字';
+                this.publishing = false;
                 return;
               }
               axiosPost('/posts/publishpost', {

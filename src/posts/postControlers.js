@@ -200,8 +200,8 @@ route.savePost.post((req, res) => {
   if (type != 'a' && type != 'i')
     return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
   
-  var path = __dirname + `/../../data/${type}/`;
   var name = type == 'a' ? 'article' : 'issue';
+  var path = __dirname + `/../../data/${name}s/`;
   if (p_id == '-1')
     fs.writeFile(path + `drafts/${req.user_current.u_id}.html`, content, () => {
       res.json({ code: 'SUCC', note: ''});
@@ -239,11 +239,11 @@ route.publishPost.post((req, res) => {
   if (tags != '' && tags.match(/[^,\d]/g))
     return res.status(400).json({ code: 'INVTAG', note: 'tags不合法'}), null;
   
-  var path = __dirname + `/../../data/${type}/`;
   var name = type == 'a' ? 'article' : 'issue';
+  var path = __dirname + `/../../data/${name}s/`;
 
   if (!fs.existsSync(path + `drafts/${req.user_current.u_id}.html`))
-    return res.json({ code: 'NODRAFT', note: '没有草稿要发送'});
+    return res.json({ code: 'NODRAFT', note: '没有草稿要发送'}), null;
   
   var date = new Date();
   var post = {
