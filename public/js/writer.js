@@ -275,7 +275,7 @@ writer.set_link = function () {
 writer.get_post = function () {
   var el = document.getElementById('writer-content');
   var doc = el.innerHTML;
-  var upload_imgs = [];
+  /*var upload_imgs = [];
   Array.prototype.forEach.call(el.getElementsByTagName('img'), img => {
     var id = img.id.split('-');
     if (id.length != 2) return;
@@ -284,10 +284,9 @@ writer.get_post = function () {
       doc = doc.replace(`src="[^"]*" id="img-${id}`, `src="%${upload_imgs}%" id="img-${id}"`);
       upload_imgs.push(images[id].file);
     }
-  });
+  });*/
   doc = doc.replace(/(src="[^"]")/g, 'lazy-$0');
-  console.log(doc);
-  return {post: doc, img_files: upload_imgs};
+  return doc;
 };
 writer.load_post = function (post) {
   document.getElementById('writer-content').innerHTML = post.replace('lazy-', '');
