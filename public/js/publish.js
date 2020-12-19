@@ -3,7 +3,7 @@ const first_load = () => {
     $('[data-toggle="tooltip"]').tooltip(); 
   });
 
-  var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace('write/').replace(/\/$/, '').match(/[^/]*$/)[0];
+  var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace('write/', '').replace(/\/$/, '').match(/[^/]*$/)[0];
 
   window.publish_vm = new Vue({
     el: '#publisher',
