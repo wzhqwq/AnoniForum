@@ -12,9 +12,9 @@ window.addEventListener('load', () => {
   document.getElementsByClassName('container')[0].style.display = 'block';
 
   if (typeof first_load != 'undefined')
-    first_load();
+    setTimeout(first_load, 0);
   if (typeof secondly_load != 'undefined')
-    secondly_load();
+    setTimeout(secondly_load, 0);
 
   if (location.pathname == 'login' || location.pathname == 'signup') return;
 

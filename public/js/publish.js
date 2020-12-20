@@ -20,7 +20,8 @@ const first_load = () => {
       topic: '',
       tag_collapsed: true,
       brief: '',
-      loaded: false
+      loaded: false,
+      load_note: '正在加载' + (id == -1 ? '草稿' : '内容')
     },
     methods: {
       save: function () {
@@ -130,7 +131,7 @@ const first_load = () => {
     }
   });
   
-  axios.get('/resource/public/jsons/tags.json')
+  axios.get('/resource/jsons/tags.json')
   .then(data => {
     window.publish_vm.tags = data.map((tag, i) => {
       return {name: tag, id: i, selected: false};
@@ -154,6 +155,7 @@ const first_load = () => {
       window.publish_vm.brief = id == -1 ? localStorage.getItem(type + '_draft_brief') : post.brief;
     window.writer_vm.load(window.publish_vm.post = post.content);
     window.publish_vm.post_id = id;
+    window.publish_vm.load_note = '';
   });
 
   window.link_vm = new Vue({

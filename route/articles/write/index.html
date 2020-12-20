@@ -36,7 +36,7 @@
         <div class="alert alert-danger" v-if="err != ''">{{ err }}</div>
         <div class="alert alert-info" v-if="saving">保存中……</div>
         <div class="alert alert-info" v-if="!saving && publishing">发布中……</div>
-        <div class="alert alert-primary" v-if="load_note">{{ load_note }}</div>
+        <div class="alert alert-primary" v-if="load_note != ''">{{ load_note }}</div>
       </div>
       <div v-if="post_id == -1">
         <div class="form-group" v-bind:class="{'has-error': err != ''}">
