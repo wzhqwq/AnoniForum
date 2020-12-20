@@ -156,7 +156,18 @@ const first_load = () => {
     window.writer_vm.load(window.publish_vm.post = post.content);
     window.publish_vm.post_id = id;
     window.publish_vm.load_note = '';
-  });
+  }).catch(err => {
+    if (err.response) {
+      if (err.response.status == 404) {
+        window.writer_vm.load('');
+        window.publish_vm.load_note = '';
+      }
+      else
+        alert("服务器发生问题：" + err.message);
+    }
+    else
+      alert("获取内容时发生错误：" + err.message);
+  })
 
   window.link_vm = new Vue({
     el: '#set-link',
