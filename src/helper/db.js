@@ -106,9 +106,8 @@ db.prototype.joinSelect = function (table1, table2, both) {
   this.sql = `SELECT tb.* FROM ${table1} AS ta JOIN ${table2} AS tb ON ta.${both} = tb.${both}`;
   return this;
 }
-// where注意需要添加前导t.
 db.prototype.sort = function (key, decrease, limit) {
-  if (where || limit)
+  if (limit)
     this.sql = `SELECT * FROM ${this.asTable()} AS t ORDER BY ${key}` + (limit ? ` LIMIT ${limit}` : '') + (decrease ? ' DESC' : '');
   else
     this.sql = `${this.sql} ORDER BY ${key}` + (decrease ? ' DESC' : '');

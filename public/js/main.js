@@ -24,7 +24,9 @@ window.addEventListener('load', () => {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-        {{ login_note }}
+        <div class="modal-header">
+          <h5>{{ login_note }}</h5>
+        </div>
         <div class="center-loader" v-if="loading">
           <div class="spinner-border"></div>
           <span>登录页面加载中</span>
