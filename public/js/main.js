@@ -25,9 +25,12 @@ window.addEventListener('load', () => {
     <div class="modal-content">
       <div class="modal-body">
         {{ login_note }}
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" v-on:click="location.href='/login'">登录</button>
+        <div class="center-loader" v-if="loading">
+          <div class="spinner-border"></div>
+          <span>登录页面加载中</span>
+        </div>
+        <iframe id="login-frame" v-bind:src="login_needed ? '/login' ? ''" v-on:load="loaded">
+        </iframe>
       </div>
     </div>
   </div>
@@ -38,20 +41,52 @@ window.addEventListener('load', () => {
     data: {
       login_needed: false,
       login_note: '',
-      location: location
+      location: location,
+      loading: true
+    },
+    methods: {
+      loaded: function () {
+        this.loading = false;
+        $('#login-frame')[0].contentWindow.login_succ = () => {
+          this.login_note = '';
+          jwt = localStorage.getItem('jwt');
+          setTimeout(() => {
+            this.login_needed = false;
+          }, 0);
+          axios.post(last_url, last_obj).then(data => last_res(data)).catch(err => last_rej(err));
+        }
+      }
     }
   });
   var jwt = localStorage.getItem('jwt');
+  
+  if (!jwt)
+    window.u_id = -1;
+  else {
+    var data = Buffer.from(jwt.split('.')[0], 'base64').toString('utf-8');
+    data = JSON.parse(data);
+    window.u_id = data.u_id;
+  }
+
+  var last_url, last_obj;
+  var last_res, last_rej;
 
   window.axiosPost = function (url, obj = {}) {
     obj.jwt = jwt;
+    last_url = url;
+    last_obj = obj;
     return axios.post(url, obj)
       .catch(err => {
         if (err?.response.status == 403) {
+          login_vm.loading = true;
           login_vm.login_needed = true;
           setTimeout(() => {
             login_vm.login_note = err.response.data.code == 'LOGIN' ? '您还没有登录' : (data.note + '，请重新登录');
           }, 0);
+          return new Promise((res, rej) => {
+            last_res = res;
+            last_rej = rej;
+          });
         }
         return new Promise((r, rej) => rej(err));
       });

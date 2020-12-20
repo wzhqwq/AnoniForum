@@ -34,7 +34,10 @@ const first_load = () => {
             var d = new Date();
             d.setTime(d.getTime() + (7*24*60*60*1000));
             localStorage.setItem('jwt', data.jwt);
-            location.href = (location.search.match(/fb=[^&]*/) || ['fb=/'])[0].replace(/^fb=/, '');
+            if (window.login_succ)
+              window.login_succ();
+            else
+              location.href = (location.search.match(/fb=[^&]*/) || ['fb=/'])[0].replace(/^fb=/, '');
           }
         })
         .catch(e => {

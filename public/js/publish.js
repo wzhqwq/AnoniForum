@@ -4,6 +4,7 @@ const first_load = () => {
   });
 
   var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace('write/', '').replace(/\/$/, '').match(/[^/]*$/)[0];
+  var id = (location.search.match(/[\d]*$/) || [-1])[0];
 
   window.publish_vm = new Vue({
     el: '#publisher',
@@ -12,12 +13,14 @@ const first_load = () => {
       publishing: false,
       // uploaded: [],
       post: '',
-      post_id: -1,
+      post_id: -2,
       err: '',
       tags: [],
       tags_s: [],
       topic: '',
-      tag_collapsed: true
+      tag_collapsed: true,
+      brief: '',
+      loaded: false
     },
     methods: {
       save: function () {
@@ -61,6 +64,7 @@ const first_load = () => {
               this.uploaded.push({name: file.name, md5: file.md5, file: imgs_to_upload[i]});
             });*/
             this.saving = false;
+            this.post = post;
             if (this.publishing) {
               if (this.topic == '') {
                 this.err = '需要键入标题';
@@ -75,7 +79,8 @@ const first_load = () => {
               axiosPost('/posts/publishpost', {
                 type: type[0],
                 topic: this.topic,
-                tags: this.tags_s.map(tag => tag.id).join(',')
+                tags: this.tags_s.map(tag => tag.id).join(','),
+                brief: this.brief
               })
               .then(resp => {
                 this.publishing = false;
@@ -125,7 +130,7 @@ const first_load = () => {
     }
   });
   
-  /*axios.get('/resource/public/jsons/tags.json')
+  axios.get('/resource/public/jsons/tags.json')
   .then(data => {
     window.publish_vm.tags = data.map((tag, i) => {
       return {name: tag, id: i, selected: false};
@@ -133,9 +138,22 @@ const first_load = () => {
   })
   .catch(err => {
     alert('获取标签时发生错误：' + err.message);
-  })*/
-  window.publish_vm.tags = ["Java", "微积分", "继承", "多态", "选择题", "读程序题", "PTA", "补全程序题", "算法", "递归", "链表", "重载", "代码bug", "微分", "定积分", "不定积分", "极限", "常用公式", "洛必达", "中值定理", "泰勒公式", "微分方程", "吉米多维奇"].map((tag, i) => {
-    return {name: tag, id: i, selected: false};
+  });
+  
+  axiosPost('/posts/getpost', {
+    p_id: id,
+    type: type[0]
+  }).then(post => {
+    if (post.u_id != window.u_id) {
+      alert('您不是该内容的发布者，无法编辑，即将返回上一页');
+      window.history.back();
+      return;
+    }
+    window.publish_vm.topic = id == -1 ? localStorage.getItem(type + '_draft_topic') : post.topic;
+    if (type == 'issues')
+      window.publish_vm.brief = id == -1 ? localStorage.getItem(type + '_draft_brief') : post.brief;
+    window.writer_vm.load(window.publish_vm.post = post.content);
+    window.publish_vm.post_id = id;
   });
 
   window.link_vm = new Vue({

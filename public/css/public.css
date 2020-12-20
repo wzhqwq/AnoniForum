@@ -227,3 +227,7 @@ block {
     overflow: auto;
   }
 }
+
+#login-frame {
+  width: 100%;
+}

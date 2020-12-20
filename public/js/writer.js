@@ -478,9 +478,13 @@ const secondly_load =  () => {
       saving: false,
       publishing: false,
       writer: writer,
-      post_id: -1
+      loaded: false
     },
     methods: {
+      load: function (content) {
+        element.innerHTML = content;
+        this.loaded = true;
+      },
       save: function () {
         window.publish_vm.save();
       },

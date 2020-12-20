@@ -163,10 +163,22 @@ route.getPost.post((req, res) => {
   var type = req.body.type || '';
   var p_id = req.body.p_id || '';
 
-  if (p_id.match(/[\D]/g))
-    return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
   if (type != 'a' && type != 'i')
     return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+  if (p_id == '-1') {
+    if (!fs.existsSync(`/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
+      return res.status(404).json({ code: 'NODRAFT', note: '没有草稿'}), null;
+    fetch(`/../../data/${name}s/drafts/${req.user_current.u_id}.html`)
+    .then(buf => buf.arrayBuffer())
+    .then(content => {
+      res.json({code: 'SUCC', note: '', post: {content: content, u_id: req.user_current.u_id, isDraft: true}});
+    })
+    .catch(err => {
+      res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
+    });
+  }
+  if (p_id.match(/[\D]/g))
+    return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
 
   var name = type == 'a' ? 'article' : 'issue';
   (new DB())
@@ -183,8 +195,8 @@ route.getPost.post((req, res) => {
         res.json({code: 'SUCC', note: '', post: post});
       })
       .catch(err => {
-        res.json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
-      })
+        res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
+      });
     })
     .catch(err => {
       res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
@@ -250,11 +262,12 @@ route.publishPost.post((req, res) => {
     topic: topic,
     tags: tags,
     essential: 0,
-    resolved: 0,
     time: `${date.getMonth()}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`
   };
-  if (type == 'i')
+  if (type == 'i') {
+    post.resolved = 0;
     post.brief = brief;
+  }
   DB.insert(`${name}s`, post).then(result => {
     if (tags != '')
       tags.split(',').forEach(id => {
