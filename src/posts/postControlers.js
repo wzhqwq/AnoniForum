@@ -87,7 +87,7 @@ route.getEssentials.post((req, res) => {
     .select('issues', 'essential = 1')
     .append(
       (new DB).select('issues', 'essential = 0')
-        .sort('issue_id', true, null, 15)
+        .sort('issue_id', true, 15)
     )
     .query()
     .then(issues => {
@@ -112,11 +112,11 @@ route.getPosts.post((req, res) => {
   var tag = req.body.tag || '';
   var resolved = req.body.res || '';
   var sort = req.body.sort || '';
-  var where = word ? `t.topic LIKE '%${word}%'` : '';
+  var where = word ? `topic LIKE '%${word}%'` : '';
   if (type == 'i' && (resolved == '0' || resolved == '1')) {
     if (where != '')
       where += ' AND ';
-    where += `t.resolved=${resolved}`;
+    where += `resolved=${resolved}`;
   }
 
   if (start.match(/[\D]/g))
@@ -144,9 +144,9 @@ route.getPosts.post((req, res) => {
   var q = new DB();
   
   if (sort == 'h')
-    q.select(fromTable).sort('watch', true, where == '' ? null : where, `${start} OFFSET 10`);
+    q.select(fromTable, where == '' ? null : where).sort('watch', true, `${start} OFFSET 10`);
   else
-    q.select(fromTable + ' AS t', where == '' ? null : where, `${start} OFFSET 10`);
+    q.select(fromTable, where == '' ? null : where, `${start} OFFSET 10`);
 
   q.query()
     .then(posts => {
