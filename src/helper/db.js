@@ -109,7 +109,7 @@ db.prototype.joinSelect = function (table1, table2, both) {
 // where注意需要添加前导t.
 db.prototype.sort = function (key, decrease, where, limit) {
   if (where || limit)
-    this.sql = `SELECT * FROM ${this.asTable()} AS t ORDER BY ${key}` + (decrease ? ' DESC' : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
+    this.sql = `SELECT * FROM ${this.asTable()} AS t ORDER BY ${key}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '') + (decrease ? ' DESC' : '');
   else
     this.sql = `${this.sql} ORDER BY ${key}` + (decrease ? ' DESC' : '');
   this.table = '';

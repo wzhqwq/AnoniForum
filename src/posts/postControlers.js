@@ -146,7 +146,7 @@ route.getPosts.post((req, res) => {
   if (sort == 'h')
     q.select(fromTable).sort('watch', true, where == '' ? null : where, `${start} OFFSET 10`);
   else
-    q.select(fromTable + 'AS t', where == '' ? null : where, `${start} OFFSET 10`);
+    q.select(fromTable + ' AS t', where == '' ? null : where, `${start} OFFSET 10`);
 
   q.query()
     .then(posts => {
