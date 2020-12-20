@@ -38,7 +38,7 @@
         <div class="alert alert-info" v-if="!saving && publishing">发布中……</div>
         <div class="alert alert-primary" v-if="load_note != ''">{{ load_note }}</div>
       </div>
-      <div v-if="post_id == -1">
+      <div v-if="is_draft">
         <div class="form-group" v-bind:class="{'has-error': err != ''}">
           <label for="topic" class="col">文章标题</label>
           <div class="col-sm-8">

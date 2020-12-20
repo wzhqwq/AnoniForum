@@ -479,7 +479,7 @@ const secondly_load =  () => {
       publishing: false,
       writer: writer,
       loaded: false,
-      is_draft: true
+      is_draft: false
     },
     methods: {
       load: function (content) {

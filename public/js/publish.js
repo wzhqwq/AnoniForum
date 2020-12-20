@@ -13,7 +13,6 @@ const first_load = () => {
       publishing: false,
       // uploaded: [],
       post: '',
-      post_id: -2,
       err: '',
       tags: [],
       tags_s: [],
@@ -21,12 +20,13 @@ const first_load = () => {
       tag_collapsed: true,
       brief: '',
       loaded: false,
-      load_note: '正在加载' + (id == -1 ? '草稿' : '内容')
+      load_note: '正在加载' + (id == -1 ? '草稿' : '内容'),
+      is_draft: false
     },
     methods: {
       save: function () {
         var post = writer.get_post();
-        if (post.post == this.post && this.post_id != -1) return;
+        if (post.post == this.post && id != -1) return;
         this.saving = true;
         /*var imgs_to_upload = [], imgs_to_delete = [];
         Promise.all(
@@ -54,11 +54,16 @@ const first_load = () => {
                 this.uploaded = this.uploaded.splice(j, 1);
                 break;
               }*/
+          if (id == -1) {
+            localStorage.setItem(type + '_draft_topic', post.topic);
+            if (type == 'issues')
+              localStorage.setItem(type + '_draft_brief', post.brief);
+          }
           axiosPost('/posts/savepost', {
             /*add_img: imgs_to_upload,
             delete_img: imgs_to_delete,*/
             post: post,
-            p_id: this.post_id,
+            p_id: id,
             type: type[0]
           }).then(resp => {
             /*resp.data.files.forEach((file, i) => {
@@ -154,13 +159,14 @@ const first_load = () => {
     if (type == 'issues')
       window.publish_vm.brief = id == -1 ? localStorage.getItem(type + '_draft_brief') : post.brief;
     window.writer_vm.load(window.publish_vm.post = post.content);
-    if (id != -1) window.writer_vm.is_draft = false;
-    window.publish_vm.post_id = id;
+    if (id == -1)
+      window.writer_vm.is_draft = window.publish_vm.is_draft = true;
     window.publish_vm.load_note = '';
   }).catch(err => {
     if (err.response) {
       if (err.response.status == 404) {
         window.writer_vm.load('');
+        window.writer_vm.is_draft = window.publish_vm.is_draft = true;
         window.publish_vm.load_note = '';
       }
       else

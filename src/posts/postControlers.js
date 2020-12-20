@@ -87,7 +87,7 @@ route.getEssentials.post((req, res) => {
     .select('issues', 'essential = 1')
     .append(
       (new DB).select('issues', 'essential = 0')
-        .sort('issue_id', 'DESC', null, 15)
+        .sort('issue_id', true, null, 15)
     )
     .query()
     .then(issues => {
@@ -145,7 +145,7 @@ route.getPosts.post((req, res) => {
   q.select(fromTable, where == '' ? null : where, `${start} OFFSET 10`);
 
   if (sort == 'h')
-    q.sort('watch', 'DESC');
+    q.sort('watch', true);
 
   q.query()
     .then(posts => {
