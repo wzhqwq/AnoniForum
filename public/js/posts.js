@@ -82,7 +82,9 @@ const first_load = () => {
   });
   axios.get('/resource/jsons/tags.json')
   .then(resp => {
-    common_vm.tags = resp.data;
+    common_vm.tags = resp.data.map((tag, i) => {
+      return {name: tag, id: i};
+    });
     common_vm.load();
   })
   .catch(err => {

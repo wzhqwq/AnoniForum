@@ -176,6 +176,7 @@ route.getPost.post((req, res) => {
     .catch(err => {
       res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
     });
+    return;
   }
   if (p_id.match(/[\D]/g))
     return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;

@@ -49,7 +49,7 @@ window.addEventListener('load', () => {
         this.loading = false;
         $('#login-frame')[0].contentWindow.login_succ = () => {
           this.login_note = '';
-          jwt = localStorage.getItem('jwt');
+          last_obj.jwt = jwt = localStorage.getItem('jwt');
           setTimeout(() => {
             this.login_needed = false;
           }, 0);

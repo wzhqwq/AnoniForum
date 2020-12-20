@@ -29,7 +29,10 @@
     </div>
   </div>
   <div class="container" style="margin-top: 80px; display: none;" id="posts">
-    <h3>所有文章</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <h3 style="margin: 0;">所有文章</h3>
+      <a class="btn btn-lg btn-success fa fa-pencil-square-o" href="write">写文章</a>
+    </div>
     <div class="search-bar col-md-6 offset-md-3">
       <input type="text" class="form-control" v-model="search_text">
       <button class="btn btn-primary" v-on:click="search">
