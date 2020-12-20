@@ -101,9 +101,9 @@ db.prototype.appendSelect = function (table, where, limit) {
   this.sql = `${this.sql} UNION ALL `;
   return this.select(table, where, limit);
 }
-// table1 < table2
+// table1为驱动表，table2为数据表
 db.prototype.joinSelect = function (table1, table2, both) {
-  this.sql = `SELECT * FROM ${table1} AS ta STRAIGHT_JOIN ${table2} AS tb ON ta.${both} = tb.${both}`;
+  this.sql = `SELECT tb.* FROM ${table1} AS ta JOIN ${table2} AS tb ON ta.${both} = tb.${both}`;
   return this;
 }
 db.prototype.sort = function (key, order, where, limit) {
