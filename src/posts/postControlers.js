@@ -135,7 +135,7 @@ route.getPosts.post((req, res) => {
     fromTable = (new DB())
       .joinSelect(
         (new DB())
-          .select(`${name}_tags a`, `tag_id = ${tag}`)
+          .select(`${name}_tags`, `tag_id = ${tag}`)
           .asTable(),
         fromTable,
         `${name}_id`

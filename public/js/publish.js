@@ -4,7 +4,7 @@ const first_load = () => {
   });
 
   var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace('write/', '').replace(/\/$/, '').match(/[^/]*$/)[0];
-  var id = (location.search.match(/[\d]*$/) || [-1])[0];
+  var id = (location.search.match(/[\d]+$/) || [-1])[0];
 
   window.publish_vm = new Vue({
     el: '#publisher',

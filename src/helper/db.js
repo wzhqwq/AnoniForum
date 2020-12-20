@@ -103,7 +103,7 @@ db.prototype.appendSelect = function (table, where, limit) {
 }
 // table1 < table2
 db.prototype.joinSelect = function (table1, table2, both) {
-  this.sql = `SELECT * FROM ${table1} a STRAIGHT_JOIN ${table2} b ON a.${both} = b.${both}`;
+  this.sql = `SELECT * FROM ${table1} AS ta STRAIGHT_JOIN ${table2} AS tb ON ta.${both} = tb.${both}`;
   return this;
 }
 db.prototype.sort = function (key, order, where, limit) {
