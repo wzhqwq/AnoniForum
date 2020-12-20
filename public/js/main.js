@@ -29,7 +29,7 @@ window.addEventListener('load', () => {
           <div class="spinner-border"></div>
           <span>登录页面加载中</span>
         </div>
-        <iframe id="login-frame" v-bind:src="login_needed ? '/login' ? ''" v-on:load="loaded">
+        <iframe id="login-frame" v-bind:src="login_needed ? '/login' : ''" v-on:load="loaded">
         </iframe>
       </div>
     </div>
@@ -63,8 +63,7 @@ window.addEventListener('load', () => {
   if (!jwt)
     window.u_id = -1;
   else {
-    var data = Buffer.from(jwt.split('.')[0], 'base64').toString('utf-8');
-    data = JSON.parse(data);
+    var data = JSON.parse(atob(jwt.split('.')[0]));
     window.u_id = data.u_id;
   }
 
