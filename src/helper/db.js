@@ -6,6 +6,7 @@ const log = require('./logger').log;
 var database;
 var db = function () {
   this.sql = '';
+  this.table = '';
 }
 db.connect = function () {
   return sqlite.open({
@@ -90,16 +91,15 @@ db.create = function (table, items) {
 db.exec = exec;
 
 db.prototype.select = function (table, where, limit) {
+  if (!where && !limit)
+    this.table = table;
   this.sql = `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
 };
 db.prototype.append = function (db) {
-  this.sql = `${this.sql} UNION ALL ${db.sql}`;
+  this.sql = `${this.sql} UNION ALL ${db.asTable()}`;
+  this.table = '';
   return this;
-}
-db.prototype.appendSelect = function (table, where, limit) {
-  this.sql = `${this.sql} UNION ALL `;
-  return this.select(table, where, limit);
 }
 // table1为驱动表，table2为数据表
 db.prototype.joinSelect = function (table1, table2, both) {
@@ -112,10 +112,11 @@ db.prototype.sort = function (key, decrease, where, limit) {
     this.sql = `SELECT * FROM ${this.asTable()} AS t ORDER BY ${key}` + (decrease ? ' DESC' : '') + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   else
     this.sql = `${this.sql} ORDER BY ${key}` + (decrease ? ' DESC' : '');
+  this.table = '';
   return this;
 }
 db.prototype.asTable = function () {
-  return `(${this.sql})`;
+  return this.table == '' ? `(${this.sql})` : this.table;
 }
 
 db.INT = 'INTEGER';

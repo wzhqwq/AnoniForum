@@ -71,7 +71,7 @@ exports.close = function () {
 route.getBulletins.post((req, res) => {
   (new DB())
     .select('bulletin', 'to_top = 1')
-    .appendSelect('bulletin', null, 5)
+    .append((new DB()).select('bulletin', null, 5))
     .query()
     .then(bulletins => {
       res.json(bulletins);
@@ -112,11 +112,11 @@ route.getPosts.post((req, res) => {
   var tag = req.body.tag || '';
   var resolved = req.body.res || '';
   var sort = req.body.sort || '';
-  var where = word ? `topic LIKE '%${word}%'` : '';
+  var where = word ? `t.topic LIKE '%${word}%'` : '';
   if (type == 'i' && (resolved == '0' || resolved == '1')) {
     if (where != '')
       where += ' AND ';
-    where += `resolved=${resolved}`;
+    where += `t.resolved=${resolved}`;
   }
 
   if (start.match(/[\D]/g))
@@ -142,10 +142,11 @@ route.getPosts.post((req, res) => {
       ).asTable();
   }
   var q = new DB();
-  q.select(fromTable, where == '' ? null : where, `${start} OFFSET 10`);
-
+  
   if (sort == 'h')
-    q.sort('watch', true);
+    q.select(fromTable).sort('watch', true, where == '' ? null : where, `${start} OFFSET 10`);
+  else
+    q.select(fromTable + 'AS t', where == '' ? null : where, `${start} OFFSET 10`);
 
   q.query()
     .then(posts => {
