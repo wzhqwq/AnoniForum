@@ -154,6 +154,7 @@ const first_load = () => {
     if (type == 'issues')
       window.publish_vm.brief = id == -1 ? localStorage.getItem(type + '_draft_brief') : post.brief;
     window.writer_vm.load(window.publish_vm.post = post.content);
+    if (id != -1) window.writer_vm.is_draft = false;
     window.publish_vm.post_id = id;
     window.publish_vm.load_note = '';
   }).catch(err => {

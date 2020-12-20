@@ -478,7 +478,8 @@ const secondly_load =  () => {
       saving: false,
       publishing: false,
       writer: writer,
-      loaded: false
+      loaded: false,
+      is_draft: true
     },
     methods: {
       load: function (content) {

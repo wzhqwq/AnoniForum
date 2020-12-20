@@ -72,7 +72,7 @@
         </div>
         <div class="float-right">
           <button class="btn fa btn-sm" v-on:click="save" data-toggle="tooltip" data-placement="bottom" title="存成草稿" v-bind:disabled="saving" v-bind:class="[ saving ? 'btn-waring' : 'btn-success', saving ? 'fa-clock-o' : 'fa-save' ]"></button>
-          <button class="btn fa fa-send btn-sm" v-on:click="publish" data-toggle="tooltip" data-placement="bottom" title="发布" v-bind:disabled="saving || publishing" v-bind:class="[ saving ? 'btn-waring' : 'btn-primary', saving ? 'fa-clock-o' : 'fa-save' ]" v-if="post_id == -1"></button>
+          <button class="btn fa fa-send btn-sm" v-on:click="publish" data-toggle="tooltip" data-placement="bottom" title="发布" v-bind:disabled="saving || publishing" v-bind:class="[ saving ? 'btn-waring' : 'btn-primary', saving ? 'fa-clock-o' : 'fa-save' ]" v-if="is_draft"></button>
         </div>
       </div>
       <div>
