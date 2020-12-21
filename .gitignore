@@ -107,3 +107,4 @@ web-service.exe
 .DS_Store
 secrets.js
 data/
+package-lock.json

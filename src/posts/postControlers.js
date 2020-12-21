@@ -5,7 +5,6 @@ const DB = require('../helper/db');
 const bodyParser = require('body-parser');
 const route = require('./postRoutes');
 const fs = require('fs');
-const fetch = require('node-fetch');
 
 const app = express();
 const server = http.createServer(app);
@@ -14,7 +13,7 @@ DB.connect().then(() => {
   server.listen(20717, 'localhost', () => {
     log('Post server is running.');
   });
-  DB.create('bulletin', [
+  /*DB.create('bulletin', [
     {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'title', type: DB.SHORT},
     {name: 'toTop', type: DB.INT},
@@ -54,7 +53,7 @@ DB.connect().then(() => {
     {name: 'content', type: DB.TEXT},
     {name: 'u_id', type: DB.INT},
     {name: 'reply', type: DB.INT}
-  ]);
+  ]);*/
 });
 
 app.use(bodyParser.json());
@@ -175,14 +174,13 @@ route.getPost.post((req, res) => {
   if (p_id == '-1') {
     if (!fs.existsSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
       return res.status(404).json({ code: 'NODRAFT', note: '没有草稿'}), null;
-    fetch(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`)
-    .then(buf => buf.arrayBuffer())
-    .then(content => {
+    try {
+      let content = fs.readFileSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`, ).toString('utf-8');
       res.json({code: 'SUCC', note: '', post: {content: content, u_id: req.user_current.u_id, isDraft: true}});
-    })
-    .catch(err => {
+    }
+    catch(err) {
       res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
-    });
+    }
     return;
   }
 
@@ -195,15 +193,13 @@ route.getPost.post((req, res) => {
       if (!post)
         return res.status(404).json({ code: 'NOID', note: 'p_id不存在' }), null;
 
-      fetch(__dirname + `/../../data/${name}s/${p_id}.html`)
-      .then(buf => buf.arrayBuffer())
-      .then(content => {
-        post.content = content;
+      try {
+        post.content = fs.readFileSync(__dirname + `/../../data/${name}s/${p_id}.html`).toString('utf-8');
         res.json({code: 'SUCC', note: '', post: post});
-      })
-      .catch(err => {
+      }
+      catch(err) {
         res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
-      });
+      }
     })
     .catch(err => {
       res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
