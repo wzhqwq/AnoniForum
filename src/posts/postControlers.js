@@ -5,6 +5,7 @@ const DB = require('../helper/db');
 const bodyParser = require('body-parser');
 const route = require('./postRoutes');
 const fs = require('fs');
+const fetch = require('node-fetch');
 
 const app = express();
 const server = http.createServer(app);
@@ -184,7 +185,7 @@ route.getPost.post((req, res) => {
     });
     return;
   }
-  
+
   if (p_id.match(/[\D]/g))
     return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
   (new DB())

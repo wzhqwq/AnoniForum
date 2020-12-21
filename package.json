@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "mysql": "^2.18.1",
+    "node-fetch": "^2.6.1",
     "promise-mysql": "^5.0.1",
     "randomstring": "^1.1.5",
     "sqlite": "^4.0.18",
