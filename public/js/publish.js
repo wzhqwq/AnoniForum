@@ -57,7 +57,7 @@ const first_load = () => {
           if (id == -1) {
             localStorage.setItem(type + '_draft_topic', this.topic);
             if (type == 'issues')
-              localStorage.setItem(type + '_draft_brief', this.brief);
+              localStorage.setItem('issues_draft_brief', this.brief);
           }
           axiosPost('/posts/savepost', {
             /*add_img: imgs_to_upload,
@@ -90,6 +90,12 @@ const first_load = () => {
               })
               .then(resp => {
                 this.publishing = false;
+                localStorage.removeItem('')
+                if (id == -1) {
+                  localStorage.removeItem(type + '_draft_topic');
+                  if (type == 'issues')
+                    localStorage.removeItem('issues_draft_brief');
+                }
                 location.href = `/${type}/detail?id=${resp.data.id}`;
               })
               .catch(err => {
@@ -158,7 +164,7 @@ const first_load = () => {
     }
     window.publish_vm.topic = id == -1 ? localStorage.getItem(type + '_draft_topic') : post.topic;
     if (type == 'issues')
-      window.publish_vm.brief = id == -1 ? localStorage.getItem(type + '_draft_brief') : post.brief;
+      window.publish_vm.brief = id == -1 ? localStorage.getItem('issues_draft_brief') : post.brief;
     window.writer_vm.load(window.publish_vm.post = post.content);
     if (id == -1)
       window.writer_vm.is_draft = window.publish_vm.is_draft = true;

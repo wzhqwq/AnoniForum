@@ -265,12 +265,14 @@ route.publishPost.post((req, res) => {
     topic: topic,
     tags: tags,
     essential: 0,
-    time: `${date.getMonth()}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`
   };
   if (type == 'i') {
     post.resolved = 0;
     post.brief = brief;
+    post.time = `${date.getMonth()}月${date.getDate()}日 ${date.getHours()}:${date.getMinutes()}`;
   }
+  else
+    post.date = `${date.getMonth()}月${date.getDate()}日`;
   DB.insert(`${name}s`, post).then(result => {
     if (tags != '')
       tags.split(',').forEach(id => {
