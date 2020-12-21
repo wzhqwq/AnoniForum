@@ -27,7 +27,8 @@ DB.connect().then(() => {
     {name: 'tags', type: DB.SHORT},
     {name: 'essential', type: DB.INT},
     {name: 'resolved', type: DB.INT},
-    {name: 'time', type: DB.SHORT}
+    {name: 'time', type: DB.SHORT},
+    {name: 'watch', type: DB.INT}
   ]);
   DB.create('articles', [
     {name: 'article_id', isPrimary: true, autoInc: true, type: DB.INT},
@@ -35,7 +36,8 @@ DB.connect().then(() => {
     {name: 'topic', type: DB.SHORT},
     {name: 'tags', type: DB.SHORT},
     {name: 'essential', type: DB.INT},
-    {name: 'date', type: DB.SHORT}
+    {name: 'date', type: DB.SHORT},
+    {name: 'watch', type: DB.INT}
   ]);
   DB.create('issues_tags', [
     {name: 'issue_id', type: DB.INT},
