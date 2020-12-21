@@ -96,6 +96,9 @@ db.prototype.select = function (table, where, limit) {
   this.sql = `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
 };
+db.prototype.selectSelf = function (where, limit) {
+  return this.select(this.asTable, where, limit);
+}
 db.prototype.append = function (db) {
   this.sql = `${this.sql} UNION ALL ${db.asTable()}`;
   this.table = '';
@@ -106,11 +109,8 @@ db.prototype.joinSelect = function (table1, table2, both) {
   this.sql = `SELECT tb.* FROM ${table1} AS ta JOIN ${table2} AS tb ON ta.${both} = tb.${both}`;
   return this;
 }
-db.prototype.sort = function (key, decrease, limit) {
-  if (limit)
-    this.sql = `SELECT * FROM ${this.asTable()} AS t ORDER BY ${key}` + (limit ? ` LIMIT ${limit}` : '') + (decrease ? ' DESC' : '');
-  else
-    this.sql = `${this.sql} ORDER BY ${key}` + (decrease ? ' DESC' : '');
+db.prototype.sort = function (key, decrease) {
+  this.sql = `${this.sql} ORDER BY ${key} ` + (decrease ? 'DESC' : 'ASC');
   this.table = '';
   return this;
 }

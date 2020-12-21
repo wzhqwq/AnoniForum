@@ -126,7 +126,8 @@ route.getSalt.get((req, res) => {
 route.getTop.post((req, res) => {
   (new DB())
   .select('scores')
-  .sort('score', true, 10)
+  .sort('score', true)
+  .selectSelf(null, 10)
   .query()
   .then(users => {
     res.json(users);
