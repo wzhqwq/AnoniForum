@@ -443,35 +443,6 @@ const refresh_status = () => {
 };
 
 const secondly_load =  () => {
-  var element = document.getElementById('writer-content');
-  element.parentElement.addEventListener('mouseup', refresh_status);
-  element.parentElement.addEventListener('keyup', e => {
-    if (e.key == 'Delete' || e.key == 'Backspace')
-      lineFormat(true);
-    if (e.key == 'ArrowUp' || e.key == 'ArrowDown' || e.key == 'ArrowLeft' || e.key == 'ArrowRight' || e.key == 'Enter' || e.key == 'Backspace' || e.key == 'Delete')
-      refresh_status();
-  });
-  element.parentElement.addEventListener('keydown', e => {
-    if ((e.metaKey || e.ctrlKey) && e.key == 'b') {
-      e.preventDefault();
-      writer.set_bold();
-    }
-  });
-  element.parentElement.addEventListener("paste", function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    var text = '', event = (e.originalEvent || e);
-    if (event.clipboardData && event.clipboardData.getData) {
-        text = event.clipboardData.getData('text/plain');
-    } else if (window.clipboardData && window.clipboardData.getData) {
-        text = window.clipboardData.getData('Text');
-    }
-    if (document.queryCommandSupported('insertText')) {
-        document.execCommand('insertText', false, text);
-    } else {
-        document.execCommand('paste', false, text);
-    }
-  });
   window.writer_vm = new Vue({
     el: '#writer',
     data: {
@@ -483,6 +454,35 @@ const secondly_load =  () => {
     },
     methods: {
       load: function (content) {
+        var element = document.getElementById('writer-content');
+        element.parentElement.addEventListener('mouseup', refresh_status);
+        element.parentElement.addEventListener('keyup', e => {
+          if (e.key == 'Delete' || e.key == 'Backspace')
+            lineFormat(true);
+          if (e.key == 'ArrowUp' || e.key == 'ArrowDown' || e.key == 'ArrowLeft' || e.key == 'ArrowRight' || e.key == 'Enter' || e.key == 'Backspace' || e.key == 'Delete')
+            refresh_status();
+        });
+        element.parentElement.addEventListener('keydown', e => {
+          if ((e.metaKey || e.ctrlKey) && e.key == 'b') {
+            e.preventDefault();
+            writer.set_bold();
+          }
+        });
+        element.parentElement.addEventListener("paste", function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          var text = '', event = (e.originalEvent || e);
+          if (event.clipboardData && event.clipboardData.getData) {
+              text = event.clipboardData.getData('text/plain');
+          } else if (window.clipboardData && window.clipboardData.getData) {
+              text = window.clipboardData.getData('Text');
+          }
+          if (document.queryCommandSupported('insertText')) {
+              document.execCommand('insertText', false, text);
+          } else {
+              document.execCommand('paste', false, text);
+          }
+        });
         element.innerHTML = content;
         this.loaded = true;
       },
