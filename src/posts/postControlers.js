@@ -170,9 +170,9 @@ route.getPost.post((req, res) => {
   if (type != 'a' && type != 'i')
     return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
   if (p_id == '-1') {
-    if (!fs.existsSync(`/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
+    if (!fs.existsSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
       return res.status(404).json({ code: 'NODRAFT', note: '没有草稿'}), null;
-    fetch(`/../../data/${name}s/drafts/${req.user_current.u_id}.html`)
+    fetch(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`)
     .then(buf => buf.arrayBuffer())
     .then(content => {
       res.json({code: 'SUCC', note: '', post: {content: content, u_id: req.user_current.u_id, isDraft: true}});
