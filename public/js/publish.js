@@ -55,9 +55,9 @@ const first_load = () => {
                 break;
               }*/
           if (id == -1) {
-            localStorage.setItem(type + '_draft_topic', post.topic);
+            localStorage.setItem(type + '_draft_topic', this.topic);
             if (type == 'issues')
-              localStorage.setItem(type + '_draft_brief', post.brief);
+              localStorage.setItem(type + '_draft_brief', this.brief);
           }
           axiosPost('/posts/savepost', {
             /*add_img: imgs_to_upload,

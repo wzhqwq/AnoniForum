@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div id="writer" v-if="loaded">
+    <div id="writer" v-bind:style="{ display: loaded ? '' : 'none' }">
       <div class="writer-toolbar">
         <div class="float-left btn-group">
           <button class="btn fa fa-bold btn-sm" v-on:click="writer.set_bold" data-toggle="tooltip" data-placement="bottom" v-bind:data-original-title="writer.is_bold ? '去除所选加粗样式' : '加粗'" v-bind:class="[ writer.is_bold ? 'btn-primary' : 'btn-light' ]"></button>
