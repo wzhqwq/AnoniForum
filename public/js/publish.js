@@ -149,7 +149,8 @@ const first_load = () => {
   axiosPost('/posts/getpost', {
     p_id: id,
     type: type[0]
-  }).then(post => {
+  }).then(resp => {
+    var post = resp.data.post;
     if (post.u_id != window.u_id) {
       alert('您不是该内容的发布者，无法编辑，即将返回上一页');
       window.history.back();
