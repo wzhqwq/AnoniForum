@@ -147,9 +147,9 @@ route.getPosts.post((req, res) => {
   var q = new DB();
   
   if (sort == 'h')
-    q.select(fromTable, where == '' ? null : where).sort('watch', true).selectSelf(null, `${start} OFFSET 10`);
+    q.select(fromTable, where == '' ? null : where).sort('watch', true).selectSelf(null, `10 OFFSET ${start}`);
   else
-    q.select(fromTable, where == '' ? null : where, `${start} OFFSET 10`);
+    q.select(fromTable, where == '' ? null : where, `10 OFFSET ${start}`);
 
   q.query()
     .then(posts => {
