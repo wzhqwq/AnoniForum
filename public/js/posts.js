@@ -1,7 +1,7 @@
 const first_load = () => {
   var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace(/\/$/, '').match(/[^/]*$/)[0];
   var last_search = '';
-  var id_name = type.substring(0, -1) + '_id';
+  var id_name = type.replace(/s$/, '_id');
 
   var common_vm = new Vue({
     el: '#posts',
