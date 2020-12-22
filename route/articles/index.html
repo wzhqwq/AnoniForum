@@ -31,9 +31,11 @@
   <div class="container" style="margin-top: 80px; display: none;" id="posts">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
       <h3 style="margin: 0;">所有文章</h3>
-      <a class="btn btn-lg btn-success fa fa-pencil-square-o" href="write" id="create-post">写文章</a>
+      <div id="create-post" class="b-green">
+        <a class="btn btn-lg btn-success fa fa-pencil-square-o" href="write">写文章</a>
+      </div>
     </div>
-    <div style="position: sticky; top: 60px; width: 100%; background-color: #FFF; padding: 5px 0;">
+    <div style="position: sticky; top: 60px; width: 100%; background-color: #FFF; padding: 5px 0; margin-top: 30px;">
       <div class="search-bar col-md-6 offset-md-3">
         <input type="text" class="form-control" v-model="search_text">
         <button class="btn btn-primary" v-on:click="search">
@@ -75,13 +77,15 @@
         </div>
       </div>
     </div>
-    <div class="center-loader" v-if="loading">
-      <div class="spinner-border"></div>
-      <span>加载中</span>
-    </div>
-    <div class="text-center fa fa-warning" v-if="isEnd" style="color: #AAA; display: block;">已经到最后了</div>
-    <div class="text-center" v-if="!loading && !isEnd">
-      <button class="btn btn-light" v-on:click="load_more">加载更多</button>
+    <div style="padding-bottom: 60px;">
+      <div class="center-loader" v-if="loading">
+        <div class="spinner-border"></div>
+        <span>加载中</span>
+      </div>
+      <div class="text-center fa fa-warning" v-if="isEnd" style="color: #AAA; display: block;">已经到最后了</div>
+      <div class="text-center" v-if="!loading && !isEnd">
+        <button class="btn btn-light" v-on:click="load_more">加载更多</button>
+      </div>
     </div>
   </div>
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>

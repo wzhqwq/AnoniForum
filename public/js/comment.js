@@ -1,5 +1,5 @@
 const first_load = () => {
-  var p_id = location.pathname.match(/[\d]*/);
+  var p_id = location.search.match(/[\d]+/);
   if (!p_id) {
     alert('路径不合法！');
     history.back();

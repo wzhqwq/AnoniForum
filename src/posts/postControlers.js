@@ -276,7 +276,7 @@ route.publishPost.post((req, res) => {
     topic: topic,
     tags: tags,
     essential: 0,
-    u_id: req.user_current,
+    u_id: req.user_current.u_id,
     watch: 0
   };
   if (type == 'i') {

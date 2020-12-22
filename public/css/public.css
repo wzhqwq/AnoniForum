@@ -59,7 +59,6 @@
 .search-bar {
   display: flex;
   flex-direction: row;
-  margin-top: 30px;
 }
 .search-bar > button {
   margin-left: 5px;
@@ -84,20 +83,33 @@
   bottom: 10px;
   right: 10px;
   border-radius: 25px;
-  font-size: 32px;
   width: 50px;
   height: 50px;
   overflow: hidden;
-  animation: btn-shrink 4s ease-in-out;
+  animation: btn-shrink 2s ease-in-out;
+}
+.bottom-btn > .btn {
+  line-height: 50px;
+  padding: 0;
+  width: 150px;
+  height: 50px;
+  font-size: 26px;
+  text-align: left;
+}
+.bottom-btn > .btn::before {
+  margin: 0 14px;
+}
+.bottom-btn.b-green {
+  box-shadow: 0px 2px 4px #2ba54687;
 }
 @keyframes btn-shrink {
   0%,
   100% {
     width: 50px;
   }
-  20%,
-  80% {
-    width: 100px;
+  40%,
+  60% {
+    width: 150px;
   }
 }
 
