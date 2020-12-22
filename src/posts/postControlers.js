@@ -3,6 +3,7 @@ const http = require('http');
 const log = require('../helper/logger').log;
 const DB = require('../helper/db');
 const bodyParser = require('body-parser');
+require('./comment');
 const route = require('./postRoutes');
 const fs = require('fs');
 
@@ -13,7 +14,7 @@ DB.connect().then(() => {
   server.listen(20717, 'localhost', () => {
     log('Post server is running.');
   });
-  /*DB.create('bulletin', [
+  DB.create('bulletin', [
     {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'title', type: DB.SHORT},
     {name: 'toTop', type: DB.INT},
@@ -47,13 +48,26 @@ DB.connect().then(() => {
     {name: 'article_id', type: DB.INT},
     {name: 'tag_id', type: DB.INT}
   ]);
-  DB.create('comments', [
+  DB.create('article_comments', [
     {name: 'comment_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'article_id', type: DB.INT},
     {name: 'content', type: DB.TEXT},
     {name: 'u_id', type: DB.INT},
     {name: 'reply', type: DB.INT}
-  ]);*/
+  ]);
+  DB.create('issue_comments', [
+    {name: 'comment_id', isPrimary: true, autoInc: true, type: DB.INT},
+    {name: 'issue_id', type: DB.INT},
+    {name: 'content', type: DB.TEXT},
+    {name: 'u_id', type: DB.INT},
+    {name: 'reply', type: DB.INT},
+    {name: 'vote', type: DB.INT}
+  ]);
+  DB.create('user_votes', [
+    {name: 'comment_id', type: DB.INT},
+    {name: 'u_id', type: DB.INT},
+    {name: 'vote', type: DB.INT}
+  ]);
 });
 
 app.use(bodyParser.json());
@@ -153,10 +167,7 @@ route.getPosts.post((req, res) => {
 
   q.query()
     .then(posts => {
-      if (posts.length == 0)
-        res.status(404).json({ code: 'NOPOST', note: '没有了' });
-      else
-        res.json(posts);
+      res.json(posts);
     })
     .catch(err => {
       res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
@@ -265,6 +276,8 @@ route.publishPost.post((req, res) => {
     topic: topic,
     tags: tags,
     essential: 0,
+    u_id: req.user_current,
+    watch: 0
   };
   if (type == 'i') {
     post.resolved = 0;

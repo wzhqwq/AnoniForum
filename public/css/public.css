@@ -68,7 +68,8 @@
   margin-top: 10px;
 }
 .search-tools::after,
-.writer-toolbar::after {
+.writer-toolbar::after,
+.post-info::after {
   content: "";
   display: block;
   clear: both;
@@ -76,6 +77,28 @@
 .tag-view {
   overflow: auto;
   max-height: 100px;
+}
+
+.bottom-btn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  border-radius: 25px;
+  font-size: 32px;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  animation: btn-shrink 4s ease-in-out;
+}
+@keyframes btn-shrink {
+  0%,
+  100% {
+    width: 50px;
+  }
+  20%,
+  80% {
+    width: 100px;
+  }
 }
 
 .writer-toolbar {

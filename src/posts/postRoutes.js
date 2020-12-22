@@ -7,11 +7,13 @@ var route = {
   getPosts: router.route('/getposts'),
   getPost: router.route('/getpost'),
   getBulletin: router.route('/getbulletin'),
-  getComments: router.route('/getcomments'),
   savePost: router.route('/savepost'),
   publishPost: router.route('/publishpost'),
   deletePost: router.route('/deletepost'),
-  sendComment: router.route('/sendcomment')
+
+  getComments: router.route('/getcomments'),
+  sendComment: router.route('/sendcomment'),
+  voteComment: router.route('/votecomment')
 };
 
 module.exports = route;

@@ -1,5 +1,5 @@
 const first_load = () => {
-  var type = location.pathname.match('[^/]*/$')[0];
+  var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace(/\/$/, '').match(/[^/]*$/)[0];
   var last_search = '';
 
   var common_vm = new Vue({
@@ -55,7 +55,7 @@ const first_load = () => {
           sort: this.sortByPop ? 'h' : ''
         })
         .then(resp => {
-          this.isEnd = false;
+          this.isEnd = resp.data.length < 10;
           this.loading = false;
           if (more)
             this.posts.concat(resp.data);
@@ -66,10 +66,6 @@ const first_load = () => {
           if (err.response) {
             if (err.response.status == 500)
               alert('服务器出错，请联系王子涵');
-            else if (err.response.status == 404) {
-              this.loading = false;
-              this.isEnd = true;
-            }
             else if (err.response.status != 403)
               alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.note : ''))
           }
@@ -89,5 +85,21 @@ const first_load = () => {
   })
   .catch(err => {
     alert('获取标签时出现问题：' + err.message);
+  });
+
+  var atBottom = false;
+  document.addEventListener('scroll', e => {
+    if (document.documentElement.scrollTop >= 70) {
+      if (!atBottom) {
+        $('#create-post').addClass('bottom-btn');
+        atBottom = true;
+      }
+    }
+    else {
+      if (atBottom) {
+        $('#create-post').removeClass('bottom-btn');
+        atBottom = false;
+      }
+    }
   });
 };
