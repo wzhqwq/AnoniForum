@@ -17,7 +17,7 @@ DB.connect()
   server.listen(20716, 'localhost', () => {
     log('User server is running.');
   });
-  DB.create('users', [
+  /*DB.create('users', [
     {name: 'u_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'sdu_id', type: DB.INT},
     {name: 'passwd', type: DB.SHA},
@@ -27,7 +27,7 @@ DB.connect()
   DB.create('scores', [
     {name: 'u_id', type: DB.INT},
     {name: 'score', type: DB.INT}
-  ]);
+  ]);*/
 })
 .catch(err => {
   log('User server: open database failed:', err);

@@ -67,7 +67,7 @@
       <div class="post-block" v-for="post in posts">
         <h5>
           <span class="badge badge-primary" v-if="post.essential == 1">精选</span>
-          <a v-bind:href="'/details/?id=' + post.id">{{ post.topic }}</a>
+          <a v-bind:href="get_link(post)">{{ post.topic }}</a>
         </h5>
         <div class="post-info">
           <span class="badge badge-pill badge-warning" v-for="tag in post.tags.split(',')">{{ tags[tag].name }}</span>

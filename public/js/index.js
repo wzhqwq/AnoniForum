@@ -21,6 +21,11 @@ const first_load =  () => {
       issues: [],
       articles: [],
       loading: false,
+    },
+    mathods: {
+      get_link: function (type, post) {
+        return `/${type}s/detail?id=${post[type + '_id']}`;
+      }
     }
   });
 

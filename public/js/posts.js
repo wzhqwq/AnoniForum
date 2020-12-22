@@ -1,6 +1,7 @@
 const first_load = () => {
   var type = location.pathname.replace(/#.*$/, '').replace('index.html', '').replace(/\/$/, '').match(/[^/]*$/)[0];
   var last_search = '';
+  var id_name = type.substring(0, -1) + '_id';
 
   var common_vm = new Vue({
     el: '#posts',
@@ -15,6 +16,9 @@ const first_load = () => {
       resolved: -1
     },
     methods: {
+      get_link: function (post) {
+        return `/${type}/detail?id=${post[id_name]}`;
+      },
       search: function () {
         if (this.search_text == last_search) return;
         last_search = this.search_text;
