@@ -44,7 +44,7 @@
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button class="btn btn-primary" v-bind:disabled="sdu_id.length != 12 || !passwd_correct || password != confirm" v-on:click="submit">注册</button>
+              <button class="btn btn-primary" v-bind:disabled="sdu_id.length != 12 || !passwd_correct || password != confirm || signing" v-on:click="submit">{{ signing ? '注册中…' : '注册' }}</button>
             </div>
           </div>
         </form>

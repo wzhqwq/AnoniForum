@@ -8,6 +8,7 @@ const first_load = () => {
   p_id = parseInt(p_id[0]);
   var type = location.pathname.replace(/#.*$/, '').replace(/\?.*/).replace('index.html', '').replace('detail/', '').replace(/\/$/, '').match(/[^/]*$/)[0];
   var post_vm = new Vue({
+    el: '#post',
     data: {
       post: '',
       topic: '',
@@ -15,6 +16,12 @@ const first_load = () => {
       tags: []
     }
   });
+  var comment_vm = new Vue({
+    el: 'comments',
+    data: {
+      comments: []
+    }
+  })
   axiosPost('/posts/getpost', {
     type: type[0],
     p_id: p_id

@@ -37,6 +37,23 @@
         {{ post }}
       </div>
     </div>
+    <div id="comment">
+      <button class="btn btn-primary fa fa-pencil">发表评论</button>
+      <div class="comments-primary">
+        <div class="comment-primary" v-for="comment in comments">
+          <div class="comment-author">{{ comment.author }}</div>
+          <div class="comment-content">{{ comment.content }}</div>
+          <button class="btn btn-round btn-primary fa fa-comment"></button>
+          <div class="comment-secondary">
+            <div class="comment-content-secondary" v-for="reply in comment.reply">
+              <div class="comment-author">{{ reply.author }}</div>
+              <div class="comment-reply fa fa-angle-double-right" v-if="reply.to != ''">{{ reply.to }}</div>
+              <div class="comment-content">{{ reply.content }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>

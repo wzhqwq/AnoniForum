@@ -12,7 +12,8 @@ const first_load = () => {
     data: {
       sdu_id: '',
       password: '',
-      err: ''
+      err: '',
+      loging: false
     },
     methods: {
       submit: function (e) {
@@ -21,12 +22,14 @@ const first_load = () => {
           this.err = '学号格式错误';
           return;
         }
+        this.loging = true;
         axios.post('/user/login', {
           password: CryptoJS.HmacSHA256(CryptoJS.HmacSHA256(this.password, salts.salt1).toString(), salts.salt2).toString(),
           sduid: this.sdu_id
         })
         .then(response => {
           var data = response.data;
+          this.loging = false;
           if (data.err != '')
             this.err = data.err;
           else {
@@ -42,6 +45,7 @@ const first_load = () => {
         })
         .catch(e => {
           var msg = '';
+          this.loging = false;
           if (e.response.data) msg = e.response.data.err;
           alert("登录发生问题：" + e.message + ' ' + msg);
         });

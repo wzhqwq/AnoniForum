@@ -14,7 +14,8 @@ const first_load =  () => {
       password: '',
       confirm: '',
       password_err: '',
-      sdu_id_err: ''
+      sdu_id_err: '',
+      signing: false
     },
     methods: {
       submit: function (e) {
@@ -29,6 +30,7 @@ const first_load =  () => {
           return;
         }
         this.password_err = this.sdu_id_err = '';
+        this.signing = true;
 
         axios.post('/user/signup', {
           sduid: this.sdu_id,
@@ -36,6 +38,7 @@ const first_load =  () => {
         })
         .then(response => {
           var data = response.data;
+          this.signing = false;
           if (data.err != '')
             this.sdu_id_err = data.err;
           else {
@@ -48,6 +51,7 @@ const first_load =  () => {
         })
         .catch(e => {
           var msg = '';
+          this.signing = false;
           if (e.response.data) msg = e.response.data.err;
           alert("登录发生问题：" + e.message + ' ' + msg);
         })
