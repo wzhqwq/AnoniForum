@@ -1,12 +1,4 @@
 const first_load = () => {
-  var salts;
-  axios.get('/user/getsalt')
-  .then(response => {
-    salts = response.data;
-  })
-  .catch(err => {
-    console.error(err);
-  });
   new Vue({
     el: '#form',
     data: {
@@ -24,7 +16,7 @@ const first_load = () => {
         }
         this.loging = true;
         axios.post('/user/login', {
-          password: CryptoJS.HmacSHA256(CryptoJS.HmacSHA256(this.password, salts.salt1).toString(), salts.salt2).toString(),
+          password: this.password,
           sduid: this.sdu_id
         })
         .then(response => {
