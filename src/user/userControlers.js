@@ -1,8 +1,7 @@
 const express = require('express');
 const http = require('http');
 const DB = require('../helper/db');
-const auth = require('../helper/auth').auth;
-const check = require('../helper/auth').checkBefore;
+const {auth, setName, checkBefore} = require('../helper/auth');
 const route = require('./userRoute');
 const salt1 = require('../secrets').salt;
 const log = require('../helper/logger').log;
@@ -17,17 +16,17 @@ DB.connect()
   server.listen(20716, 'localhost', () => {
     log('User server is running.');
   });
-  /*DB.create('users', [
+  DB.create('users', [
     {name: 'u_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'sdu_id', type: DB.INT},
     {name: 'passwd', type: DB.SHA},
-    {name: 'last_remote', type: DB.SHORT},
-    {name: 'token_secret', type: DB.SALT}
+    {name: 'token_secret', type: DB.SALT},
+    {name: 'nick_name', type: DB.SHORT}
   ]);
   DB.create('scores', [
     {name: 'u_id', type: DB.INT},
     {name: 'score', type: DB.INT}
-  ]);*/
+  ]);
 })
 .catch(err => {
   log('User server: open database failed:', err);
@@ -36,7 +35,7 @@ DB.connect()
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(check);
+app.use(checkBefore);
 
 exports.close = function () {
   return new Promise(res => {
@@ -51,21 +50,20 @@ exports.close = function () {
 // POST
 var salts = {};
 route.logIn.post((req, res) => {
-  if (!salts[req.header('X-Real-IP')]) {
+  /*if (!salts[req.header('X-Real-IP')]) {
     res.json({jwt: '', err: '页面失效了，请刷新再试！'});
     return;
-  }
+  }*/
   var password = req.body.password || '';
   var sdu_id = req.body.sduid || 'a';
 
-  if (password.length != 64 || password.match(/[^0-9a-f]/g) ||
-  sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
+  if (password.length == 0 || sdu_id.match(/[^\d]/g) || sdu_id.length != 12 || !sdu_id.match(/2020[02]{2,2}3[\d]{5,5}/)) {
     res.status(400).json({jwt: '', err: '格式错误'});
     return;
   }
   sdu_id = sdu_id.replace(/^2020/, '');
 
-  auth(sdu_id, password, req.header('X-Real-IP'), salts[req.header('X-Real-IP')].salt)
+  auth(sdu_id, password)
   .then(({jwt}) => {
     res.json({jwt: jwt, err: ''});
   })
@@ -74,7 +72,19 @@ route.logIn.post((req, res) => {
   });
 });
 
-route.signUp.post((req, res) => {
+route.setNickName.post((req, res) => {
+  var nick_name = req.body.nick || '';
+  var jwt = req.body.jwt || '';
+
+  if (nick_name.length == 0)
+    res.status(400);
+  else
+    setName(jwt, nick_name)
+      .then(jwt => res.json({ jwt: jwt }))
+      .catch(err => res.status(500).json({ err: err }))
+})
+
+/*route.signUp.post((req, res) => {
   var password = req.body.password || '';
   var sdu_id = req.body.sduid || 'a';
 
@@ -121,7 +131,7 @@ route.getSalt.get((req, res) => {
   var ip = req.header('X-Real-IP');
   salts[ip] = {salt: randomStr.generate(), date: new Date()};
   res.json({salt1: salt1, salt2: salts[ip].salt});
-});
+});*/
 
 route.getTop.post((req, res) => {
   (new DB())

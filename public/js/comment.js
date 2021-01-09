@@ -21,7 +21,7 @@ const first_load = () => {
     data: {
       comments: []
     }
-  })
+  });
   axiosPost('/posts/getpost', {
     type: type[0],
     p_id: p_id

@@ -68,7 +68,8 @@
 }
 .search-tools::after,
 .writer-toolbar::after,
-.post-info::after {
+.post-info::after,
+.post-top::after {
   content: "";
   display: block;
   clear: both;

@@ -28,16 +28,20 @@
       </div>
     </div>
   </div>
-  <div class="container">
+  <div class="container" style="margin-top: 80px; display: none;">
     <div id="post">
       <div class="post-top">
-        <h3>{{ topic }}</h3>
+        <h3 class="float-left">{{ topic }}</h3>
+        <div class="float-right">
+          <div class="post-author">{{ author }}</div>
+          <div class="post-tags">
+            <span class="badge badge-pill badge-warning" v-for="tag in tags.split(',')">{{ tag }}</span>
+          </div>
+        </div>
       </div>
-      <div class="post-content">
-        {{ post }}
-      </div>
+      <div class="post-content" v-html="post"></div>
     </div>
-    <div id="comment">
+    <div id="comments">
       <button class="btn btn-primary fa fa-pencil">发表评论</button>
       <div class="comments-primary">
         <div class="comment-primary" v-for="comment in comments">

@@ -1,5 +1,7 @@
 const fork = require('child_process').fork;
 const log = require('./src/helper/logger').log;
+const randomStr = require('randomstring');
+const fs = require('fs');
 const MAIN_WORKER_PATH = './worker.js';
 const MGR_WORKER_PATH = './src/management/mgrControlers.js';
 var mainWorker, managerWorker;
@@ -7,6 +9,11 @@ var mainWorker, managerWorker;
 var reload = false;
 var mainClosed = true;
 
+if (!fs.existsSync(__dirname + '/src/secrets.js'))
+  fs.writeFileSync(__dirname + '/src/secrets.js',
+`exports.mgrPath = '/mgr';
+exports.sqlPass = '1234';
+exports.salt = '${randomStr.generate()}';`)
 startManagerWorker();
 startMainWorker();
 
