@@ -283,8 +283,8 @@ block {
 }
 #login-frame {
   width: 100%;
-  height: calc(100% - 20px);
-  margin-top: 20px;
+  height: calc(100% - 56px);
+  margin-top: 56px;
   border: none;
   background-color: transparent;
 }

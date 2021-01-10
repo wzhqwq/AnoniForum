@@ -103,8 +103,8 @@ exports.auth = function (sdu_id, passwd) {
                   else {
                     let user;
                     DB.insert('users', user = { sdu_id: sdu_id, passwd: passwd, token_secret: randomStr.generate(), nick_name: '_unset_' })
-                      .then(() => {
-                        res({ jwt: genJwt(u_id), user: user });            
+                      .then(result => {
+                        res({ jwt: genJwt(result.lastID), user: user });            
                       })
                       .catch(e => {
                         rej('数据库出错: ' + e.message);

@@ -3,10 +3,8 @@ const http = require('http');
 const DB = require('../helper/db');
 const {auth, setName, checkBefore} = require('../helper/auth');
 const route = require('./userRoute');
-const salt1 = require('../secrets').salt;
 const log = require('../helper/logger').log;
 const bodyParser = require('body-parser');
-const randomStr = require('randomstring');
 
 const app = express();
 const server = http.createServer(app);
@@ -48,7 +46,6 @@ exports.close = function () {
 
 // Route
 // POST
-var salts = {};
 route.logIn.post((req, res) => {
   /*if (!salts[req.header('X-Real-IP')]) {
     res.json({jwt: '', err: '页面失效了，请刷新再试！'});

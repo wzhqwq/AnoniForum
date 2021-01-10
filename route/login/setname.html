@@ -146,7 +146,7 @@
   </style>
 </head>
 <body>
-  <div id="show-box">
+  <div class="container" id="show-box" style="display: none;">
     <div id="show1">你好，软件人！</div>
     <div id="show2">为自己起一个昵称吧：</div>
     <div id="show3">
@@ -155,6 +155,7 @@
     </div>
     <div id="show4">该昵称将被用于排行榜以及公告中，请不要使用暴露个人身份或冒充他人身份的称呼，否则您的昵称将被改为默认的“灯哥哥粉丝”。昵称一旦设置将无法修改</div>
   </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
   <script src="/resource/js/main.js"></script>
   <script>
     const $ = q => document.querySelector(q);
@@ -175,8 +176,9 @@
         });
       }, 500);
       $('#set-btn').onclick = () => {
-        axiosPost('/user/setnickname', {
-          nick: $('#nick-name').value
+        axios.post('/user/setnickname', {
+          nick: $('#nick-name').value,
+          jwt: localStorage.getItem('jwt')
         }).then(resp => {
           localStorage.setItem('jwt', resp.data.jwt);
           if (window.login_succ)

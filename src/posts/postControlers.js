@@ -267,7 +267,7 @@ route.publishPost.post((req, res) => {
   var path = __dirname + `/../../data/${name}s/`;
 
   if (!fs.existsSync(path + `drafts/${req.user_current.u_id}.html`))
-    return res.json({ code: 'NODRAFT', note: '没有草稿要发送'}), null;
+    return res.json({ code: 'NODRAFT', note: '没有草稿要发布'}), null;
   
   var date = new Date();
   var post = {
