@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const { request } = require('http');
 const DB = require('./db');
 const strEnc = require('./sdu_rsa');
 const log = require('./logger').log;
@@ -95,14 +94,14 @@ exports.auth = function (sdu_id, passwd) {
                   return;
                 }
                 if (resp.statusCode == 200)
-                  rej('学号不存在或密码错误！200');
+                  rej('学号不存在或密码错误！');
                 else if (resp.statusCode == 302) {
                   let loc = resp.headers['location'];
                   if (!loc.match(/ticket=.*$/))
                     rej('学号不存在或密码错误！');
                   else {
                     let user;
-                    DB.insert('users', user = { sdu_id: sdu_id, passwd: password/*, last_remote: req.header('X-Real-IP')*/, token_secret: randomStr.generate(), nick_name: '_unset_' })
+                    DB.insert('users', user = { sdu_id: sdu_id, passwd: passwd, token_secret: randomStr.generate(), nick_name: '_unset_' })
                       .then(() => {
                         res({ jwt: genJwt(u_id), user: user });            
                       })

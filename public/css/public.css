@@ -264,8 +264,27 @@ block {
   }
 }
 
+#login-needed {
+  width: 100%;
+  height: 100%;
+  background-color: #0001;
+  position: fixed;
+}
+#login-needed.show {
+  animation: swipe-up .3s ease-out;
+}
+@keyframes swipe-up {
+  from {
+    top: 100%;
+  }
+  to {
+    top: 0;
+  }
+}
 #login-frame {
   width: 100%;
-  height: 450px;
+  height: calc(100% - 20px);
+  margin-top: 20px;
   border: none;
+  background-color: transparent;
 }

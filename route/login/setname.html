@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置你的昵称</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      overflow: hidden;
+    }
+    #show-box {
+      background: linear-gradient(to top right, #1980ff, #109cff);
+      width: 100%;
+      height: 100%;
+      color: white;
+      filter: opacity(0);
+      position: fixed;
+      transition: filter 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #show-box.show {
+      filter: opacity(1);
+    }
+    #show3 {
+      transition-delay: .6s;
+      display: flex;
+      flex-direction: row;
+    }
+    #show4 {
+      font-size: 22px !important;
+      line-height: 30px !important;
+      color: #d2e5ff;
+      transition-delay: 1.2s;
+    }
+    #show-box > div {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      filter: opacity(0);
+      font-size: 50px;
+      line-height: 60px;
+      transition-property: filter, bottom;
+      transition-duration: 2s;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0 30px;
+    }
+    #show1.show,
+    #show2.show,
+    #show3.show,
+    #show4.show {
+      filter: opacity(1);
+    }
+    #show1.show {
+      bottom: calc(50% - 30px);
+    }
+    #show1.hide {
+      bottom: calc(50% + 140px);
+      filter: opacity(.2) blur(2px);
+    }
+    #show2.show {
+      bottom: calc(50% + 80px);
+    }
+    #show3.show {
+      bottom: calc(50%);
+    }
+    #show4.show {
+      bottom: calc(50% - 100px);
+    }
+    input {
+      border: none;
+      padding: 0 10px;
+      background-color: #FFF7;
+      color: #23548a;
+      border-radius: 10px;
+      line-height: 60px;
+      font-size: 34px;
+      display: block;
+    }
+    button {
+      border: none;
+      background-color: #ecf5ff;
+      color: #1980ff;
+      border-radius: 10px;
+      font-size: 28px;
+      line-height: 60px;
+      padding: 0 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    input:focus,
+    button:focus {
+      outline: none;
+    }
+    input:focus {
+      background-color: #ecf5ff;
+    }
+    @media (max-width: 600px) {
+      #show-box {
+        width: calc(100% - 10px);
+        margin-left: 5px;
+        border-radius: 8px;
+        top: 100%;
+        box-shadow: 0 0 4px #23558a50;
+        filter: none;
+        transition-property: top;
+      }
+      #show-box.show {
+        top: 10px;
+      }
+      #show4 {
+        font-size: 18px !important;
+      }
+      #show-box > div {
+        font-size: 38px;
+      }
+      input {
+        font-size: 28px;
+      }
+      button {
+        font-size: 20px;
+      }
+      input, button {
+        line-height: 50px;
+      }
+    }
+    @media (max-width: 500px) {
+      #show4 {
+        font-size: 14px !important;
+        line-height: 20px !important;
+      }
+      #show-box > div {
+        font-size: 26px;
+        padding: 0 20px;
+      }
+      input {
+        font-size: 22px;
+        width: 170px;
+      }
+      button {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="show-box">
+    <div id="show1">你好，软件人！</div>
+    <div id="show2">为自己起一个昵称吧：</div>
+    <div id="show3">
+      <input type="text" id="nick-name" value="灯哥哥粉丝">
+      <button id="set-btn">好了</button>
+    </div>
+    <div id="show4">该昵称将被用于排行榜以及公告中，请不要使用暴露个人身份或冒充他人身份的称呼，否则您的昵称将被改为默认的“灯哥哥粉丝”。昵称一旦设置将无法修改</div>
+  </div>
+  <script src="/resource/js/main.js"></script>
+  <script>
+    const $ = q => document.querySelector(q);
+    const first_load = () => {
+      setTimeout(() => {
+        $('#show-box').className = 'show';
+        var ended = false;
+        $('#show-box').addEventListener('transitionend', () => {
+          if (ended) return;
+          ended = true;
+          $('#show1').className = 'show';
+          setTimeout(() => {
+            $('#show1').className = 'hide';
+            $('#show2').className = 'show';
+            $('#show3').className = 'show';
+            $('#show4').className = 'show';
+          }, 2500);
+        });
+      }, 500);
+      $('#set-btn').onclick = () => {
+        axiosPost('/user/setnickname', {
+          nick: $('#nick-name').value
+        }).then(resp => {
+          localStorage.setItem('jwt', resp.data.jwt);
+          if (window.login_succ)
+            window.login_succ();
+          else
+            location.href = '/';
+        }).catch(err => {
+          alert('设置昵称时发生了错误：' + err.message);
+        })
+      }
+    };
+    window.onload = first_load;
+  </script>
+</body>
+</html>
