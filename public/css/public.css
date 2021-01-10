@@ -271,7 +271,7 @@ block {
   position: fixed;
 }
 #login-needed.show {
-  animation: swipe-up .3s ease-out;
+  animation: swipe-up .3s ease-out forwards;
 }
 @keyframes swipe-up {
   from {

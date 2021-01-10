@@ -3,6 +3,7 @@ const DB = require('./db');
 const strEnc = require('./sdu_rsa');
 const log = require('./logger').log;
 const salt = require('../secrets.js').salt;
+const randomStr = require('randomstring');
 
 exports.check = function (jwt) {
   return new Promise((res, rej) => {
