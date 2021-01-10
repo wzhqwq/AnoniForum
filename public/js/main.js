@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
   if (typeof secondly_load != 'undefined')
     setTimeout(secondly_load, 0);
 
-  if (location.pathname == 'login' || location.pathname == 'signup') return;
+  if (location.pathname.match('login')) return;
 
   var login_el = document.createElement('div');
   login_el.innerHTML = `

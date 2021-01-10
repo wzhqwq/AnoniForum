@@ -38,20 +38,19 @@ exports.auth = function (sdu_id, passwd) {
       .query(true)
       .then(user => {
         if (!user) {
-          let req = require('request').defaults({
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'Accept-Language': 'zh-CN,zh;q=0.9',
-            'Cache-Control': 'max-age=0',
-            'Connection': 'keep-alive',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
-          });
+          let req = require('request');
           let url = 'https://pass.sdu.edu.cn/cas/login?service=https%3A%2F%2Fservice.sdu.edu.cn%2Ftp_up%2Fview%3Fm%3Dup#act=portal/viewhome';
           
           req(url, {
             method: 'GET',
             headers: {
-              'Accept-Encoding': 'gzip, deflate, br',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+              'Accept-Language': 'zh-CN,zh;q=0.9',
+              'Cache-Control': 'max-age=0',
+              'Connection': 'keep-alive',
               'Host': 'pass.sdu.edu.cn',
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+              'Accept-Encoding': 'gzip, deflate, br',
               'Sec-Fetch-Dest': 'document',
               'Sec-Fetch-Mode': 'navigate',
               'Sec-Fetch-Site': 'cross-site',
@@ -76,8 +75,13 @@ exports.auth = function (sdu_id, passwd) {
                   _eventId: 'submit'
                 },
                 headers: {
-                  'Accept-Encoding': 'gzip, deflate',
+                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                  'Accept-Language': 'zh-CN,zh;q=0.9',
+                  'Cache-Control': 'max-age=0',
+                  'Connection': 'keep-alive',
                   'Host': 'pass.sdu.edu.cn',
+                  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',    
+                  'Accept-Encoding': 'gzip, deflate',
                   'Upgrade-Insecure-Requests': '1',
                   'Origin': 'https://pass.sdu.edu.cn',
                   'Content-Type': 'application/x-www-form-urlencoded',
@@ -107,7 +111,15 @@ exports.auth = function (sdu_id, passwd) {
                       });
                   }
                 }
+                else {
+                  rej('发送请求时出现了问题');
+                  log('User server: unexpected code from second fetch:', resp.statusCode);
+                }
               });
+            }
+            else {
+              rej('发送请求时出现了问题');
+              log('User server: unexpected code from first fetch:', resp.statusCode);
             }
           });
         }
@@ -144,7 +156,7 @@ exports.setName = function (jwt, name) {
 }
 
 exports.checkBefore = function (req, res, next) {
-  if (req.path == '/user/login' || req.path == '/user/signup' || req.path == '/user/getsalt') {
+  if (req.path == '/user/login' || req.path == '/user/signup') {
     next();
     return;
   }
