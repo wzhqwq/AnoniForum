@@ -6,7 +6,7 @@
   <title>文章详情</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/resource/css/public.css">
-  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
@@ -42,7 +42,7 @@
       <div class="post-content" v-html="post"></div>
     </div>
     <div id="comments">
-      <button class="btn btn-primary fa fa-pencil">发表评论</button>
+      <button class="btn btn-primary fa fa-pen-nib">发表评论</button>
       <div class="comments-primary">
         <div class="comment-primary" v-for="comment in comments">
           <div class="comment-author">{{ comment.author }}</div>

@@ -98,7 +98,7 @@
   text-align: left;
 }
 .bottom-btn > .btn::before {
-  margin: 0 14px;
+  margin: 0 12px;
 }
 .bottom-btn.b-green {
   box-shadow: 0px 2px 4px #2ba54687;
