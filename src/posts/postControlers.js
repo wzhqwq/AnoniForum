@@ -125,12 +125,12 @@ route.getEssentials.get((req, res) => {
 });
 
 route.getPosts.get((req, res) => {
-  var type = req.body.type || '';
-  var start = req.body.start || '';
-  var word = req.body.wd || '';
-  var tag = req.body.tag || '';
-  var resolved = req.body.res || '';
-  var sort = req.body.sort || '';
+  var type = req.query.type || '';
+  var start = req.query.start || '';
+  var word = req.query.wd || '';
+  var tag = req.query.tag || '';
+  var resolved = req.query.res || '';
+  var sort = req.query.sort || '';
   var where = word ? `topic LIKE '%${word}%'` : '';
   if (type == 'i' && (resolved == '0' || resolved == '1')) {
     if (where != '')
@@ -180,8 +180,8 @@ route.getPosts.get((req, res) => {
 });
 
 route.getPost.get((req, res) => {
-  var type = req.body.type || '';
-  var p_id = req.body.p_id;
+  var type = req.query.type || '';
+  var p_id = req.query.p_id;
 
   if (typeof p_id != 'number')
     return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;

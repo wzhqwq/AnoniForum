@@ -90,7 +90,8 @@ window.addEventListener('load', () => {
     if (obj) {
       let queries = [];
       for (key in obj)
-        queries.push(`${key}=${encodeURI(obj[key])}`);
+        if (obj[key] && obj[key] != '')
+          queries.push(`${key}=${encodeURI(obj[key])}`);
       url += '?' + queries.join('&');
     }
     return axios.get(url);

@@ -49,20 +49,20 @@ db.prototype.query = function (single) {
       });
   });
 };
-function exec(sql) {
+function exec(sql, debug = true) {
   if (disconnecting) {
     rej('Server is closing');
     return;
   }
-  log('DataBase: execute:', sql);
+  if (debug) log('DataBase: execute:', sql);
   return new Promise((res, rej) => {
     database.run(sql)
       .then(data => {
-        log('Execute success.');
+        if (debug) log('Execute success.');
         res(data);
       })
       .catch(err => {
-        log('Execute failed:', err.message);
+        if (debug) log('Execute failed:', err.message);
         rej(err);
       });
   });
@@ -81,12 +81,12 @@ db.delete = function (table, where) {
   return exec(`DELETE FROM ${table} WHERE ${where};`)
 }
 db.create = function (table, items) {
-  return exec(`CREATE TABLE IF NOT EXISTS ${table} (\n${
+  return exec(`CREATE TABLE IF NOT EXISTS ${table} (${
     items
       .map(item =>
         `${item.name} ${item.type}` + (item.isPrimary ? ' PRIMARY KEY' : '') + (item.autoInc ? ' AUTOINCREMENT' : '')
-      ).join(',\n')
-  }\n);`);
+      ).join(',')
+  });`, false);
 }
 db.exec = exec;
 
