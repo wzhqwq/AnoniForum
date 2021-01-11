@@ -14,7 +14,7 @@ DB.connect().then(() => {
   server.listen(20717, 'localhost', () => {
     log('Post server is running.');
   });
-  /*DB.create('bulletin', [
+  DB.create('bulletin', [
     {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'title', type: DB.SHORT},
     {name: 'toTop', type: DB.INT},
@@ -29,7 +29,8 @@ DB.connect().then(() => {
     {name: 'essential', type: DB.INT},
     {name: 'resolved', type: DB.INT},
     {name: 'time', type: DB.SHORT},
-    {name: 'watch', type: DB.INT}
+    {name: 'watch', type: DB.INT},
+    {name: 'alias', type: DB.TEXT}
   ]);
   DB.create('articles', [
     {name: 'article_id', isPrimary: true, autoInc: true, type: DB.INT},
@@ -38,7 +39,8 @@ DB.connect().then(() => {
     {name: 'tags', type: DB.SHORT},
     {name: 'essential', type: DB.INT},
     {name: 'date', type: DB.SHORT},
-    {name: 'watch', type: DB.INT}
+    {name: 'watch', type: DB.INT},
+    {name: 'alias', type: DB.TEXT}
   ]);
   DB.create('issues_tags', [
     {name: 'issue_id', type: DB.INT},
@@ -67,7 +69,7 @@ DB.connect().then(() => {
     {name: 'comment_id', type: DB.INT},
     {name: 'u_id', type: DB.INT},
     {name: 'vote', type: DB.INT}
-  ]);*/
+  ]);
 });
 
 app.use(bodyParser.json());
@@ -99,18 +101,18 @@ route.getBulletins.post((req, res) => {
 
 route.getEssentials.post((req, res) => {
   var ret = {};
-  (new DB())
-    .select('issues', 'essential = 1')
+  (new DB())  // 所有精选问题
+    .select('issues', 'essential = 1 AND resolved = 0', null, ['issue_id', 'topic', 'brief', 'tags', 'time', 'watch', 'essential'])
     .append(
-      (new DB).select('issues', 'essential = 0')
-        .sort('issue_id', true)
+      (new DB).select('issues', 'essential = 0 AND resolved = 0', null, ['issue_id', 'topic', 'brief', 'tags', 'time', 'watch', 'essential'])
+        .sort('issue_id', true) // 附加最新15个非精选问题
         .selectSelf(null, 15)
     )
     .query()
     .then(issues => {
       ret.issues = issues;
-      return (new DB())
-        .select('articles', 'essential = 1', 20)
+      return (new DB()) // 20个精选文章
+        .select('articles', 'essential = 1', 20, ['article_id', 'topic', 'tags', 'date', 'watch'])
         .query()
     })
     .then(articles => {
@@ -160,10 +162,13 @@ route.getPosts.post((req, res) => {
   }
   var q = new DB();
   
+  var qkey = [`${name}_id`, 'topic', 'tags', 'essential', name == 'issue' ? 'time' : 'date', 'watch']
+  if (name == 'issue') qkey.push('brief', 'resolved');
   if (sort == 'h')
-    q.select(fromTable, where == '' ? null : where).sort('watch', true).selectSelf(null, `10 OFFSET ${start}`);
+    q.select(fromTable, where == '' ? null : where, null, qkey)
+      .sort('watch', true).selectSelf(null, `10 OFFSET ${start}`);
   else
-    q.select(fromTable, where == '' ? null : where, `10 OFFSET ${start}`);
+    q.select(fromTable, where == '' ? null : where, `10 OFFSET ${start}`, qkey);
 
   q.query()
     .then(posts => {
@@ -180,10 +185,12 @@ route.getPost.post((req, res) => {
 
   if (typeof p_id != 'number')
     return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
-  if (type != 'a' && type != 'i')
+  if (type[0] != 'a' && type[0] != 'i')
     return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
-  var name = type == 'a' ? 'article' : 'issue';
+  var name = type[0] == 'a' ? 'article' : 'issue';
 
+  var qkey = [`${name}_id`, 'topic', 'tags', 'essential', name == 'issue' ? 'time' : 'date', 'watch']
+  if (name == 'issue') qkey.push('brief', 'resolved');
   if (p_id == -1) {
     if (!fs.existsSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
       return res.status(404).json({ code: 'NODRAFT', note: '没有草稿'}), null;
@@ -200,8 +207,10 @@ route.getPost.post((req, res) => {
       .select(`${name}s`, `${name}_id = ${p_id}`)
       .query(true)
       .then(post => {
-        if (!post)
+        if (!post || type.length == 2 && post.u_id != req.user_current.u_id)
           return res.status(404).json({ code: 'NOID', note: 'p_id不存在' }), null;
+        if (type.length == 1 && post.u_id != req.user_current.u_id)
+          DB.update(`${name}s`, { watch: parseInt(post.watch) + 1}, `${name}_id = ${p_id}`)
 
         try {
           post.content = fs.readFileSync(__dirname + `/../../data/${name}s/${p_id}.html`).toString('utf-8');
@@ -238,10 +247,8 @@ route.savePost.post((req, res) => {
       .select(`${name}s`, `${name}_id = ${p_id}`)
       .query(true)
       .then(post => {
-        if (!post)
-          return res.status(403).json({code: 'NOID', note: 'p_id不存在'}), null;
-        if (post.p_id != req.user_current)
-          return res.status(403).json({code: 'INVUSER', note: '您没有权限编辑此内容'}), null;
+        if (!post || post.p_id != req.user_current.u_id)
+          return res.status(404).json({code: 'NOID', note: 'p_id不存在'}), null;
         fs.writeFile(path + `${p_id}.html`, content, () => {
           res.json({ code: 'SUCC', note: ''});
         });

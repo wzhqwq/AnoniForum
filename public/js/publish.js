@@ -100,12 +100,14 @@ const first_load = () => {
               })
               .catch(err => {
                 this.publishing = false;
+                alert('发布失败：' + err.message);
               });
             }
           })
           .catch(err => {
             this.saving = false;
             this.publishing = false;
+            alert('保存失败' + err.message);
           });
         /*});*/
       },
@@ -154,14 +156,9 @@ const first_load = () => {
   
   axiosPost('/posts/getpost', {
     p_id: id,
-    type: type[0]
+    type: type[0] + 'e',
   }).then(resp => {
     var post = resp.data.post;
-    if (post.u_id != window.u_id) {
-      alert('您不是该内容的发布者，无法编辑，即将返回上一页');
-      window.history.back();
-      return;
-    }
     window.publish_vm.topic = id == -1 ? localStorage.getItem(type + '_draft_topic') : post.topic;
     if (type == 'issues')
       window.publish_vm.brief = id == -1 ? localStorage.getItem('issues_draft_brief') : post.brief;
@@ -172,9 +169,13 @@ const first_load = () => {
   }).catch(err => {
     if (err.response) {
       if (err.response.status == 404) {
-        window.writer_vm.load('');
-        window.writer_vm.is_draft = window.publish_vm.is_draft = true;
-        window.publish_vm.load_note = '';
+        if (err.response.data.code == 'NODRAFT') {
+          window.writer_vm.load('');
+          window.writer_vm.is_draft = window.publish_vm.is_draft = true;
+          window.publish_vm.load_note = '';
+        }
+        else
+          alert('内容不存在或者您不是该内容的作者');
       }
       else
         alert("服务器发生问题：" + err.message);

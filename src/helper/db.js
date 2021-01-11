@@ -90,10 +90,14 @@ db.create = function (table, items) {
 }
 db.exec = exec;
 
-db.prototype.select = function (table, where, limit) {
+db.prototype.select = function (table, where, limit, keys) {
+  if (keys)
+    keys = `(${keys.join(', ')})`;
+  else
+    keys = '*';
   if (!where && !limit)
     this.table = table;
-  this.sql = `SELECT * FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
+  this.sql = `SELECT ${keys} FROM ${table}` + (where ? ` WHERE ${where}` : '') + (limit ? ` LIMIT ${limit}` : '');
   return this;
 };
 db.prototype.selectSelf = function (where, limit) {

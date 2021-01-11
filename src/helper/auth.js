@@ -102,7 +102,7 @@ exports.auth = function (sdu_id, passwd) {
                     rej('学号不存在或密码错误！');
                   else {
                     let user;
-                    DB.insert('users', user = { sdu_id: sdu_id, passwd: passwd, token_secret: randomStr.generate(), nick_name: '_unset_' })
+                    DB.insert('users', user = { sdu_id: sdu_id, passwd: crypto.createHmac('sha256', salt).update(passwd).digest('hex'), token_secret: randomStr.generate(), nick_name: '_unset_' })
                       .then(result => {
                         res({ jwt: genJwt(result.lastID), user: user });            
                       })
