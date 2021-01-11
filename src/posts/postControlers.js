@@ -17,7 +17,7 @@ DB.connect().then(() => {
   DB.create('bulletin', [
     {name: 'b_id', isPrimary: true, autoInc: true, type: DB.INT},
     {name: 'title', type: DB.SHORT},
-    {name: 'toTop', type: DB.INT},
+    {name: 'to_top', type: DB.INT},
     {name: 'date', type: DB.SHORT},
   ]);
   DB.create('issues', [
