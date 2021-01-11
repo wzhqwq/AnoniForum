@@ -154,7 +154,7 @@ const first_load = () => {
     alert('获取标签时发生错误：' + err.message);
   });
   
-  axiosPost('/posts/getpost', {
+  axiosGet('/posts/getpost', {
     p_id: id,
     type: type[0] + 'e',
   }).then(resp => {

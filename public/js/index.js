@@ -29,17 +29,17 @@ const first_load =  () => {
     }
   });
 
-  axiosPost('/posts/getbulletins')
+  axios.get('/posts/getbulletins')
   .then(response => {
     bulletin_vm.loading = false;
     bulletin_vm.bulletins = response.data;
   })
-  .then(() => axiosPost('/user/gettop'))
+  .then(() => axios.get('/user/gettop'))
   .then(response => {
     top_vm.loading = false;
     top_vm.users = response.data;
   })
-  .then(() => axiosPost('/posts/getess'))
+  .then(() => axios.get('/posts/getess'))
   .then(response => {
     fav_vm.loading = false;
     fav_vm.issues = response.data.issues;

@@ -50,7 +50,7 @@ const first_load = () => {
       },
       load: function (more) {
         this.loading = true;
-        axiosPost('/posts/getposts', {
+        axiosGet('/posts/getposts', {
           type: type[0],
           wd: this.search_text,
           start: more ? `${this.posts.length}` : '0',

@@ -156,7 +156,7 @@ exports.setName = function (jwt, name) {
 }
 
 exports.checkBefore = function (req, res, next) {
-  if (req.path == '/user/login' || req.path == '/user/signup') {
+  if (req.path == '/user/login' || req.method == 'GET') {
     next();
     return;
   }

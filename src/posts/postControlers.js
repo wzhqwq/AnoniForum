@@ -86,7 +86,7 @@ exports.close = function () {
   })
 };
 
-route.getBulletins.post((req, res) => {
+route.getBulletins.get((req, res) => {
   (new DB())
     .select('bulletin', 'to_top = 1')
     .append((new DB()).select('bulletin', null, 5))
@@ -99,7 +99,7 @@ route.getBulletins.post((req, res) => {
     });
 });
 
-route.getEssentials.post((req, res) => {
+route.getEssentials.get((req, res) => {
   var ret = {};
   (new DB())  // 所有精选问题
     .select('issues', 'essential = 1 AND resolved = 0', null, ['issue_id', 'topic', 'brief', 'tags', 'time', 'watch', 'essential'])
@@ -124,7 +124,7 @@ route.getEssentials.post((req, res) => {
     });
 });
 
-route.getPosts.post((req, res) => {
+route.getPosts.get((req, res) => {
   var type = req.body.type || '';
   var start = req.body.start || '';
   var word = req.body.wd || '';
@@ -179,7 +179,7 @@ route.getPosts.post((req, res) => {
     });
 });
 
-route.getPost.post((req, res) => {
+route.getPost.get((req, res) => {
   var type = req.body.type || '';
   var p_id = req.body.p_id;
 

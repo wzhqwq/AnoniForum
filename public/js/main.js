@@ -86,5 +86,13 @@ window.addEventListener('load', () => {
         return new Promise((_, rej) => rej(err));
       });
   };
-
+  window.axiosGet = (url, obj) => {
+    if (obj) {
+      let queries = [];
+      for (key in obj)
+        queries.push(`${key}=${encodeURI(obj[key])}`);
+      url += '?' + queries.join('&');
+    }
+    return axios.get(url);
+  }
 });

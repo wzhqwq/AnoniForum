@@ -104,7 +104,7 @@ db.prototype.selectSelf = function (where, limit) {
   return this.select(this.asTable(), where, limit);
 }
 db.prototype.append = function (db) {
-  this.sql = `${this.sql} UNION ALL ${db.asTable()}`;
+  this.sql = `${this.sql} UNION ALL ${db.sql}`;
   this.table = '';
   return this;
 }

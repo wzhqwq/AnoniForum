@@ -130,7 +130,7 @@ route.getSalt.get((req, res) => {
   res.json({salt1: salt1, salt2: salts[ip].salt});
 });*/
 
-route.getTop.post((req, res) => {
+route.getTop.get((req, res) => {
   (new DB())
   .select('scores')
   .sort('score', true)
