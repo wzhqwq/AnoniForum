@@ -179,11 +179,11 @@ route.getPosts.get((req, res) => {
     });
 });
 
-route.getPost.get((req, res) => {
+route.getPost.post((req, res) => {
   var type = req.query.type || '';
-  var p_id = req.query.p_id;
+  var p_id = req.query.p_id || '';
 
-  if (typeof p_id != 'number')
+  if (parseInt(p_id) == NaN)
     return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
   if (type[0] != 'a' && type[0] != 'i')
     return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
@@ -191,7 +191,7 @@ route.getPost.get((req, res) => {
 
   var qkey = [`${name}_id`, 'topic', 'tags', 'essential', name == 'issue' ? 'time' : 'date', 'watch']
   if (name == 'issue') qkey.push('brief', 'resolved');
-  if (p_id == -1) {
+  if (p_id == '-1') {
     if (!fs.existsSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
       return res.status(404).json({ code: 'NODRAFT', note: '没有草稿'}), null;
     try {
