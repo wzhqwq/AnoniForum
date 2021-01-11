@@ -180,8 +180,8 @@ route.getPosts.get((req, res) => {
 });
 
 route.getPost.post((req, res) => {
-  var type = req.query.type || '';
-  var p_id = req.query.p_id || '';
+  var type = req.body.type || '';
+  var p_id = req.body.p_id || '';
 
   if (parseInt(p_id) == NaN)
     return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;

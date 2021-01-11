@@ -269,6 +269,7 @@ block {
   height: 100%;
   background-color: #0001;
   position: fixed;
+  z-index: 50;
 }
 #login-needed.show {
   animation: swipe-up .3s ease-out forwards;
