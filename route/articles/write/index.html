@@ -62,7 +62,7 @@
       <div class="writer-toolbar">
         <div class="float-left btn-group">
           <button class="btn fa fa-bold btn-sm" v-on:click="writer.set_bold" data-toggle="tooltip" data-placement="bottom" v-bind:data-original-title="writer.is_bold ? '去除所选加粗样式' : '加粗'" v-bind:class="[ writer.is_bold ? 'btn-primary' : 'btn-light' ]"></button>
-          <button class="btn fa fa-header btn-sm" v-on:click="writer.set_header" data-toggle="tooltip" data-placement="bottom" v-bind:data-original-title="writer.is_header ? '去除所选标题样式' : '设置标题样式'" v-bind:class="[ writer.is_header ? 'btn-primary' : 'btn-light' ]"></button>
+          <button class="btn fa fa-heading btn-sm" v-on:click="writer.set_header" data-toggle="tooltip" data-placement="bottom" v-bind:data-original-title="writer.is_header ? '去除所选标题样式' : '设置标题样式'" v-bind:class="[ writer.is_header ? 'btn-primary' : 'btn-light' ]"></button>
           <button class="btn fa fa-link btn-sm" v-on:click="writer.set_link" data-toggle="tooltip" data-placement="bottom" v-bind:data-original-title="writer.is_link ? '删除所选所有超链接' : '设置超链接'" v-bind:class="[ writer.is_link ? 'btn-primary' : 'btn-light' ]"></button>
         </div>
         <div class="float-left btn-group" style="margin-left: 5px;">
@@ -72,7 +72,7 @@
         </div>
         <div class="float-right">
           <button class="btn fa btn-sm" v-on:click="save" data-toggle="tooltip" data-placement="bottom" title="存成草稿" v-bind:disabled="saving" v-bind:class="[ saving ? 'btn-waring' : 'btn-success', saving ? 'fa-clock-o' : 'fa-save' ]"></button>
-          <button class="btn fa fa-send btn-sm" v-on:click="publish" data-toggle="tooltip" data-placement="bottom" title="发布" v-bind:disabled="saving || publishing" v-bind:class="[ saving ? 'btn-waring' : 'btn-primary', saving ? 'fa-clock-o' : 'fa-save' ]" v-if="is_draft"></button>
+          <button class="btn fa fa-send btn-sm" v-on:click="publish" data-toggle="tooltip" data-placement="bottom" title="发布" v-bind:disabled="saving || publishing" v-bind:class="[ saving ? 'btn-waring' : 'btn-primary', saving ? 'fa-clock-o' : 'fa-paper-plane' ]" v-if="is_draft"></button>
         </div>
       </div>
       <div>

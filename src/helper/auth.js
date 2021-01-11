@@ -124,7 +124,7 @@ exports.auth = function (sdu_id, passwd) {
           });
         }
         else {
-          if (crypto.createHmac('sha256', salt).update(user.passwd).digest('hex') != passwd)
+          if (crypto.createHmac('sha256', salt).update(passwd).digest('hex') != user.passwd)
             rej('密码错误');
           else {
             /*if (user.last_remote != address)

@@ -20,7 +20,7 @@ window.addEventListener('load', () => {
 
   var login_el = document.createElement('div');
   login_el.innerHTML = 
-`<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="{ display: show1 ? 'block' : '' }">
+`<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="[ display: show1 ? 'block' : '' ]">
   <div class="center-loader" v-if="loading">
     <div class="spinner-border"></div>
     <span>登录页面加载中</span>
