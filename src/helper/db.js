@@ -92,7 +92,7 @@ db.exec = exec;
 
 db.prototype.select = function (table, where, limit, keys) {
   if (keys)
-    keys = `(${keys.join(', ')})`;
+    keys = keys.join(',');
   else
     keys = '*';
   if (!where && !limit)
