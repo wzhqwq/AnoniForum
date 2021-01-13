@@ -16,9 +16,6 @@ const first_load = () => {
       resolved: -1
     },
     methods: {
-      get_link: function (post) {
-        return `/${type}/detail?id=${post[id_name]}`;
-      },
       search: function () {
         if (this.search_text == last_search) return;
         last_search = this.search_text;
@@ -61,10 +58,12 @@ const first_load = () => {
         .then(resp => {
           this.isEnd = resp.data.length < 10;
           this.loading = false;
+          var data = resp.data;
+          data.forEach(post => post.url = `detail?id=${post[id_name]}`)
           if (more)
-            this.posts.concat(resp.data);
+            this.posts.concat(data);
           else
-            this.posts = resp.data;
+            this.posts = data;
         })
         .catch(err => {
           if (err.response) {

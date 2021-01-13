@@ -96,7 +96,7 @@ const first_load = () => {
                   if (type == 'issues')
                     localStorage.removeItem('issues_draft_brief');
                 }
-                location.href = `/${type}/detail?id=${resp.data.id}`;
+                location.href = `/rjrrjh/${type}/detail?id=${resp.data.id}`;
               })
               .catch(err => {
                 this.publishing = false;

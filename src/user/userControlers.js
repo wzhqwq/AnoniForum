@@ -19,10 +19,7 @@ DB.connect()
     {name: 'sdu_id', type: DB.INT},
     {name: 'passwd', type: DB.SHA},
     {name: 'token_secret', type: DB.SALT},
-    {name: 'nick_name', type: DB.SHORT}
-  ]);
-  DB.create('scores', [
-    {name: 'u_id', type: DB.INT},
+    {name: 'nick_name', type: DB.SHORT},
     {name: 'score', type: DB.INT}
   ]);
 })
@@ -73,7 +70,7 @@ route.setNickName.post((req, res) => {
   var nick_name = req.body.nick || '';
   var jwt = req.body.jwt || '';
 
-  if (nick_name.length == 0)
+  if (nick_name.length == 0 || nick_name.length > 10)
     res.status(400);
   else
     setName(jwt, nick_name)
@@ -132,7 +129,7 @@ route.getSalt.get((req, res) => {
 
 route.getTop.get((req, res) => {
   (new DB())
-  .select('scores')
+  .select('users', null, null, ['nick_name', 'score'])
   .sort('score', true)
   .selectSelf(null, 10)
   .query()

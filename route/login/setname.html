@@ -151,11 +151,12 @@
     <div id="show1">你好，软件人！</div>
     <div id="show2">为自己起一个昵称吧：</div>
     <div id="show3">
-      <input type="text" id="nick-name" value="灯哥哥粉丝">
-      <button id="set-btn">好了</button>
+      <input type="text" v-model="name" placeholder="输入昵称，长度不超过10位" v-bind:style="{ color: name.length > 10 ? 'red' : '' }">
+      <button v-on:click="submit">{{ name.length == 0 ? '默认' : '好了' }}</button>
     </div>
     <div id="show4">该昵称将被用于排行榜以及公告中，请不要使用暴露个人身份或冒充他人身份的称呼，否则您的昵称将被改为默认的“灯哥哥粉丝”。昵称一旦设置将无法修改</div>
   </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
   <script src="/rjrres/js/main.js"></script>
   <script>
@@ -176,20 +177,37 @@
           }, 2500);
         });
       }, 500);
-      $('#set-btn').onclick = () => {
-        axios.post('/rjrusr/setnickname', {
-          nick: $('#nick-name').value,
-          jwt: localStorage.getItem('jwt')
-        }).then(resp => {
-          localStorage.setItem('jwt', resp.data.jwt);
-          if (window.login_succ)
-            window.login_succ();
-          else
-            location.href = '/rjrrjh/';
-        }).catch(err => {
-          alert('设置昵称时发生了错误：' + err.message);
-        })
-      }
+      new Vue({
+        el: 'show3',
+        data: {
+          name: ''
+        },
+        methods: {
+          submit: function () {
+            if (this.name.length == 0) {
+              if (confirm('没有输入昵称，是否使用默认昵称“灯哥哥粉丝”？'))
+                this.name = '灯哥哥粉丝';
+              else
+                return;
+            }
+            if (this.name.length > 10)
+              return alert('输入昵称长度超过10位');
+
+            axios.post('/rjrusr/setnickname', {
+              nick: this.name,
+              jwt: localStorage.getItem('jwt')
+            }).then(resp => {
+              localStorage.setItem('jwt', resp.data.jwt);
+              if (window.login_succ)
+                window.login_succ();
+              else
+                location.href = '/rjrrjh/';
+            }).catch(err => {
+              alert('设置昵称时发生了错误：' + err.message);
+            })
+          }
+        }
+      })
     };
     window.onload = first_load;
   </script>

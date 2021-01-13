@@ -102,7 +102,7 @@ exports.auth = function (sdu_id, passwd) {
                     rej('学号不存在或密码错误！');
                   else {
                     let user;
-                    DB.insert('users', user = { sdu_id: sdu_id, passwd: crypto.createHmac('sha256', salt).update(passwd).digest('hex'), token_secret: randomStr.generate(), nick_name: '_unset_' })
+                    DB.insert('users', user = { sdu_id: sdu_id, passwd: crypto.createHmac('sha256', salt).update(passwd).digest('hex'), token_secret: randomStr.generate(), nick_name: '_unset_', score: 0 })
                       .then(result => {
                         res({ jwt: genJwt(result.lastID), user: user });            
                       })
@@ -150,8 +150,10 @@ exports.setName = function (jwt, name) {
     .then(user => {
       if (user.nick_name != '_unset_')
         return jwt;
-      else
+      else {
+        DB.update('users', {nick_name: name}, `u_id = ${user.u_id}`);
         return genJwt(user.u_id, name);
+      }
     });
 }
 

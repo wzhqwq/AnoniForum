@@ -21,11 +21,6 @@ const first_load =  () => {
       issues: [],
       articles: [],
       loading: false,
-    },
-    mathods: {
-      get_link: function (type, post) {
-        return `/${type}s/detail?id=${post[type + '_id']}`;
-      }
     }
   });
 
@@ -42,8 +37,14 @@ const first_load =  () => {
   .then(() => axios.get('/rjrpst/getess'))
   .then(response => {
     fav_vm.loading = false;
-    fav_vm.issues = response.data.issues;
-    fav_vm.articles = response.data.articles;
+    fav_vm.issues = (issues => {
+      issues.forEach(issue => issue.url = `/rjrrjh/issues/detail?id=${issue.issue_id}`);
+      return issues;
+    })(response.data.issues);
+    fav_vm.articles = (articles => {
+      articles.forEach(article => article.url = `/rjrrjh/articles/detail?id=${article.article_id}`);
+      return articles;
+    })(response.data.articles);
   })
   .catch(error => {
     if (error.response) {

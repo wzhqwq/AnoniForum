@@ -21,15 +21,19 @@ window.addEventListener('load', () => {
   var login_el = document.createElement('div');
   login_el.innerHTML = 
 `<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="[ display: show1 ? 'block' : '' ]">
-  <div class="center-loader" v-if="loading">
-    <div class="spinner-border"></div>
-    <span>登录页面加载中</span>
-  </div>
+  <center-loader v-if="loading" text="登录页面加载中"/>
   <iframe id="login-frame" v-bind:src="show1 ? (setName ? '/login/setname.html' : '/login') : ''" v-on:load="loaded">
   </iframe>
 </div>`;
   const getData = () => JSON.parse(atob(jwt.split('.')[0]));
   document.body.appendChild(login_el);
+  Vue.component('center-loader', {
+    props: ['text'],
+    template: `<div class="center-loader">
+  <div class="spinner-border"></div>
+  <span>{{ text || '加载中' }}</span>
+</div>`
+  });
   var login_vm = new Vue({
     el: '#login-needed',
     data: {
