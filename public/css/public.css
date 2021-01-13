@@ -270,17 +270,11 @@ block {
   background-color: #0001;
   position: fixed;
   z-index: 50;
+  top: 100%;
+  transition: top .3s ease-out;
 }
 #login-needed.show {
-  animation: swipe-up .3s ease-out forwards;
-}
-@keyframes swipe-up {
-  from {
-    top: 100%;
-  }
-  to {
-    top: 0;
-  }
+  top: 0;
 }
 #login-frame {
   width: 100%;

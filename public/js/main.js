@@ -48,7 +48,7 @@ window.addEventListener('load', () => {
             this.show2 = false;
             setTimeout(() => {
               this.show1 = false;
-            }, 0);
+            }, 300);
           }
           else {
             this.setName = true;
