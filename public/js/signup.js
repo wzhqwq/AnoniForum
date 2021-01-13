@@ -1,6 +1,6 @@
 const first_load =  () => {
   var salts;
-  axios.get('/user/getsalt')
+  axios.get('/rjrusr/getsalt')
   .then(response => {
     salts = response.data;
   })
@@ -32,7 +32,7 @@ const first_load =  () => {
         this.password_err = this.sdu_id_err = '';
         this.signing = true;
 
-        axios.post('/user/signup', {
+        axios.post('/rjrusr/signup', {
           sduid: this.sdu_id,
           password: CryptoJS.HmacSHA256(this.password, salts.salt1).toString()
         })

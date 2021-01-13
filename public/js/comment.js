@@ -22,7 +22,7 @@ const first_load = () => {
       comments: []
     }
   });
-  axiosPost('/posts/getpost', {
+  axiosPost('/rjrpst/getpost', {
     type: type[0],
     p_id: p_id
   }).then(resp => {

@@ -50,7 +50,7 @@ const first_load = () => {
       },
       load: function (more) {
         this.loading = true;
-        axiosGet('/posts/getposts', {
+        axiosGet('/rjrpst/getposts', {
           type: type[0],
           wd: this.search_text,
           start: more ? `${this.posts.length}` : '0',
@@ -80,7 +80,7 @@ const first_load = () => {
       }
     }
   });
-  axios.get('/resource/jsons/tags.json')
+  axios.get('/rjrres/jsons/tags.json')
   .then(resp => {
     common_vm.tags = resp.data.map((tag, i) => {
       return {name: tag, id: i};

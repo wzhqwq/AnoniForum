@@ -59,7 +59,7 @@ const first_load = () => {
             if (type == 'issues')
               localStorage.setItem('issues_draft_brief', this.brief);
           }
-          axiosPost('/posts/savepost', {
+          axiosPost('/rjrpst/savepost', {
             /*add_img: imgs_to_upload,
             delete_img: imgs_to_delete,*/
             post: post,
@@ -82,7 +82,7 @@ const first_load = () => {
                 this.publishing = false;
                 return;
               }
-              axiosPost('/posts/publishpost', {
+              axiosPost('/rjrpst/publishpost', {
                 type: type[0],
                 topic: this.topic,
                 tags: this.tags_s.map(tag => tag.id).join(','),
@@ -144,7 +144,7 @@ const first_load = () => {
     }
   });
   
-  axios.get('/resource/jsons/tags.json')
+  axios.get('/rjrres/jsons/tags.json')
   .then(resp => {
     window.publish_vm.tags = resp.data.map((tag, i) => {
       return {name: tag, id: i, selected: false};
@@ -154,7 +154,7 @@ const first_load = () => {
     alert('获取标签时发生错误：' + err.message);
   });
   
-  axiosPost('/posts/getpost', {
+  axiosPost('/rjrpst/getpost', {
     p_id: id,
     type: type[0] + 'e',
   }).then(resp => {

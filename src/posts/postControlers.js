@@ -306,4 +306,4 @@ route.publishPost.post((req, res) => {
   });
 })
 
-app.use('/posts', route.router);
+app.use('/rjrpst', route.router);

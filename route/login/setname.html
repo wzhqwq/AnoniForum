@@ -157,7 +157,7 @@
     <div id="show4">该昵称将被用于排行榜以及公告中，请不要使用暴露个人身份或冒充他人身份的称呼，否则您的昵称将被改为默认的“灯哥哥粉丝”。昵称一旦设置将无法修改</div>
   </div>
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
-  <script src="/resource/js/main.js"></script>
+  <script src="/rjrres/js/main.js"></script>
   <script>
     const $ = q => document.querySelector(q);
     const first_load = () => {
@@ -177,7 +177,7 @@
         });
       }, 500);
       $('#set-btn').onclick = () => {
-        axios.post('/user/setnickname', {
+        axios.post('/rjrusr/setnickname', {
           nick: $('#nick-name').value,
           jwt: localStorage.getItem('jwt')
         }).then(resp => {
@@ -185,7 +185,7 @@
           if (window.login_succ)
             window.login_succ();
           else
-            location.href = '/';
+            location.href = '/rjrrjh/';
         }).catch(err => {
           alert('设置昵称时发生了错误：' + err.message);
         })

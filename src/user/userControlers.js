@@ -144,4 +144,4 @@ route.getTop.get((req, res) => {
   });
 });
 
-app.use('/user', route.router);
+app.use('/rjrusr', route.router);
