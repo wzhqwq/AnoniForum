@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-    <center-loader v-if="loading"/>
+    <center-loader v-if="loading"></center-loader>/>
     <div class="text-center fa fa-exclamation-triangle" v-if="isEnd" style="color: #AAA; display: block;">已经到最后了</div>
     <div class="text-center" v-if="!loading && !isEnd">
       <button class="btn btn-light" v-on:click="load_more">加载更多</button>

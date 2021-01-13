@@ -124,7 +124,7 @@
               <b>图片质量：{{ quantity }}%</b><br/>
               <input type="range" min="60" max="100" value="100" v-model="quantity" step="1" style="width: 80%"><br/>
               文件大小：<span v-bind:class="[size > 1024 ? 'text-danger' : 'text-success']">{{ size.toFixed(0) }}KB</span>
-              <center-loader v-if="processing" text="压缩中"/>
+              <center-loader v-if="processing" text="压缩中"></center-loader>/>
               <h5>需要压缩图片</h5>
               <p>因为服务器资源有限，所以图片大小限制在1M以内，通常将图片压缩到这个体积对图片本身的影响很小，如果您需要提供高清图片，可以选择将图片上传至类似<a href="sm.ms">SM.MS</a>的免费图床上，然后得到它的图片URL后再次插入图片</p>
               若想插入图片URL，请点击返回按钮<br/>

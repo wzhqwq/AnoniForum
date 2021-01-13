@@ -20,9 +20,9 @@ window.addEventListener('load', () => {
 
   var login_el = document.createElement('div');
   login_el.innerHTML = 
-`<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="[ display: show1 ? 'block' : '' ]">
-  <center-loader v-if="loading" text="登录页面加载中"/>
-  <iframe id="login-frame" v-bind:src="show1 ? (setName ? '/login/setname.html' : '/login') : ''" v-on:load="loaded">
+`<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="{ display: show1 ? 'block' : '' ">
+  <center-loader v-if="loading" text="页面加载中" style="margin-top: 100px;"></center-loader>/>
+  <iframe id="login-frame" v-bind:src="show1 ? (setName ? '/rjrrjh/login/setname.html' : '/rjrrjh/login') : ''" v-on:load="loaded">
   </iframe>
 </div>`;
   const getData = () => JSON.parse(atob(jwt.split('.')[0]));

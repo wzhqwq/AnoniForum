@@ -3,7 +3,7 @@ const first_load =  () => {
     el: '#bulletin-board',
     data: {
       loading: true,
-      bulletins: [],
+      bulletins: []
     }
   });
 
@@ -11,7 +11,7 @@ const first_load =  () => {
     el: '#top-10',
     data: {
       loading: true,
-      users: [],
+      users: []
     }
   });
 
@@ -20,7 +20,7 @@ const first_load =  () => {
     data: {
       issues: [],
       articles: [],
-      loading: false,
+      loading: true
     }
   });
 
