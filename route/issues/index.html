@@ -70,7 +70,7 @@
           <a v-bind:href="post.url">{{ post.topic }}</a>
         </h5>
         <div class="post-info">
-          <span class="badge badge-pill badge-warning" v-for="tag in post.tags.split(',')">{{ tag }}</span>
+          <span class="badge badge-pill badge-warning" v-if="post.tags.length != 0" v-for="tag in post.tags.split(',')">{{ tags[tag].name }}</span>
           <div class="float-right">
             {{ post.date }}
           </div>
