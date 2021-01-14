@@ -19,9 +19,9 @@ window.addEventListener('load', () => {
   if (location.pathname.match('login')) return;
 
   var login_el = document.createElement('div');
-  login_el.innerHTML = 
-`<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="{ display: show1 ? 'block' : '' ">
-  <center-loader v-if="loading" text="页面加载中" style="margin-top: 100px;"></center-loader>/>
+  login_el.innerHTML =
+    `<div id="login-needed" v-bind:class="{ show: show2 }" v-bind:style="{ display: show1 ? 'block' : '' }">
+  <center-loader v-if="loading" text="页面加载中" style="margin-top: 100px;"></center-loader>
   <iframe id="login-frame" v-bind:src="show1 ? (setName ? '/rjrrjh/login/setname.html' : '/rjrrjh/login') : ''" v-on:load="loaded">
   </iframe>
 </div>`;
@@ -64,19 +64,23 @@ window.addEventListener('load', () => {
     }
   });
   var jwt = localStorage.getItem('jwt');
-  
+
   window.u_id = jwt ? getData().u_id : -1;
 
   var last_url, last_obj;
   var last_res, last_rej;
 
   window.axiosPost = function (url, obj = {}) {
-    obj.jwt = jwt;
+    if (jwt) obj.jwt = jwt;
     last_url = url;
     last_obj = obj;
     return axios.post(url, obj)
       .catch(err => {
-        if (err?.response.status == 403) {
+        if (!err.response)
+          return alert('发送请求失败，请检查网络环境: ' + err.message + '，如果网络没有问题，请将问题反馈给王子涵'), fakePromise;
+        if (err.response.status == 500)
+          return alert(err.response?.data?.code == 'DBERR' ? '数据库出错，请联系王子涵' : ('服务器出错，请联系王子涵: ' + err.response.data.err || '')), fakePromise;
+        if (err.response.status == 403) {
           login_vm.loading = true;
           login_vm.show1 = true;
           setTimeout(() => {
@@ -98,6 +102,23 @@ window.addEventListener('load', () => {
           queries.push(`${key}=${encodeURI(obj[key])}`);
       url += '?' + queries.join('&');
     }
-    return axios.get(url);
+    return axios.get(url)
+      .catch(err => {
+        if (!err.response)
+          return alert('发送请求失败，请检查网络环境: ' + err.message + '，如果网络没有问题，请将问题反馈给王子涵'), fakePromise;
+        if (err.response.status == 500)
+          return alert(err.response?.data?.code == 'DBERR' ? '数据库出错，请联系王子涵' : '服务器出错，请联系王子涵'), fakePromise;
+
+        return new Promise((_, rej) => rej(err))
+      });
   }
+
+  var fakePromise = {
+    then: function () {
+      return this;
+    },
+    catch: function () {
+      return this;
+    }
+  };
 });

@@ -60,7 +60,7 @@ exports.auth = function (sdu_id, passwd) {
           }, (err, resp) => {
             if (err) {
               log('User controler: error when accessing sdu auth: ', err);
-              rej('登录出现问题，请联系王子涵');
+              rej('连不上山大统一认证服务器了，请联系王子涵');
               return;
             }
             if (resp.statusCode == 200) {
@@ -91,7 +91,7 @@ exports.auth = function (sdu_id, passwd) {
               }, (err, resp) => {
                 if (err) {
                   log('User controler: error when accessing sdu auth: ', err);
-                  rej('登录出现问题，请联系王子涵');
+                  rej('连不上山大统一认证服务器了，请联系王子涵');
                   return;
                 }
                 if (resp.statusCode == 200)
@@ -107,25 +107,25 @@ exports.auth = function (sdu_id, passwd) {
                         res({ jwt: genJwt(result.lastID), user: user });            
                       })
                       .catch(e => {
-                        rej('数据库出错: ' + e.message);
+                        rej('注册失败，数据库出错: ' + e.message);
                       });
                   }
                 }
                 else {
-                  rej('发送请求时出现了问题');
+                  rej('无法理解山大统一认证服务器的回应，请联系王子涵');
                   log('User server: unexpected code from second fetch:', resp.statusCode);
                 }
               });
             }
             else {
-              rej('发送请求时出现了问题');
+              rej('无法理解山大统一认证服务器的回应，请联系王子涵');
               log('User server: unexpected code from first fetch:', resp.statusCode);
             }
           });
         }
         else {
           if (crypto.createHmac('sha256', salt).update(passwd).digest('hex') != user.passwd)
-            rej('密码错误');
+            rej('登录失败，密码错误');
           else {
             /*if (user.last_remote != address)
               DB.update('users', { last_remote: address }, `u_id=${user.u_id}`);*/
@@ -134,7 +134,7 @@ exports.auth = function (sdu_id, passwd) {
         }
       })
       .catch(e => {
-        rej('bad request: database error: ' + e.message);
+        rej('失败，数据库出错: ' + e.message);
       });
   });
 };
@@ -164,7 +164,7 @@ exports.checkBefore = function (req, res, next) {
   }
   var jwt = req.body.jwt;
   if (!jwt || jwt.length == 0) {
-    res.status(403).json({ code: 'LOGIN', note: '' });
+    res.status(403).json({ code: 'LOGIN', err: '' });
     return;
   }
   exports.check(jwt)
@@ -173,6 +173,6 @@ exports.checkBefore = function (req, res, next) {
       next();
     })
     .catch(e => {
-      res.status(403).json({ code: 'MALJWT', note: e });
+      res.status(403).json({ code: 'MALJWT', err: e });
     });
 };

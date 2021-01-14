@@ -50,11 +50,11 @@ const first_load =  () => {
     if (error.response) {
       let data = error.response.data;
       if (error.response.status == '500')
-      alert('服务器出错，请联系王子涵' + ', 详细原因：' + (data ? data.note : ''));
+        alert('服务器出错，请联系王子涵' + ', 详细原因：' + (data ? data.note : ''));
       else
         alert('获取数据失败，请联系王子涵，错误码：' + error.response.status);
     }
     else
-      alert('获取数据失败，请检查网络环境：' + error.message);
+      alert('获取数据失败，请检查网络环境：' + error.message + '，如果网络没有问题，请将问题反馈给王子涵');
   });
 };

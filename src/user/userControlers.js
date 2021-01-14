@@ -62,7 +62,7 @@ route.logIn.post((req, res) => {
     res.json({jwt: jwt, err: ''});
   })
   .catch(err => {
-    res.json({jwt: '', err: err});
+    res.json({jwt: '', err: err, code: 'VARERR'});
   });
 });
 
@@ -75,9 +75,10 @@ route.setNickName.post((req, res) => {
   else
     setName(jwt, nick_name)
       .then(jwt => res.json({ jwt: jwt }))
-      .catch(err => res.status(500).json({ err: err }))
+      .catch(err => res.status(500).json({ code: 'VARERR', err: err }))
 })
 
+// 已废弃且长期不维护
 /*route.signUp.post((req, res) => {
   var password = req.body.password || '';
   var sdu_id = req.body.sduid || 'a';

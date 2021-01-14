@@ -144,7 +144,7 @@ const first_load = () => {
     }
   });
   
-  axios.get('/rjrres/jsons/tags.json')
+  axiosGet('/rjrres/jsons/tags.json')
   .then(resp => {
     window.publish_vm.tags = resp.data.map((tag, i) => {
       return {name: tag, id: i, selected: false};

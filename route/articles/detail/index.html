@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>文章详情</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/rjrres/css/public.css">
+  <link rel="stylesheet" href="../../../public/css/public.css">
+  <link rel="stylesheet" href="../../../public/css/post_page.css">
   <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -30,29 +31,47 @@
   </div>
   <div class="container" style="margin-top: 80px; display: none;">
     <div id="post">
-      <div class="post-top">
-        <h3 class="float-left">{{ topic }}</h3>
-        <div class="float-right">
-          <div class="post-author">{{ author }}</div>
-          <div class="post-tags">
-            <span class="badge badge-pill badge-warning" v-for="tag in tags.split(',')">{{ tag }}</span>
+      <div class="row">
+        <div class="col-sm-6 col-lg-8" style="margin: 5px 0;">
+          <div class="badge badge-secondary" v-bind:class="[ isIssue && !resolved ? 'badge-success' : 'badge-secondary' ]" style="line-height: 1.5;">
+            <span v-bind:class="[ 'fa', isIssue ? (resolved ? 'fa-check-circle' : 'fa-question-circle') : 'fa-book' ]"></span>
+            {{ isIssue ? (resolved ? '已解决的问题' : '未解决的问题') : '文章' }}
+          </div>
+          <topic>{{ topic }}</topic>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <div>
+                <span v-bind:class="[ 'fa', tags.length == 1 ? 'fa-tag' : 'fa-tags' ]" style="color: var(--blue); width: 20px; text-align: center;"></span>
+                <span class="badge badge-warning" v-for="tag in tags">{{ tag }}</span>
+                <span v-if="tags.length == 0" style="color: var(--secondary);">无标签</span>
+              </div>
+              <div>
+                <span class="fa fa-fire" style="color: var(--red); width: 20px; text-align: center;"></span>
+                {{ watcher }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="post-content" v-html="post"></div>
+      <div v-html="post" style="margin-top: 10px;"></div>
     </div>
-    <div id="comments">
-      <button class="btn btn-primary fa fa-pen-nib">发表评论</button>
-      <div class="comments-primary">
-        <div class="comment-primary" v-for="comment in comments">
-          <div class="comment-author">{{ comment.author }}</div>
-          <div class="comment-content">{{ comment.content }}</div>
-          <button class="btn btn-round btn-primary fa fa-comment"></button>
-          <div class="comment-secondary">
-            <div class="comment-content-secondary" v-for="reply in comment.reply">
-              <div class="comment-author">{{ reply.author }}</div>
-              <div class="comment-reply fa fa-angle-double-right" v-if="reply.to != ''">{{ reply.to }}</div>
-              <div class="comment-content">{{ reply.content }}</div>
+    <div id="comments" class="card" style="margin-top: 10px; width: 100%;">
+      <div class="card-body">
+        <!--评论编辑器-->
+        <button class="btn btn-primary"><span class="fa fa-pen-nib"></span>发表评论</button>
+        <div class="comments-primary">
+          <div class="comment-primary" v-for="comment in comments">
+            <div class="comment-author">{{ comment.author }}</div>
+            <div class="comment-content">{{ comment.content }}</div>
+            <button class="btn btn-round btn-primary fa fa-comment"></button>
+            <div class="comment-secondary">
+              <div class="comment-content-secondary" v-for="reply in comment.reply">
+                <div class="comment-author">{{ reply.author }}</div>
+                <div class="comment-reply" v-if="reply.to != ''"><span class="fa fa-angle-double-right"></span>{{ reply.to }}</div>
+                <div class="comment-content">{{ reply.content }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -63,7 +82,7 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
-  <script src="/rjrres/js/main.js"></script>
-  <script src="/rjrres/js/comment.js"></script>
+  <script src="../../../public/js/main.js"></script>
+  <script src="../../../public/js/comment.js"></script>
 </body>
 </html>

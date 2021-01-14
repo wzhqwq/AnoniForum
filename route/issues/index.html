@@ -32,9 +32,7 @@
     <h3>所有提问</h3>
     <div class="search-bar col-md-6 offset-md-3">
       <input type="text" class="form-control" v-model="search_text">
-      <button class="btn btn-primary" v-on:click="search">
-        <span class="fa fa-search"></span>
-      </button>
+      <button class="btn btn-primary fa fa-search" v-on:click="search"></button>
     </div>
     <div class="search-tools row">
       <ul class="nav nav-pills col-sm-4">
@@ -48,7 +46,7 @@
       <div class="col-sm-8 text-right">
         <div class="btn-group">
           <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" v-bind:class="[ tag_now == -1 ? 'btn-primary' : 'btn-success' ]">
-            <span class="fa" v-bind:class="[ tag_now == -1 ? 'fa-tags' : 'fa-tag' ]">{{ tag_now == -1 ? '标签筛选' : tags[tag_now].name }}</span>
+            <span class="fa" v-bind:class="[ tag_now == -1 ? 'fa-tags' : 'fa-tag' ]"></span>{{ tag_now == -1 ? '标签筛选' : tags[tag_now].name }}
           </button>
           <div class="dropdown-menu tag-view">
             <a class="dropdown-item" href="#" v-for="tag in tags" v-bind:class="{ active: tag.id == tag_now }" v-on:click="select_tag(tag.id)">{{ tag.name }}</a>
@@ -56,7 +54,7 @@
         </div>
         <div class="btn-group">
           <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" v-bind:class="[ resolved == -1 ? 'btn-primary' : 'btn-success' ]">
-            <span class="fa" v-bind:class="[ resolved == -1 ? 'fa-filter' : (resolved == 0 ? 'fa-question-circle' : 'fa-check-circle') ]">{{ resolved == -1 ? '筛选问题状态' : (resolved == 0 ? '筛选未解决' : '筛选已解决') }}</span>
+            <span class="fa" v-bind:class="[ resolved == -1 ? 'fa-filter' : (resolved == 0 ? 'fa-question-circle' : 'fa-check-circle') ]"></span>{{ resolved == -1 ? '筛选问题状态' : (resolved == 0 ? '筛选未解决' : '筛选已解决') }}
           </button>
           <div class="dropdown-menu tag-view">
             <a class="dropdown-item" href="#" v-bind:class="{ active: 0 == resolved }" v-on:click="set_res(0)">未解决</a>
@@ -69,7 +67,7 @@
       <div class="post-block" v-for="post in posts">
         <h5>
           <span class="badge badge-primary" v-if="post.essential == 1">精选</span>
-          <a v-bind:href="post.id">{{ post.topic }}</a>
+          <a v-bind:href="post.url">{{ post.topic }}</a>
         </h5>
         <div class="post-info">
           <span class="badge badge-pill badge-warning" v-for="tag in post.tags.split(',')">{{ tag }}</span>
@@ -79,8 +77,8 @@
         </div>
       </div>
     </div>
-    <center-loader v-if="loading"></center-loader>/>
-    <div class="text-center fa fa-exclamation-triangle" v-if="isEnd" style="color: #AAA; display: block;">已经到最后了</div>
+    <center-loader v-if="loading"></center-loader>
+    <div class="text-center" v-if="isEnd" style="color: #AAA; display: block;"><span class="fa fa-exclamation-triangle"></span>已经到最后了</div>
     <div class="text-center" v-if="!loading && !isEnd">
       <button class="btn btn-light" v-on:click="load_more">加载更多</button>
     </div>

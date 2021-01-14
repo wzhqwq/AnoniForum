@@ -1,3 +1,4 @@
+// 已废弃、长期不维护的代码
 const first_load =  () => {
   var salts;
   axios.get('/rjrusr/getsalt')

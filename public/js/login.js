@@ -15,7 +15,7 @@ const first_load = () => {
           return;
         }
         this.loging = true;
-        axios.post('/rjrusr/login', {
+        axiosPost('/rjrusr/login', {
           password: this.password,
           sduid: this.sdu_id
         })

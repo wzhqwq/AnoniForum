@@ -139,9 +139,9 @@ route.getPosts.get((req, res) => {
   }
 
   if (start.match(/[\D]/g))
-    return res.status(400).json({ code: 'INVNUM', note: 'start不合法' }), null;
+    return res.status(400).json({ code: 'INVNUM', err: 'start不合法' }), null;
   if (type != 'a' && type != 'i')
-    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+    return res.status(400).json({ code: 'INVTP', err: 'type不合法' }), null;
 
   var name = type == 'a' ? 'article' : 'issue';
   start = parseInt(start);
@@ -149,7 +149,7 @@ route.getPosts.get((req, res) => {
 
   if (tag != '') {
     if (tag.match(/[\D]/g) != null)
-      return res.status(400).json({ code: 'INVTAG', note: 'tags不合法' }), null;
+      return res.status(400).json({ code: 'INVTAG', err: 'tags不合法' }), null;
 
     fromTable = (new DB())
       .joinSelect(
@@ -184,22 +184,22 @@ route.getPost.post((req, res) => {
   var p_id = req.body.p_id || '';
 
   if (parseInt(p_id) == NaN)
-    return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
+    return res.status(400).json({ code: 'INVID', err: 'p_id不合法' }), null;
   if (type[0] != 'a' && type[0] != 'i')
-    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+    return res.status(400).json({ code: 'INVTP', err: 'type不合法' }), null;
   var name = type[0] == 'a' ? 'article' : 'issue';
 
   var qkey = [`${name}_id`, 'topic', 'tags', 'essential', name == 'issue' ? 'time' : 'date', 'watch']
   if (name == 'issue') qkey.push('brief', 'resolved');
   if (p_id == '-1') {
     if (!fs.existsSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`))
-      return res.status(404).json({ code: 'NODRAFT', note: '没有草稿'}), null;
+      return res.status(404).json({ code: 'NODRAFT', err: '没有草稿'}), null;
     try {
       let content = fs.readFileSync(__dirname + `/../../data/${name}s/drafts/${req.user_current.u_id}.html`, ).toString('utf-8');
-      res.json({code: 'SUCC', note: '', post: {content: content, u_id: req.user_current.u_id, isDraft: true}});
+      res.json({code: 'SUCC', err: '', post: {content: content, u_id: req.user_current.u_id, isDraft: true}});
     }
     catch(err) {
-      res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
+      res.status(500).json({code: 'FSERR', err: '文件系统发生错误：' + err.message, post: null});
     }
   }
   else
@@ -208,20 +208,20 @@ route.getPost.post((req, res) => {
       .query(true)
       .then(post => {
         if (!post || type.length == 2 && post.u_id != req.user_current.u_id)
-          return res.status(404).json({ code: 'NOID', note: 'p_id不存在' }), null;
+          return res.status(404).json({ code: 'NOID', err: 'p_id不存在' }), null;
         if (type.length == 1 && post.u_id != req.user_current.u_id)
           DB.update(`${name}s`, { watch: parseInt(post.watch) + 1}, `${name}_id = ${p_id}`)
 
         try {
           post.content = fs.readFileSync(__dirname + `/../../data/${name}s/${p_id}.html`).toString('utf-8');
-          res.json({code: 'SUCC', note: '', post: post});
+          res.json({code: 'SUCC', err: '', post: post});
         }
         catch(err) {
-          res.status(500).json({code: 'FSERR', note: '文件系统发生错误：' + err.message, post: null});
+          res.status(500).json({code: 'FSERR', err: '文件系统发生错误：' + err.message, post: null});
         }
       })
       .catch(err => {
-        res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
+        res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
       });
 });
 
@@ -232,15 +232,15 @@ route.savePost.post((req, res) => {
   var content = (req.body.post || '').replace(/<script>/gi, '<xd>').replace(/<\/script>/gi, '</xd>');
 
   if (typeof p_id != 'number')
-    return res.status(400).json({ code: 'INVID', note: 'p_id不合法' }), null;
+    return res.status(400).json({ code: 'INVID', err: 'p_id不合法' }), null;
   if (type != 'a' && type != 'i')
-    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+    return res.status(400).json({ code: 'INVTP', err: 'type不合法' }), null;
   
   var name = type == 'a' ? 'article' : 'issue';
   var path = __dirname + `/../../data/${name}s/`;
   if (p_id == -1)
     fs.writeFile(path + `drafts/${req.user_current.u_id}.html`, content, () => {
-      res.json({ code: 'SUCC', note: ''});
+      res.json({ code: 'SUCC', err: ''});
     });
   else
     (new DB())
@@ -248,13 +248,13 @@ route.savePost.post((req, res) => {
       .query(true)
       .then(post => {
         if (!post || post.p_id != req.user_current.u_id)
-          return res.status(404).json({code: 'NOID', note: 'p_id不存在'}), null;
+          return res.status(404).json({code: 'NOID', err: 'p_id不存在'}), null;
         fs.writeFile(path + `${p_id}.html`, content, () => {
-          res.json({ code: 'SUCC', note: ''});
+          res.json({ code: 'SUCC', err: ''});
         });
       })
       .catch(err => {
-        res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
+        res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
       });
 });
 
@@ -264,17 +264,17 @@ route.publishPost.post((req, res) => {
   var tags = req.body.tags || '';
   var brief = req.body.brief || '';
   if (type != 'a' && type != 'i')
-    return res.status(400).json({ code: 'INVTP', note: 'type不合法' }), null;
+    return res.status(400).json({ code: 'INVTP', err: 'type不合法' }), null;
   if (topic == '' || topic.length > 40)
-    return res.status(400).json({ node: 'NOTOPIC', note: '标题不合法'}), null;
+    return res.status(400).json({ node: 'NOTOPIC', err: '标题不合法'}), null;
   if (tags != '' && tags.match(/[^,\d]/g))
-    return res.status(400).json({ code: 'INVTAG', note: 'tags不合法'}), null;
+    return res.status(400).json({ code: 'INVTAG', err: 'tags不合法'}), null;
   
   var name = type == 'a' ? 'article' : 'issue';
   var path = __dirname + `/../../data/${name}s/`;
 
   if (!fs.existsSync(path + `drafts/${req.user_current.u_id}.html`))
-    return res.json({ code: 'NODRAFT', note: '没有草稿要发布'}), null;
+    return res.json({ code: 'NODRAFT', err: '没有草稿要发布'}), null;
   
   var date = new Date();
   var post = {
@@ -299,10 +299,10 @@ route.publishPost.post((req, res) => {
         DB.insert(`${name}s_tags`, ins);
       });
     fs.rename(path + `drafts/${req.user_current.u_id}.html`, path + `${result.lastID}.html`, () => {
-      res.json({code: 'SUCC', note: '', id: result.lastID});
+      res.json({code: 'SUCC', err: '', id: result.lastID});
     });
   }).catch(err => {
-    res.status(500).json({ code: 'DBERR', note: '数据库出错: ' + err.message });
+    res.status(500).json({ code: 'DBERR', err: '数据库出错: ' + err.message });
   });
 })
 

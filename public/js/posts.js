@@ -66,20 +66,12 @@ const first_load = () => {
             this.posts = data;
         })
         .catch(err => {
-          if (err.response) {
-            if (err.response.status == 500)
-              alert('服务器出错，请联系王子涵');
-            else if (err.response.status != 403)
-              alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.note : ''))
-          }
-          else {
-            alert('发送请求失败，请检查网络环境: ' + err.message);
-          }
+          alert('请求出现问题，请联系王子涵：' + (err.response.data ? err.response.data.err : ''))
         });
       }
     }
   });
-  axios.get('/rjrres/jsons/tags.json')
+  axiosGet('/rjrres/jsons/tags.json')
   .then(resp => {
     common_vm.tags = resp.data.map((tag, i) => {
       return {name: tag, id: i};

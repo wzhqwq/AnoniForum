@@ -32,15 +32,13 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
       <h3 style="margin: 0;">所有文章</h3>
       <div id="create-post" class="b-green">
-        <a class="btn btn-lg btn-success fa fa-pen-nib" href="write">写文章</a>
+        <a class="btn btn-lg btn-success" href="write"><span class="fa fa-pen-nib"></span>写文章</a>
       </div>
     </div>
     <div style="position: sticky; top: 60px; width: 100%; background-color: #FFF; padding: 5px 0; margin-top: 30px;">
       <div class="search-bar col-md-6 offset-md-3">
         <input type="text" class="form-control" v-model="search_text">
-        <button class="btn btn-primary" v-on:click="search">
-          <span class="fa fa-search"></span>
-        </button>
+        <button class="btn btn-primary fa fa-search" v-on:click="search"></button>
       </div>
       <div class="search-tools">
         <ul class="float-left nav nav-pills">
@@ -54,7 +52,7 @@
         <div class="float-right">
           <div class="btn-group">
             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" v-bind:class="[ tag_now == -1 ? 'btn-primary' : 'btn-success' ]">
-              <span class="fa" v-bind:class="[ tag_now == -1 ? 'fa-tags' : 'fa-tag' ]">{{ tag_now == -1 ? '标签筛选' : tags[tag_now].name }}</span>
+              <span class="fa" v-bind:class="[ tag_now == -1 ? 'fa-tags' : 'fa-tag' ]"></span>{{ tag_now == -1 ? '标签筛选' : tags[tag_now].name }}
             </button>
             <div class="dropdown-menu tag-view">
               <a class="dropdown-item" href="#" v-for="tag in tags" v-bind:class="{ active: tag.id == tag_now }" v-on:click="select_tag(tag.id)">{{ tag.name }}</a>
@@ -67,7 +65,7 @@
       <div class="post-block" v-for="post in posts">
         <h5>
           <span class="badge badge-primary" v-if="post.essential == 1">精选</span>
-          <a v-bind:href="get_link(post)">{{ post.topic }}</a>
+          <a v-bind:href="post.url">{{ post.topic }}</a>
         </h5>
         <div class="post-info">
           <span class="badge badge-pill badge-warning" v-for="tag in post.tags.split(',')">{{ tags[tag].name }}</span>
@@ -78,8 +76,8 @@
       </div>
     </div>
     <div style="padding-bottom: 60px;">
-      <center-loader v-if="loading"></center-loader>/>
-      <div class="text-center fa fa-exclamation-triangle" v-if="isEnd" style="color: #AAA; display: block;">已经到最后了</div>
+      <center-loader v-if="loading"></center-loader>
+      <div class="text-center" v-if="isEnd" style="color: #AAA; display: block;"><span class="fa fa-exclamation-triangle"></span>已经到最后了</div>
       <div class="text-center" v-if="!loading && !isEnd">
         <button class="btn btn-light" v-on:click="load_more">加载更多</button>
       </div>
